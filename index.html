@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/logo hugs.png">
   <title>HUGs Agency</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -41,6 +42,51 @@
     .no-scroll {
       overflow: hidden;
       height: 100vh;
+    }
+
+    /* Article content markdown styles */
+    .article-content h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .article-content p {
+      color: #374151;
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+
+    .article-content ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 1.5rem 0;
+    }
+
+    .article-content li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .article-content li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 0.5rem;
+      height: 0.5rem;
+      background-color: #eb2166;
+      border-radius: 50%;
+    }
+
+    .article-content strong {
+      color: #1a1a1a;
+      font-weight: 600;
     }
   </style>
   <script type="importmap">

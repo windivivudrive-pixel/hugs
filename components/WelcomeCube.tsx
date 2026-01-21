@@ -1,48 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-// Partner logos for cube faces
-const partnerLogos = [
-  { name: 'VinGroup', color: '#1a1a2e' },
-  { name: 'Samsung', color: '#1428A0' },
-  { name: 'Shopee', color: '#EE4D2D' },
-  { name: 'TikTok', color: '#000000' },
-  { name: 'Meta', color: '#0668E1' },
-];
-
-// First face with HUGs logo
-const BrandFace: React.FC<{
+// Image face component for cube
+const ImageFace: React.FC<{
   transform: string;
   cubeSize: number;
-}> = ({ transform, cubeSize }) => (
+  imageSrc: string;
+  alt: string;
+}> = ({ transform, cubeSize, imageSrc, alt }) => (
   <div
-    className="absolute backface-hidden flex flex-col items-center justify-center bg-white shadow-lg"
+    className="absolute backface-hidden overflow-hidden shadow-lg"
     style={{ transform, width: cubeSize, height: cubeSize }}
   >
     <img
-      src="/logo hugs.png"
-      alt="HUGs Agency Logo"
-      className="w-32 h-32 object-contain mb-2"
+      src={imageSrc}
+      alt={alt}
+      className="w-full h-full object-cover"
     />
-    <span className="text-xl font-black text-brand-pink tracking-tight">
-      HUGs Agency
-    </span>
-  </div>
-);
-
-// Face with partner logo
-const LogoFace: React.FC<{
-  transform: string;
-  cubeSize: number;
-  logo: { name: string; color: string };
-}> = ({ transform, cubeSize, logo }) => (
-  <div
-    className="absolute backface-hidden flex items-center justify-center bg-white shadow-lg"
-    style={{ transform, width: cubeSize, height: cubeSize }}
-  >
-    <span className="text-2xl font-bold tracking-tight" style={{ color: logo.color }}>
-      {logo.name}
-    </span>
   </div>
 );
 
@@ -196,14 +170,18 @@ export const WelcomeCube: React.FC = () => {
                 transformOrigin: 'center center',
               }}
             >
-              {/* Front face - HUGs brand logo */}
-              <BrandFace transform={`translateZ(${translateZ}px)`} cubeSize={cubeSize} />
-              {/* Other faces - partner logos */}
-              <LogoFace transform={`rotateY(180deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} logo={partnerLogos[0]} />
-              <LogoFace transform={`rotateY(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} logo={partnerLogos[1]} />
-              <LogoFace transform={`rotateY(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} logo={partnerLogos[2]} />
-              <LogoFace transform={`rotateX(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} logo={partnerLogos[3]} />
-              <LogoFace transform={`rotateX(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} logo={partnerLogos[4]} />
+              {/* Front face - cube3 (start) */}
+              <ImageFace transform={`translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube3.png" alt="Cube Front" />
+              {/* Back face - cube4 */}
+              <ImageFace transform={`rotateY(180deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube4.png" alt="Cube Back" />
+              {/* Right face - cube2 */}
+              <ImageFace transform={`rotateY(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube1.png" alt="Cube Right" />
+              {/* Left face - cube1 */}
+              <ImageFace transform={`rotateY(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube2.png" alt="Cube Left" />
+              {/* Top face - cube2 */}
+              <ImageFace transform={`rotateX(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube1.png" alt="Cube Top" />
+              {/* Bottom face - cube3 */}
+              <ImageFace transform={`rotateX(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube3.png" alt="Cube Bottom" />
             </div>
           </div>
 
@@ -219,66 +197,6 @@ export const WelcomeCube: React.FC = () => {
             </div>
           </motion.div>
         </motion.div>
-      </div>
-
-      {/* Scroll spacer */}
-      <div className="h-[15vh]" />
-
-      {/* Team Introduction / Mission Section */}
-      <div className="relative z-10 bg-white pb-0 pt-20 overflow-hidden min-h-[700px] flex items-end">
-
-        {/* Pink Wave Background - High Z-index to cover bottom of images */}
-        <div className="absolute bottom-0 left-0 w-full z-20 pointer-events-none translate-y-1">
-          <svg viewBox="0 0 1440 320" className="w-full h-auto object-cover" preserveAspectRatio="none">
-            <path fill="#eb2166" fillOpacity="1" d="M0,64L48,80C96,96,192,128,288,144C384,160,480,160,576,149.3C672,139,768,117,864,128C960,139,1056,181,1152,192C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-          </svg>
-        </div>
-
-        <div className="w-full max-w-[1440px] mx-auto px-4 relative z-10 grid grid-cols-1 md:grid-cols-12 gap-4 items-end pb-10 md:pb-20">
-
-          {/* Left Image - Team 1 - Slides in from left */}
-          <motion.div
-            className="md:col-span-6 flex items-end justify-start -mb-10 md:-mb-28 relative z-10"
-            initial={{ x: -100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <img src="/team 1.png" alt="HUGs Team" className="h-[400px] md:h-[850px] object-contain drop-shadow-xl" />
-          </motion.div>
-
-          {/* Center/Right Content Area */}
-          <div className="md:col-span-6 flex flex-col items-end justify-bottom h-full relative z-0">
-
-            {/* Text Content - Slides in from right */}
-            <div className="text-right mt-auto md:mt-[50px] px-4 md:px-10 md:mr-[120px] w-full relative z-30">
-              <motion.div
-                initial={{ x: 100, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                viewport={{ once: true }}
-              >
-                <h2 className="text-4xl md:text-7xl font-black text-[#eb2166] mb-4 drop-shadow-sm leading-tight text-nowrap" style={{ fontFamily: '"Rounded Mplus 1c", "Varela Round", sans-serif' }}>
-                  Sứ Mệnh Của <br />
-                  <span className="text-5xl md:text-8xl">HUGS</span>
-                </h2>
-
-                <motion.div
-                  className="flex flex-col items-end gap-2"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                >
-                  <p className="text-gray-600 text-base md:text-lg font-medium max-w-sm leading-relaxed text-right">
-                    Chúng tôi đồng hành cùng sự phát triển của doanh nghiệp thông qua những chiến lược truyền thông sáng tạo và hiệu quả nhất.
-                  </p>
-                  <div className="h-1 w-20 bg-[#eb2166] rounded-full mt-2"></div>
-                </motion.div>
-              </motion.div>
-            </div>
-
-          </div>
-        </div>
       </div>
 
       <style>{`

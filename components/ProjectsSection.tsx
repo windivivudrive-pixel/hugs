@@ -2,22 +2,54 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-export const ProjectsSection: React.FC = () => {
-    const projects = [
-        { client: "Mobifone", title: "Chiến dịch truyền thông 5G", tag: "BOOKING - PR" },
-        { client: "Tan Ca", title: "Hành trình tăng nhận diện thương hiệu", tag: "MARKETING F&B" },
-        { client: "My Hanh", title: "Chanh vàng gọi hè - Chiến dịch marketing", tag: "MARKETING" },
-        { client: "Tram Huong", title: "Khi mặt hàng địa phương lên sàn", tag: "TIKTOK" },
-        { client: "Kieslect", title: "Tăng nhận diện thương hiệu smartwatch", tag: "BOOKING - PR" },
-        { client: "Ai Hay", title: "Khi AI trở thành trợ lý đắc lực", tag: "MARKETING" }
-    ];
+// Project data with partner logos and campaign backgrounds
+const projects = [
+    {
+        client: "Mobifone",
+        title: "Chiến dịch truyền thông 5G",
+        logo: "/logo partner/partner0.png",
+        image: "https://picsum.photos/600/600?random=1"
+    },
+    {
+        client: "Tan Ca",
+        title: "Hành trình tăng nhận diện thương hiệu",
+        logo: "/logo partner/partner1.png",
+        image: "https://picsum.photos/600/600?random=2"
+    },
+    {
+        client: "My Hanh",
+        title: "Chanh vàng gọi hè - Chiến dịch marketing",
+        logo: "/logo partner/partner2.png",
+        image: "https://picsum.photos/600/600?random=3"
+    },
+    {
+        client: "Tram Huong",
+        title: "Khi mặt hàng địa phương lên sàn",
+        logo: "/logo partner/partner3.png",
+        image: "https://picsum.photos/600/600?random=4"
+    },
+    {
+        client: "Kieslect",
+        title: "Tăng nhận diện thương hiệu smartwatch",
+        logo: "/logo partner/partner4.png",
+        image: "https://picsum.photos/600/600?random=5"
+    },
+    {
+        client: "Ai Hay",
+        title: "Khi AI trở thành trợ lý đắc lực",
+        logo: "/logo partner/partner5.png",
+        image: "https://picsum.photos/600/600?random=6"
+    }
+];
 
+export const ProjectsSection: React.FC = () => {
     return (
-        <section className="pb-10 bg-white relative overflow-hidden">
+        <section className="py-20 bg-white relative overflow-hidden">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-3xl"></div>
 
-            <div className="max-w-5xl mx-auto px-6">
+            <div className="max-w-7xl mx-auto px-6">
+                {/* Header */}
                 <motion.div
                     className="flex flex-col md:flex-row md:items-end md:justify-between mb-12"
                     initial={{ opacity: 0, y: 30 }}
@@ -41,9 +73,9 @@ export const ProjectsSection: React.FC = () => {
                     </motion.button>
                 </motion.div>
 
-                {/* 2 columns x 3 rows layout */}
+                {/* Grid layout - 2x3 */}
                 <motion.div
-                    className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
@@ -52,37 +84,53 @@ export const ProjectsSection: React.FC = () => {
                         visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
                     }}
                 >
-                    {projects.map((p, i) => (
+                    {projects.map((project, i) => (
                         <motion.div
                             key={i}
-                            className="group flex items-start gap-5 p-4 rounded-2xl border border-brand-pink/30 bg-white shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                            className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer"
                             variants={{
                                 hidden: { opacity: 0, y: 20 },
                                 visible: { opacity: 1, y: 0 }
                             }}
-                            whileHover={{ y: -5 }}
                         >
-                            {/* Logo/Image - square */}
-                            <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
-                                <img
-                                    src={`https://picsum.photos/100/100?random=${i + 50}`}
-                                    alt={p.client}
-                                    className="w-full h-full object-cover"
-                                />
+                            {/* Background Image */}
+                            <motion.img
+                                src={project.image}
+                                alt={project.title}
+                                className="w-full h-full object-cover"
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.4 }}
+                            />
+
+                            {/* Default overlay - subtle gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-0" />
+
+                            {/* Hover overlay - pink */}
+                            <div className="absolute inset-0 bg-brand-pink/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                            {/* Logo - always centered */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <motion.div
+                                    className="w-28 h-28 bg-white rounded-2xl shadow-lg flex items-center justify-center p-4"
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    <img
+                                        src={project.logo}
+                                        alt={project.client}
+                                        className="w-full h-full object-contain"
+                                    />
+                                </motion.div>
                             </div>
 
-                            {/* Content */}
-                            <div className="flex-1 flex flex-col justify-between h-24">
-                                {/* Top: Tag */}
-                                <span className="text-brand-pink font-bold text-xs uppercase tracking-wider">{p.tag}</span>
-
-                                {/* Middle: Title */}
-                                <h3 className="font-bold text-gray-900 text-base leading-snug group-hover:text-brand-pink transition-colors line-clamp-2">
-                                    {p.title}
+                            {/* Bottom content - visible on hover */}
+                            <div className="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-center flex flex-col items-center">
+                                <h3 className="text-white font-bold text-lg leading-tight mb-3">
+                                    {project.title}
                                 </h3>
-
-                                {/* Bottom: Client name */}
-                                <p className="text-gray-500 text-sm">{p.client}</p>
+                                <button className="px-5 py-2 bg-white text-brand-pink font-bold text-sm rounded-full flex items-center gap-2 hover:bg-gray-100 transition-colors">
+                                    Xem chi tiết
+                                    <ArrowRight size={16} />
+                                </button>
                             </div>
                         </motion.div>
                     ))}

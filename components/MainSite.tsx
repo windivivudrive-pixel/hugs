@@ -6,8 +6,10 @@ import { Navbar } from './Navbar';
 import { WelcomeCube } from './WelcomeCube';
 import { HeroSection } from './HeroSection';
 import { CultureSection } from './CultureSection';
+import { ServicesSection } from './ServicesSection';
 import { PartnersSection } from './PartnersSection';
 import { ProjectsSection } from './ProjectsSection';
+import { SocialSection } from './SocialSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { NewsSection } from './NewsSection';
 import { FooterSection } from './FooterSection';
@@ -39,7 +41,9 @@ export const MainSite: React.FC = () => {
       <div className="relative z-20 bg-white">
         <CultureSection />
         <PartnersSection />
+        <ServicesSection />
         <ProjectsSection />
+        <SocialSection />
         <TestimonialsSection />
         <NewsSection />
         <FooterSection />
