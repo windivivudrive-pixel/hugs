@@ -7,49 +7,49 @@ const socialPages = [
     {
         name: "Đà Nẵng 24h",
         description: "Cập nhật tin tức Đà Nẵng 24/7, những câu chuyện thường nhật và sự kiện nổi bật của thành phố đáng sống.",
-        image: "/logo partner/social1.jpg",
+        image: "/logo-partner/social1.jpg",
         link: "https://www.facebook.com/share/1AsVvrcPeC/?mibextid=wwXIfr"
     },
     {
         name: "Đà Nẵng News",
         description: "Tin tức chính thống, cập nhật nhanh chóng về mọi mặt đời sống xã hội tại Đà Nẵng.",
-        image: "/logo partner/social2.jpg",
+        image: "/logo-partner/social2.jpg",
         link: "https://www.facebook.com/danangnews2025"
     },
     {
         name: "Đà Nẵng",
         description: "Trang cộng đồng chia sẻ vẻ đẹp, văn hóa và con người Đà Nẵng đến bạn bè khắp nơi.",
-        image: "/logo partner/social3.jpg",
+        image: "/logo-partner/social3.jpg",
         link: "https://www.facebook.com/Danang2019"
     },
     {
         name: "Đà Nẵng Ơi",
         description: "Nơi kết nối cộng đồng Đà Nẵng, chia sẻ những điều hay, ý đẹp của thành phố biển.",
-        image: "/logo partner/social4.jpg",
+        image: "/logo-partner/social4.jpg",
         link: "https://www.facebook.com/share/1GkxWw2P2T/?mibextid=wwXIfr"
     },
     {
         name: "Chuyện Của Đà Nẵng",
         description: "Góc nhìn đa chiều về cuộc sống, con người và những câu chuyện thú vị tại Đà Nẵng.",
-        image: "/logo partner/social5.jpg",
+        image: "/logo-partner/social5.jpg",
         link: "https://www.facebook.com/share/1A9GFFTkT3/?mibextid=wwXIfr"
     },
     {
         name: "Review Đà Nẵng",
         description: "Review chân thật về ẩm thực, du lịch và dịch vụ tại Đà Nẵng từ cộng đồng.",
-        image: "/logo partner/social6.jpg",
+        image: "/logo-partner/social6.jpg",
         link: "https://www.facebook.com/share/1HTgqsfm5N/?mibextid=wwXIfr"
     },
     {
         name: "Check In Đà Nẵng",
         description: "Khám phá những địa điểm check-in hot nhất, đẹp nhất tại thành phố Đà Nẵng.",
-        image: "/logo partner/social7.jpg",
+        image: "/logo-partner/social7.jpg",
         link: "https://www.facebook.com/share/1BPvveuY8o/?mibextid=wwXIfr"
     },
     {
         name: "Hóng Biến Đà Nẵng",
         description: "Cập nhật nhanh những tin tức nóng hổi, sự kiện đang được quan tâm tại Đà Nẵng.",
-        image: "/logo partner/social8.jpg",
+        image: "/logo-partner/social8.jpg",
         link: "https://www.facebook.com/share/1GJa8BLRqw/?mibextid=wwXIfr"
     }
 ];
