@@ -4,6 +4,7 @@ import { Calendar, User, Building2, Share2, Facebook, Linkedin, Link2 } from 'lu
 import { FooterSection } from './FooterSection';
 import { supabase, ServiceArticle, NewsArticle } from '../lib/supabase';
 import { marked } from 'marked';
+import { Link } from 'react-router-dom';
 
 // Combined article type for display
 type DisplayArticle = (ServiceArticle & { category?: string }) | (NewsArticle & { service?: { name: string } });
@@ -101,17 +102,17 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
             {/* Navbar */}
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
                 <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-                    <a href="/" className="flex items-center gap-2">
+                    <Link to="/" className="flex items-center gap-2">
                         <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-                    </a>
+                    </Link>
 
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-                        <a href="/" className="hover:text-brand-pink transition-colors">Trang chủ</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Giới thiệu</a>
-                        <a href="/service" className="hover:text-brand-pink transition-colors">Dịch vụ</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Dự án</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
-                        <a href="#" className="text-brand-pink">Tin tức</a>
+                        <Link to="/" className="hover:text-brand-pink transition-colors">Trang chủ</Link>
+                        <Link to="/about" className="hover:text-brand-pink transition-colors">Giới thiệu</Link>
+                        <Link to="/service" className="hover:text-brand-pink transition-colors">Dịch vụ</Link>
+                        <Link to="/projects" className="hover:text-brand-pink transition-colors">Dự án</Link>
+                        <Link to="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</Link>
+                        <Link to="/news" className="text-brand-pink">Tin tức</Link>
                     </div>
 
                     <div className="flex items-center gap-3">

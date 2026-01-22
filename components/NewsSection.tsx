@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { fetchNewsArticles, NewsArticle } from '../lib/supabase';
+import { useNavigate, Link } from 'react-router-dom';
 
 export const NewsSection: React.FC = () => {
     const [articles, setArticles] = useState<NewsArticle[]>([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadArticles = async () => {
@@ -23,7 +25,7 @@ export const NewsSection: React.FC = () => {
     }, []);
 
     const handleArticleClick = (article: NewsArticle) => {
-        window.location.href = `/article?id=${article.id}`;
+        navigate(`/article?id=${article.id}`);
     };
 
     if (loading) {
@@ -128,15 +130,16 @@ export const NewsSection: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.4 }}
                     viewport={{ once: true }}
                 >
-                    <motion.a
-                        href="/news"
-                        className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        Xem tất cả tin tức
-                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                    </motion.a>
+                    <Link to="/news">
+                        <motion.div
+                            className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            Xem tất cả tin tức
+                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                        </motion.div>
+                    </Link>
                 </motion.div>
             </div>
         </section>

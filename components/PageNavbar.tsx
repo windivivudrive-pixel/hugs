@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { supabase, Service } from '../lib/supabase';
+import { Link } from 'react-router-dom';
 
 interface PageNavbarProps {
     activePage?: 'home' | 'about' | 'service' | 'projects' | 'careers' | 'news';
@@ -39,13 +40,13 @@ export const PageNavbar: React.FC<PageNavbarProps> = ({ activePage }) => {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
             <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-                <a href="/" className="flex items-center gap-2">
+                <Link to="/" className="flex items-center gap-2">
                     <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-                </a>
+                </Link>
 
                 <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-                    <a href="/" className={getLinkClass('home')}>Trang chủ</a>
-                    <a href="/about" className={getLinkClass('about')}>Giới thiệu</a>
+                    <Link to="/" className={getLinkClass('home')}>Trang chủ</Link>
+                    <Link to="/about" className={getLinkClass('about')}>Giới thiệu</Link>
 
                     {/* Services Dropdown */}
                     <div
@@ -53,13 +54,13 @@ export const PageNavbar: React.FC<PageNavbarProps> = ({ activePage }) => {
                         onMouseEnter={() => setShowServicesDropdown(true)}
                         onMouseLeave={() => setShowServicesDropdown(false)}
                     >
-                        <a
-                            href="/service"
+                        <Link
+                            to="/service"
                             className={`${getLinkClass('service')} flex items-center gap-1`}
                         >
                             Dịch vụ
                             <ChevronDown size={14} className={`transition-transform ${showServicesDropdown ? 'rotate-180' : ''}`} />
-                        </a>
+                        </Link>
 
                         <AnimatePresence>
                             {showServicesDropdown && (
@@ -72,13 +73,13 @@ export const PageNavbar: React.FC<PageNavbarProps> = ({ activePage }) => {
                                 >
                                     <div className="py-2">
                                         {services.map((service) => (
-                                            <a
+                                            <Link
                                                 key={service.id}
-                                                href={`/projects?service=${service.slug}`}
+                                                to={`/projects?service=${service.slug}`}
                                                 className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-brand-pink/10 hover:text-brand-pink transition-colors normal-case"
                                             >
                                                 {service.name}
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </motion.div>
@@ -86,9 +87,9 @@ export const PageNavbar: React.FC<PageNavbarProps> = ({ activePage }) => {
                         </AnimatePresence>
                     </div>
 
-                    <a href="/projects" className={getLinkClass('projects')}>Dự án</a>
-                    <a href="/careers" className={getLinkClass('careers')}>Tuyển dụng</a>
-                    <a href="/news" className={getLinkClass('news')}>Tin tức</a>
+                    <Link to="/projects" className={getLinkClass('projects')}>Dự án</Link>
+                    <Link to="/careers" className={getLinkClass('careers')}>Tuyển dụng</Link>
+                    <Link to="/news" className={getLinkClass('news')}>Tin tức</Link>
                 </div>
 
                 <div className="flex items-center gap-3">

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Users, Target, Heart, Zap } from 'lucide-react';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
+import { Link } from 'react-router-dom';
 
 interface SectionProps {
     title: string;
@@ -313,13 +314,13 @@ export const AboutPage: React.FC = () => {
                         <p className="text-gray-400 mb-8 text-lg">
                             Liên hệ với chúng tôi để được tư vấn về chiến lược truyền thông phù hợp
                         </p>
-                        <a
-                            href="/#contact"
+                        <Link
+                            to="/#contact"
                             className="inline-flex items-center gap-2 bg-brand-pink text-white px-8 py-4 rounded-full font-bold hover:bg-pink-600 transition-colors"
                         >
                             Liên hệ ngay
                             <ArrowRight size={20} />
-                        </a>
+                        </Link>
                     </motion.div>
                 </div>
             </section>
