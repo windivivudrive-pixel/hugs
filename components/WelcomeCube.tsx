@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Image face component for cube
 const ImageFace: React.FC<{
@@ -22,14 +22,15 @@ const ImageFace: React.FC<{
 
 export const WelcomeCube: React.FC = () => {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(1);
-  const [decorProgress, setDecorProgress] = useState(0); // 0-1 for decorative content animation
+  const [phase, setPhase] = useState<'center' | 'sidebar'>('center');
+  const [sidebarVerticalProgress, setSidebarVerticalProgress] = useState(0);
+  const [cubeScale, setCubeScale] = useState(1); // 1 = full, 0.33 = mini
+  const [cubePosition, setCubePosition] = useState({ x: 0, y: 0 }); // Offset from center
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number | undefined>(undefined);
 
-  const cubeSize = 300;
-  const translateZ = cubeSize / 2;
+  const baseCubeSize = 300;
   const perspective = 1200;
 
   // Lerp function for smooth interpolation
@@ -59,143 +60,159 @@ export const WelcomeCube: React.FC = () => {
     };
   }, []);
 
-  // Scroll handler - updates target rotation
+  // Scroll handler
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
 
-      const scrollRange = windowHeight * 2; // Reduced to match 200vh spacer
-      const progress = Math.min(scrollY / scrollRange, 1);
+      // Phase 1: Center rotation (0 to 270deg)
+      const rotationEnd = windowHeight * 0.75;
 
-      // First 1.5x height: only rotate Y axis
-      // After 1.5x: start rotating X axis too
-      const yProgress = progress;
-      const xThreshold = 0.5; // 1.5x height = 50% of 3x range
-      const xProgress = progress > xThreshold
-        ? (progress - xThreshold) / (1 - xThreshold)
-        : 0;
+      if (scrollY < rotationEnd) {
+        // Center phase - rotate
+        setPhase('center');
+        setCubeScale(1);
+        setCubePosition({ x: 0, y: 0 });
+        setSidebarVerticalProgress(0);
 
-      targetRef.current = {
-        y: yProgress * 720,
-        x: xProgress * 45,
-      };
-
-      // Decorative content: appears 33%-60%, then fades out 60%-80%
-      const decorStart = 0.33;
-      const decorPeak = 0.6;
-      const decorFadeEnd = 0.8;
-
-      if (progress < decorStart) {
-        setDecorProgress(0);
-      } else if (progress < decorPeak) {
-        // Fade in
-        setDecorProgress((progress - decorStart) / (decorPeak - decorStart));
-      } else if (progress < decorFadeEnd) {
-        // Fade out
-        setDecorProgress(1 - (progress - decorPeak) / (decorFadeEnd - decorPeak));
+        const rotProgress = scrollY / rotationEnd;
+        targetRef.current = {
+          y: rotProgress * 270,
+          x: 0,
+        };
       } else {
-        setDecorProgress(0);
-      }
+        // Sidebar phase
+        setPhase('sidebar');
+        setCubeScale(0.30); // 10% smaller
 
-      // Fade cube from 30% to 45% - disappear much earlier
-      if (progress > 0.3) {
-        const fadeProgress = Math.min((progress - 0.3) / 0.15, 1);
-        setOpacity(1 - fadeProgress);
-      } else {
-        setOpacity(1);
+        // Calculate position to right side (moved left a bit)
+        const rightOffset = window.innerWidth / 2 - 80;
+
+        // Calculate vertical progress
+        const totalScrollableHeight = document.documentElement.scrollHeight - windowHeight;
+        const remainingScroll = totalScrollableHeight - rotationEnd;
+        const verticalProgress = Math.min((scrollY - rotationEnd) / remainingScroll, 1);
+        setSidebarVerticalProgress(verticalProgress);
+
+        // Vertical position: from top to 1/4 screen from bottom
+        const startY = -windowHeight * 0.35; // Start near top
+        const endY = windowHeight * 0.25; // End at 1/4 from bottom (center + 0.25 = 0.75 from top)
+        const topOffset = startY + verticalProgress * (endY - startY);
+
+        setCubePosition({ x: rightOffset, y: topOffset });
+
+        // Continuous rotation
+        const sidebarProgress = (scrollY - rotationEnd) / windowHeight;
+        targetRef.current = {
+          y: 270 + sidebarProgress * 180,
+          x: 15,
+        };
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const currentCubeSize = baseCubeSize * cubeScale;
+  const currentTranslateZ = currentCubeSize / 2;
+
   return (
     <>
-      {/* Sticky container - hidden when opacity is very low */}
-      <div
-        className="sticky top-0 h-screen flex items-center justify-center z-50 pointer-events-none"
-        style={{ visibility: opacity < 0.05 ? 'hidden' : 'visible' }}
-      >
+      {/* Sticky container for cube */}
+      <div className="sticky top-0 h-screen flex items-center justify-center z-50 pointer-events-none">
+
+        {/* Background & Text - only visible in center phase */}
+        <AnimatePresence>
+          {phase === 'center' && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-0"
+            >
+              {/* Background gradient */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-white/70" />
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,2,144,0.15) 0%, rgba(147,51,234,0.15) 25%, rgba(59,130,246,0.15) 50%, rgba(255,2,144,0.15) 75%, rgba(147,51,234,0.15) 100%)',
+                    backgroundSize: '400% 400%',
+                    animation: 'gradientShift 8s ease-in-out infinite',
+                  }}
+                />
+              </div>
+
+              {/* Floating Text */}
+              <div className="absolute inset-0 flex items-center justify-center z-[2] pointer-events-none">
+                <motion.h2
+                  className="text-[10vw] font-black text-brand-dark/5 absolute top-[20%]"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 0.5, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  WE ARE
+                </motion.h2>
+                <motion.h2
+                  className="text-[10vw] font-black text-[#FF0290]/5 absolute bottom-[20%]"
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 0.5, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  HUGS
+                </motion.h2>
+              </div>
+
+              {/* Scroll indicator - centered below cube */}
+              <motion.div
+                className="fixed bottom-10 left-0 right-0 flex flex-col items-center gap-2 z-20"
+                animate={{ y: [0, 10, 3] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <span className="text-sm text-gray-500 font-medium">Cuộn để khám phá</span>
+                <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center pt-2">
+                  <div className="w-1.5 h-3 bg-gray-400 rounded-full" />
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* 3D Cube - Single element that animates position/scale */}
         <motion.div
-          animate={{ opacity }}
-          transition={{ duration: 0.1 }}
-          className="flex flex-col items-center justify-center"
+          className="relative z-10"
+          animate={{
+            x: cubePosition.x,
+            y: cubePosition.y,
+            scale: cubeScale,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 120,
+            damping: 20,
+          }}
+          style={{ perspective: `${perspective}px` }}
         >
-          {/* Background gradient - semi-transparent to show content below */}
-          <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 bg-white/70" />
-            <div
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,2,144,0.15) 0%, rgba(147,51,234,0.15) 25%, rgba(59,130,246,0.15) 50%, rgba(255,2,144,0.15) 75%, rgba(147,51,234,0.15) 100%)',
-                backgroundSize: '400% 400%',
-                animation: 'gradientShift 8s ease-in-out infinite',
-              }}
-            />
-          </div>
-
-          {/* Floating Text - WE ARE HUGS */}
-          <div className="fixed inset-0 flex items-center justify-center z-[2] pointer-events-none">
-            <motion.h2
-              className="text-[10vw] font-black text-brand-dark/5 absolute top-[20%]"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: opacity * 0.5, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              WE ARE
-            </motion.h2>
-            <motion.h2
-              className="text-[10vw] font-black text-[#FF0290]/5 absolute bottom-[20%]"
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: opacity * 0.5, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              HUGS
-            </motion.h2>
-          </div>
-
-          {/* 3D Cube */}
           <div
-            className="relative z-10"
-            style={{ perspective: `${perspective}px` }}
+            className="relative transform-style-3d will-change-transform"
+            style={{
+              width: baseCubeSize,
+              height: baseCubeSize,
+              transform: `rotateY(${rotation.y}deg) rotateX(${rotation.x}deg)`,
+              transformOrigin: 'center center',
+            }}
           >
-            <div
-              className="relative transform-style-3d will-change-transform"
-              style={{
-                width: cubeSize,
-                height: cubeSize,
-                transform: `rotateY(${rotation.y}deg) rotateX(${rotation.x}deg)`,
-                transformOrigin: 'center center',
-              }}
-            >
-              {/* Front face - cube3 (start) */}
-              <ImageFace transform={`translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube3.png" alt="Cube Front" />
-              {/* Back face - cube4 */}
-              <ImageFace transform={`rotateY(180deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube4.png" alt="Cube Back" />
-              {/* Right face - cube2 */}
-              <ImageFace transform={`rotateY(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube1.png" alt="Cube Right" />
-              {/* Left face - cube1 */}
-              <ImageFace transform={`rotateY(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube2.png" alt="Cube Left" />
-              {/* Top face - cube2 */}
-              <ImageFace transform={`rotateX(90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube1.png" alt="Cube Top" />
-              {/* Bottom face - cube3 */}
-              <ImageFace transform={`rotateX(-90deg) translateZ(${translateZ}px)`} cubeSize={cubeSize} imageSrc="/cube3.png" alt="Cube Bottom" />
-            </div>
+            <ImageFace transform={`translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube3.png" alt="Cube Front" />
+            <ImageFace transform={`rotateY(180deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube4.png" alt="Cube Back" />
+            <ImageFace transform={`rotateY(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube1.png" alt="Cube Right" />
+            <ImageFace transform={`rotateY(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube2.png" alt="Cube Left" />
+            <ImageFace transform={`rotateX(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube2.png" alt="Cube Top" />
+            <ImageFace transform={`rotateX(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube3.png" alt="Cube Bottom" />
           </div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-10 flex flex-col items-center gap-2 z-20"
-            animate={{ y: [0, 10, 3], opacity }}
-            transition={{ y: { duration: 1.5, repeat: Infinity }, opacity: { duration: 0.1 } }}
-          >
-            <span className="text-sm text-gray-500 font-medium">Cuộn để khám phá</span>
-            <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center pt-2">
-              <div className="w-1.5 h-3 bg-gray-400 rounded-full" />
-            </div>
-          </motion.div>
         </motion.div>
       </div>
 

@@ -1,287 +1,171 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ArrowRight, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { FooterSection } from './FooterSection';
-import { supabase, Service, ServiceArticle } from '../lib/supabase';
+import { PageNavbar } from './PageNavbar';
+import { supabase, Service } from '../lib/supabase';
+
+// Service icons mapping
+const serviceIcons: Record<string, string> = {
+    'quan-tri-page-facebook': '📱',
+    'xay-kenh-tiktok': '🎵',
+    'media-production': '🎬',
+    'booking-kol-koc': '⭐',
+    'seo': '🔍',
+    'social-media': '💬',
+    'quang-cao-da-nen-tang': '📢',
+    'seeding': '🌱',
+    'thiet-ke-an-pham': '🎨',
+    'to-chuc-su-kien': '🎪',
+    'thiet-ke-website': '🌐',
+};
 
 export const ServicePage: React.FC = () => {
     const [services, setServices] = useState<Service[]>([]);
-    const [articles, setArticles] = useState<ServiceArticle[]>([]);
-    const [selectedService, setSelectedService] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
-    // Fetch services on mount
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchServices = async () => {
             try {
-                setLoading(true);
-
-                // Fetch all services
-                const { data: servicesData, error: servicesError } = await supabase
+                const { data, error } = await supabase
                     .from('services')
-                    .select('*, category:service_categories(*)')
+                    .select('*')
                     .order('display_order');
 
-                if (servicesError) throw servicesError;
-
-                setServices(servicesData || []);
-
-                // Set initial selected service from URL or first item
-                const params = new URLSearchParams(window.location.search);
-                const serviceSlug = params.get('s');
-                if (serviceSlug) {
-                    setSelectedService(serviceSlug);
-                } else if (servicesData && servicesData.length > 0) {
-                    setSelectedService(servicesData[0].slug);
-                }
-
+                if (error) throw error;
+                setServices(data || []);
             } catch (err) {
                 console.error('Error fetching services:', err);
-                setError('Không thể tải danh sách dịch vụ');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchData();
+        fetchServices();
     }, []);
 
-    // Fetch articles when selected service changes
-    useEffect(() => {
-        const fetchArticles = async () => {
-            if (!selectedService) return;
+    const handleServiceClick = (slug: string) => {
+        navigate(`/projects?service=${slug}`);
+    };
 
-            try {
-                setSelectedCategory(null); // Reset category filter when service changes
-                const { data, error } = await supabase
-                    .from('service_articles')
-                    .select('*, service:services!inner(*)')
-                    .eq('service.slug', selectedService)
-                    .eq('published', true)
-                    .order('display_order');
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-white">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-pink" />
+            </div>
+        );
+    }
 
-                if (error) throw error;
-                setArticles(data || []);
-            } catch (err) {
-                console.error('Error fetching articles:', err);
-            }
-        };
-
-        fetchArticles();
-    }, [selectedService]);
-
-    // Get selected service details
-    const activeService = services.find(s => s.slug === selectedService);
+    // Split services into rows: 3-3-3-2
+    const rows = [
+        services.slice(0, 3),
+        services.slice(3, 6),
+        services.slice(6, 9),
+        services.slice(9, 11),
+    ];
 
     return (
         <div className="min-h-screen bg-white text-gray-900">
-            {/* Navbar - Always visible on service page */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-                    <a href="/" className="flex items-center gap-2">
-                        <img src="/logo hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-                    </a>
+            {/* Navbar */}
+            <PageNavbar activePage="service" />
 
-                    <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-                        <a href="/" className="hover:text-brand-pink transition-colors">Trang chủ</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Giới thiệu</a>
-                        <a href="/service" className="text-brand-pink">Dịch vụ</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Dự án</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Tin tức</a>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs font-bold text-gray-500 cursor-pointer hover:border-brand-pink hover:text-brand-pink">
-                            VN
-                        </div>
-                        <button className="bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
-                            Đăng ký tư vấn
-                        </button>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Main Content */}
-            <div className="pt-20">
-                {/* Header */}
-                <div className="bg-gray-50 border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto px-6 py-12 text-center">
-                        <h1 className="text-4xl lg:text-5xl font-black mb-4 text-gray-900">
-                            Dịch Vụ Của HUGs Agency
+            {/* Hero Section */}
+            <section className="pt-32 pb-16 bg-gradient-to-b from-brand-pink/5 to-white">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <span className="inline-block px-4 py-2 bg-brand-pink/10 text-brand-pink rounded-full text-sm font-semibold mb-6">
+                            Dịch vụ của chúng tôi
+                        </span>
+                        <h1 className="text-4xl md:text-6xl font-black mb-6">
+                            Giải pháp truyền thông<br />
+                            <span className="text-brand-pink">toàn diện</span>
                         </h1>
-                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Giải pháp truyền thông toàn diện, từ chiến lược đến triển khai
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            HUGs cung cấp đầy đủ các dịch vụ truyền thông số, từ xây dựng nội dung đến quản lý kênh và quảng cáo đa nền tảng.
                         </p>
-                    </div>
-
-                    {/* Service Tabs - Horizontal */}
-                    <div className="overflow-x-auto pb-4">
-                        <div className="px-6 flex justify-center">
-                            <div className="flex gap-2 flex-wrap justify-center">
-                                {loading ? (
-                                    <div className="flex items-center gap-2 text-gray-500">
-                                        <Loader2 className="animate-spin" size={20} />
-                                        <span>Đang tải...</span>
-                                    </div>
-                                ) : (
-                                    services.map((service) => (
-                                        <button
-                                            key={service.id}
-                                            onClick={() => setSelectedService(service.slug)}
-                                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
-                                                ? 'bg-brand-pink text-white border-brand-pink'
-                                                : 'bg-white text-gray-600 border-brand-pink/50 hover:border-brand-pink hover:text-brand-pink'
-                                                }`}
-                                            style={{
-                                                background: selectedService !== service.slug
-                                                    ? 'linear-gradient(to top, transparent, transparent)'
-                                                    : undefined
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                if (selectedService !== service.slug) {
-                                                    (e.target as HTMLElement).style.background = 'linear-gradient(to top, rgba(255,2,144,0.25) 0%, transparent 70%)';
-                                                }
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                if (selectedService !== service.slug) {
-                                                    (e.target as HTMLElement).style.background = 'transparent';
-                                                }
-                                            }}
-                                        >
-                                            {service.name}
-                                        </button>
-                                    ))
-                                )}
-                            </div>
-                        </div>
-                    </div>
+                    </motion.div>
                 </div>
+            </section>
 
-                {/* Error Message */}
-                {error && (
-                    <div className="max-w-7xl mx-auto px-6 py-8">
-                        <div className="bg-red-50 text-red-600 p-4 rounded-xl text-center">
-                            {error}
-                        </div>
-                    </div>
-                )}
-
-                {/* 2-Column Layout: Categories Left, Articles Right */}
-                {!loading && !error && activeService && (
-                    <div className="max-w-7xl mx-auto px-6 py-12">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                            {/* Left Column - Category Filter */}
-                            <div className="lg:col-span-3">
-                                <div className="sticky top-28">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4">{activeService.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-6">{activeService.short_description}</p>
-
-                                    {/* Category Filter */}
-                                    <div className="space-y-2">
-                                        <button
-                                            onClick={() => setSelectedCategory(null)}
-                                            className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === null
-                                                ? 'bg-brand-pink text-white border-brand-pink'
-                                                : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
-                                                }`}
-                                        >
-                                            Tất cả
-                                            <ChevronRight size={16} className={`${selectedCategory === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
-                                        </button>
-                                        {Array.from(new Set(articles.map(a => a.category).filter(Boolean))).map((cat, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => setSelectedCategory(cat as string)}
-                                                className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === cat
-                                                    ? 'bg-brand-pink text-white border-brand-pink'
-                                                    : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
-                                                    }`}
-                                            >
-                                                {cat}
-                                                <ChevronRight size={16} className={`${selectedCategory === cat ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
-                                            </button>
-                                        ))}
+            {/* Services Grid */}
+            <section className="py-16">
+                <div className="max-w-7xl mx-auto px-6">
+                    {rows.map((row, rowIndex) => (
+                        <div
+                            key={rowIndex}
+                            className={`grid gap-6 mb-6 ${row.length === 2
+                                ? 'grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto'
+                                : 'grid-cols-1 md:grid-cols-3'
+                                }`}
+                        >
+                            {row.map((service, index) => (
+                                <motion.div
+                                    key={service.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    viewport={{ once: true }}
+                                    onClick={() => handleServiceClick(service.slug)}
+                                    className="group bg-white border border-gray-200 rounded-2xl p-8 hover:border-brand-pink hover:shadow-xl transition-all cursor-pointer"
+                                >
+                                    {/* Icon */}
+                                    <div className="text-4xl mb-4">
+                                        {serviceIcons[service.slug] || '📌'}
                                     </div>
-                                </div>
-                            </div>
 
-                            {/* Right Column - Articles */}
-                            <div className="lg:col-span-9">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeService.slug + (selectedCategory || 'all')}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h3 className="text-xl font-bold text-gray-900">
-                                                {selectedCategory ? selectedCategory : 'Dự án tiêu biểu'}
-                                            </h3>
-                                            <a href="#" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
-                                                Xem tất cả <ArrowRight size={14} />
-                                            </a>
-                                        </div>
+                                    {/* Title */}
+                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-pink transition-colors">
+                                        {service.name}
+                                    </h3>
 
-                                        {(() => {
-                                            const filteredArticles = selectedCategory
-                                                ? articles.filter(a => a.category === selectedCategory)
-                                                : articles;
+                                    {/* Description */}
+                                    <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                                        {service.short_description || 'Giải pháp chuyên nghiệp giúp thương hiệu phát triển bền vững trên nền tảng số.'}
+                                    </p>
 
-                                            return filteredArticles.length > 0 ? (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    {filteredArticles.map((article) => (
-                                                        <motion.a
-                                                            key={article.id}
-                                                            href={`/article?id=${article.id}`}
-                                                            className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all cursor-pointer group block"
-                                                            whileHover={{ y: -5 }}
-                                                        >
-                                                            <div className="aspect-[16/10] overflow-hidden bg-gray-100 relative">
-                                                                <img
-                                                                    src={article.thumbnail || `https://picsum.photos/600/400?random=${article.id}`}
-                                                                    alt={article.title}
-                                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                                    onError={(e) => {
-                                                                        (e.target as HTMLImageElement).src = `https://picsum.photos/600/400?random=${article.id}`;
-                                                                    }}
-                                                                />
-                                                                {/* Category Tag */}
-                                                                {article.category && (
-                                                                    <span className="absolute bottom-3 left-3 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded">
-                                                                        {article.category}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="p-5">
-                                                                <h4 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
-                                                                    {article.title}
-                                                                </h4>
-                                                                <p className="text-sm text-gray-500 line-clamp-2">
-                                                                    {article.content}
-                                                                </p>
-                                                            </div>
-                                                        </motion.a>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <div className="text-center py-12 bg-gray-50 rounded-2xl">
-                                                    <p className="text-gray-500">Chưa có bài viết nào{selectedCategory ? ` cho category "${selectedCategory}"` : ''}</p>
-                                                </div>
-                                            );
-                                        })()}
-                                    </motion.div>
-                                </AnimatePresence>
-                            </div>
+                                    {/* CTA */}
+                                    <div className="flex items-center gap-2 text-brand-pink font-semibold text-sm group-hover:gap-3 transition-all">
+                                        Xem dự án
+                                        <ArrowRight size={16} />
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
-                    </div>
-                )}
-            </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="py-20 bg-brand-pink">
+                <div className="max-w-4xl mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
+                            Bạn cần tư vấn dịch vụ phù hợp?
+                        </h2>
+                        <p className="text-white/80 mb-8 text-lg">
+                            Liên hệ với HUGs để được tư vấn chiến lược truyền thông phù hợp với doanh nghiệp của bạn
+                        </p>
+                        <a
+                            href="/#contact"
+                            className="inline-flex items-center gap-2 bg-white text-brand-pink px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors"
+                        >
+                            Liên hệ ngay
+                            <ArrowRight size={20} />
+                        </a>
+                    </motion.div>
+                </div>
+            </section>
 
             {/* Footer */}
             <FooterSection />

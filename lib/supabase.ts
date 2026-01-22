@@ -37,8 +37,10 @@ export interface ServiceArticle {
     title: string;
     content: string | null;
     thumbnail: string | null;
+    logo: string | null;
     category: string | null;
     published: boolean;
+    featured: boolean;
     display_order: number;
     created_at: string;
     service?: Service;
@@ -132,4 +134,67 @@ export const fetchNewsArticles = async (limit: number = 4): Promise<NewsArticle[
         return [];
     }
     return data || [];
+};
+
+// Storage helpers for thumbnail upload/delete
+const THUMBNAIL_BUCKET = 'hugs';
+
+export const uploadThumbnail = async (file: File, folder: 'news' | 'service' | 'logo'): Promise<{ url: string | null; error: any }> => {
+    try {
+        // Generate unique filename
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) {
+            console.error('Error uploading thumbnail:', error);
+            return { url: null, error };
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .getPublicUrl(data.path);
+
+        return { url: urlData.publicUrl, error: null };
+    } catch (err) {
+        console.error('Error uploading thumbnail:', err);
+        return { url: null, error: err };
+    }
+};
+
+export const deleteThumbnail = async (thumbnailUrl: string): Promise<boolean> => {
+    try {
+        if (!thumbnailUrl) return true;
+
+        // Extract file path from URL
+        // URL format: https://xxx.supabase.co/storage/v1/object/public/thumbnails/path/to/file.jpg
+        const urlParts = thumbnailUrl.split(`/storage/v1/object/public/${THUMBNAIL_BUCKET}/`);
+        if (urlParts.length < 2) {
+            console.warn('Invalid thumbnail URL format, skipping delete');
+            return true; // Not a Supabase storage URL, skip deletion
+        }
+
+        const filePath = urlParts[1];
+
+        const { error } = await supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .remove([filePath]);
+
+        if (error) {
+            console.error('Error deleting thumbnail:', error);
+            return false;
+        }
+
+        return true;
+    } catch (err) {
+        console.error('Error deleting thumbnail:', err);
+        return false;
+    }
 };

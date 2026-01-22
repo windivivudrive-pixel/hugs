@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { fetchNewsArticles, NewsArticle } from '../lib/supabase';
 
 export const NewsSection: React.FC = () => {
@@ -32,7 +33,7 @@ export const NewsSection: React.FC = () => {
                     <div className="mb-12">
                         <h2 className="text-2xl lg:text-3xl font-black text-gray-900 flex items-center gap-2">
                             <span className="text-brand-pink">*</span>
-                            <span>E-Magazine</span>
+                            <span>Tin tức</span>
                         </h2>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -73,7 +74,7 @@ export const NewsSection: React.FC = () => {
                 >
                     <h2 className="text-2xl lg:text-3xl font-black text-gray-900 flex items-center gap-2">
                         <span className="text-brand-pink">*</span>
-                        <span>E-Magazine</span>
+                        <span>Tin tức</span>
                     </h2>
                 </motion.div>
 
@@ -118,6 +119,25 @@ export const NewsSection: React.FC = () => {
                         </motion.article>
                     ))}
                 </div>
+
+                {/* View All Button */}
+                <motion.div
+                    className="mt-12 text-center"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    viewport={{ once: true }}
+                >
+                    <motion.a
+                        href="/news"
+                        className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        Xem tất cả tin tức
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </motion.a>
+                </motion.div>
             </div>
         </section>
     );

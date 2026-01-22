@@ -89,9 +89,9 @@ export const Navbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          <a href="#projects" className="hover:text-brand-pink transition-colors">Dự án</a>
-          <a href="#careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
-          <a href="#news" className="hover:text-brand-pink transition-colors">Tin tức</a>
+          <a href="/projects" className="hover:text-brand-pink transition-colors">Dự án</a>
+          <a href="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
+          <a href="/news" className="hover:text-brand-pink transition-colors">Tin tức</a>
         </div>
 
         <div className="flex items-center gap-3">

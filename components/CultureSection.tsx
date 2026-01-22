@@ -4,7 +4,7 @@ import { ArrowRight, MapPin, Users, Lightbulb } from 'lucide-react';
 
 export const CultureSection: React.FC = () => {
     return (
-        <section className="pt-24 lg:pt-32 pb-0 bg-white relative overflow-hidden">
+        <section className="pt-8 lg:pt-12 pb-0 bg-white relative overflow-hidden">
             {/* Subtle background decorations */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-gray-50/50 to-transparent pointer-events-none" />
 

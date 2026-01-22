@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, Newspaper, FileText, Plus, Edit, Trash2, Save, X, Eye, EyeOff, Users } from 'lucide-react';
-import { supabase, NewsArticle } from '../lib/supabase';
+import { LogOut, Newspaper, FileText, Plus, Edit, Trash2, Save, X, Eye, EyeOff, Users, Upload, Loader2, Star } from 'lucide-react';
+import { supabase, NewsArticle, uploadThumbnail, deleteThumbnail } from '../lib/supabase';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 type UserRole = 'admin' | 'agent' | 'member';
 
@@ -17,7 +19,9 @@ interface ServiceArticle {
     title: string;
     content: string | null;
     thumbnail: string | null;
+    logo: string | null;
     published: boolean;
+    featured: boolean;
     display_order: number;
     created_at: string;
     author_id?: string;
@@ -54,12 +58,17 @@ export const AdminPage: React.FC = () => {
         excerpt: '',
         content: '',
         thumbnail: '',
+        logo: '',
         category: 'NEWS',
         category_color: '#E91E63',
         published: false,
+        featured: false,
         display_order: 0,
         service_id: ''
     });
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     // Check login state on mount
     useEffect(() => {
@@ -163,15 +172,19 @@ export const AdminPage: React.FC = () => {
 
     const openAddModal = () => {
         setEditingArticle(null);
+        setThumbnailFile(null);
+        setLogoFile(null);
         setFormData({
             title: '',
             slug: '',
             excerpt: '',
             content: '',
             thumbnail: '',
+            logo: '',
             category: 'NEWS',
             category_color: '#E91E63',
             published: false,
+            featured: false,
             display_order: 0,
             service_id: services.length > 0 ? services[0].id : ''
         });
@@ -180,15 +193,19 @@ export const AdminPage: React.FC = () => {
 
     const openEditModal = (article: NewsArticle | ServiceArticle) => {
         setEditingArticle(article);
+        setThumbnailFile(null);
+        setLogoFile(null);
         setFormData({
             title: article.title,
             slug: (article as NewsArticle).slug || '',
             excerpt: (article as NewsArticle).excerpt || '',
             content: article.content || '',
             thumbnail: article.thumbnail || '',
+            logo: (article as ServiceArticle).logo || '',
             category: (article as NewsArticle).category || 'NEWS',
             category_color: (article as NewsArticle).category_color || '#E91E63',
             published: article.published,
+            featured: (article as ServiceArticle).featured || false,
             display_order: article.display_order,
             service_id: (article as ServiceArticle).service_id || ''
         });
@@ -197,13 +214,44 @@ export const AdminPage: React.FC = () => {
 
     const handleSave = async () => {
         try {
+            setIsUploading(true);
+            let uploadedThumbnailUrl = formData.thumbnail;
+            let uploadedLogoUrl = formData.logo;
+
+            // Upload thumbnail if file selected
+            if (thumbnailFile) {
+                const folder = activeTab === 'news' ? 'news' : 'service';
+                const { url, error } = await uploadThumbnail(thumbnailFile, folder);
+                if (url) {
+                    uploadedThumbnailUrl = url;
+                } else {
+                    console.error('Upload error details:', error);
+                    alert(`Lỗi khi upload ảnh thumbnail: ${error?.message || 'Unknown error'}`);
+                    setIsUploading(false);
+                    return;
+                }
+            }
+
+            // Upload logo if file selected (service articles only)
+            if (logoFile && activeTab === 'service') {
+                const { url, error } = await uploadThumbnail(logoFile, 'logo');
+                if (url) {
+                    uploadedLogoUrl = url;
+                } else {
+                    console.error('Logo upload error details:', error);
+                    alert(`Lỗi khi upload logo: ${error?.message || 'Unknown error'}`);
+                    setIsUploading(false);
+                    return;
+                }
+            }
+
             if (activeTab === 'news') {
                 const articleData = {
                     title: formData.title,
                     slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-'),
                     excerpt: formData.excerpt,
                     content: formData.content,
-                    thumbnail: formData.thumbnail,
+                    thumbnail: uploadedThumbnailUrl,
                     category: formData.category,
                     category_color: formData.category_color,
                     published: formData.published,
@@ -224,8 +272,11 @@ export const AdminPage: React.FC = () => {
                 const articleData = {
                     title: formData.title,
                     content: formData.content,
-                    thumbnail: formData.thumbnail,
+                    thumbnail: uploadedThumbnailUrl,
+                    logo: uploadedLogoUrl,
+                    category: formData.category,
                     published: formData.published,
+                    featured: formData.featured,
                     display_order: formData.display_order,
                     service_id: formData.service_id
                 };
@@ -246,6 +297,8 @@ export const AdminPage: React.FC = () => {
             fetchData();
         } catch (err) {
             console.error('Error saving:', err);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -254,6 +307,18 @@ export const AdminPage: React.FC = () => {
 
         try {
             const table = activeTab === 'news' ? 'news_articles' : 'service_articles';
+
+            // Get article to find thumbnail URL
+            const { data: article } = await supabase
+                .from(table)
+                .select('thumbnail')
+                .eq('id', id)
+                .single();
+
+            if (article?.thumbnail) {
+                await deleteThumbnail(article.thumbnail);
+            }
+
             await supabase.from(table).delete().eq('id', id);
             fetchData();
         } catch (err) {
@@ -437,9 +502,16 @@ export const AdminPage: React.FC = () => {
                                                         />
                                                     )}
                                                     <div>
-                                                        <p className="font-medium text-gray-900 line-clamp-1">
-                                                            {article.title}
-                                                        </p>
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="font-medium text-gray-900 line-clamp-1">
+                                                                {article.title}
+                                                            </p>
+                                                            {activeTab === 'service' && (article as ServiceArticle).featured && (
+                                                                <span title="Hiển thị trên trang chủ" className="text-yellow-400">
+                                                                    <Star size={16} fill="currentColor" />
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -696,27 +768,153 @@ export const AdminPage: React.FC = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Thumbnail URL
+                                    Thumbnail *
                                 </label>
-                                <input
-                                    type="text"
-                                    value={formData.thumbnail}
-                                    onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
-                                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
-                                    placeholder="https://..."
-                                />
+                                <div className="space-y-3">
+                                    {/* Preview */}
+                                    {(thumbnailFile || formData.thumbnail) && (
+                                        <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-gray-100 border">
+                                            <img
+                                                src={thumbnailFile ? URL.createObjectURL(thumbnailFile) : formData.thumbnail}
+                                                alt="Preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <button
+                                                onClick={() => {
+                                                    setThumbnailFile(null);
+                                                    setFormData({ ...formData, thumbnail: '' });
+                                                }}
+                                                className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-red-100 text-red-500"
+                                            >
+                                                <X size={16} />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* File Input */}
+                                    <div className="flex items-center gap-3">
+                                        <label className="flex-1 cursor-pointer">
+                                            <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-pink hover:bg-brand-pink/5 transition-colors group">
+                                                <div className="flex items-center gap-2 text-gray-500 group-hover:text-brand-pink">
+                                                    <Upload size={20} />
+                                                    <span className="text-sm font-medium">
+                                                        {thumbnailFile ? thumbnailFile.name : 'Upload ảnh từ máy'}
+                                                    </span>
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="hidden"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) setThumbnailFile(file);
+                                                    }}
+                                                />
+                                            </div>
+                                        </label>
+                                        <span className="text-sm text-gray-400">hoặc</span>
+                                        <input
+                                            type="text"
+                                            value={formData.thumbnail}
+                                            onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
+                                            className="w-1/3 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none text-sm"
+                                            placeholder="Paste URL..."
+                                        />
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* Logo Upload - Service Articles Only */}
+                            {activeTab === 'service' && (
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Logo (hiển thị trên card dự án)
+                                    </label>
+                                    <div className="space-y-3">
+                                        {/* Logo Preview */}
+                                        {(logoFile || formData.logo) && (
+                                            <div className="relative w-32 h-32 rounded-lg overflow-hidden bg-gray-100 border">
+                                                <img
+                                                    src={logoFile ? URL.createObjectURL(logoFile) : formData.logo}
+                                                    alt="Logo Preview"
+                                                    className="w-full h-full object-contain p-2"
+                                                />
+                                                <button
+                                                    onClick={() => {
+                                                        setLogoFile(null);
+                                                        setFormData({ ...formData, logo: '' });
+                                                    }}
+                                                    className="absolute top-1 right-1 p-1 bg-white/80 rounded-full hover:bg-red-100 text-red-500"
+                                                >
+                                                    <X size={14} />
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Logo File Input */}
+                                        <div className="flex items-center gap-3">
+                                            <label className="flex-1 cursor-pointer">
+                                                <div className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-brand-pink hover:bg-brand-pink/5 transition-colors group">
+                                                    <div className="flex items-center gap-2 text-gray-500 group-hover:text-brand-pink">
+                                                        <Upload size={20} />
+                                                        <span className="text-sm font-medium">
+                                                            {logoFile ? logoFile.name : 'Upload logo từ máy'}
+                                                        </span>
+                                                    </div>
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="hidden"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) setLogoFile(file);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </label>
+                                            <span className="text-sm text-gray-400">hoặc</span>
+                                            <input
+                                                type="text"
+                                                value={formData.logo}
+                                                onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
+                                                className="w-1/3 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none text-sm"
+                                                placeholder="Paste URL..."
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Nội dung (Markdown)
+                                    Nội dung
                                 </label>
-                                <textarea
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none h-48 font-mono text-sm"
-                                    placeholder="## Heading&#10;&#10;Paragraph content...&#10;&#10;- List item 1&#10;- List item 2"
-                                />
+                                <div className="border rounded-lg overflow-hidden">
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={formData.content}
+                                        onChange={(value) => setFormData({ ...formData, content: value })}
+                                        modules={{
+                                            toolbar: [
+                                                [{ 'header': [1, 2, 3, false] }],
+                                                ['bold', 'italic', 'underline', 'strike'],
+                                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                                [{ 'align': [] }],
+                                                ['link', 'image'],
+                                                ['clean']
+                                            ],
+                                        }}
+                                        formats={[
+                                            'header',
+                                            'bold', 'italic', 'underline', 'strike',
+                                            'list', 'bullet',
+                                            'align',
+                                            'link', 'image'
+                                        ]}
+                                        placeholder="Nhập nội dung bài viết..."
+                                        style={{ minHeight: '250px' }}
+                                    />
+                                </div>
                             </div>
 
                             <div className="flex items-center gap-2 pt-4">
@@ -731,6 +929,39 @@ export const AdminPage: React.FC = () => {
                                     Published
                                 </label>
                             </div>
+
+                            {/* Featured checkbox - Service Articles Only */}
+                            {activeTab === 'service' && (
+                                <div className="flex items-center gap-2 pt-2">
+                                    <input
+                                        type="checkbox"
+                                        id="featured"
+                                        checked={formData.featured}
+                                        disabled={(() => {
+                                            const otherFeatured = serviceArticles.filter(a =>
+                                                (a as ServiceArticle).featured &&
+                                                a.id !== editingArticle?.id
+                                            ).length;
+                                            return !formData.featured && otherFeatured >= 6;
+                                        })()}
+                                        onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                                        className="w-5 h-5 accent-brand-pink disabled:opacity-50 disabled:cursor-not-allowed"
+                                    />
+                                    <label htmlFor="featured" className="text-sm font-medium text-gray-700">
+                                        ⭐ Hiển thị ở trang chủ (tối đa 6 bài)
+                                    </label>
+                                    {(() => {
+                                        const otherFeatured = serviceArticles.filter(a =>
+                                            (a as ServiceArticle).featured &&
+                                            a.id !== editingArticle?.id
+                                        ).length;
+                                        if (!formData.featured && otherFeatured >= 6) {
+                                            return <span className="text-xs text-red-500 font-medium ml-2">(Đã đủ 6 bài)</span>;
+                                        }
+                                        return null;
+                                    })()}
+                                </div>
+                            )}
                         </div>
 
                         <div className="p-6 border-t flex justify-end gap-3">
@@ -742,10 +973,11 @@ export const AdminPage: React.FC = () => {
                             </button>
                             <button
                                 onClick={handleSave}
-                                className="flex items-center gap-2 px-6 py-2 bg-brand-pink text-white rounded-lg hover:bg-pink-600"
+                                disabled={isUploading || loading}
+                                className="flex items-center gap-2 px-6 py-2 bg-brand-pink text-white rounded-lg hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                <Save size={18} />
-                                Lưu
+                                {isUploading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+                                {isUploading ? 'Đang tải...' : 'Lưu'}
                             </button>
                         </div>
                     </motion.div >

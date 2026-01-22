@@ -3,6 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, Service, ServiceArticle } from '../lib/supabase';
 
+// Helper function to strip HTML tags from rich text content
+const stripHtmlTags = (html: string): string => {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    return temp.textContent || temp.innerText || '';
+};
+
 export const ServicesSection: React.FC = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [hoveredServiceSlug, setHoveredServiceSlug] = useState<string | null>(null);
@@ -97,7 +104,6 @@ export const ServicesSection: React.FC = () => {
                                         key={service.id}
                                         className="group cursor-pointer"
                                         onMouseEnter={() => setHoveredServiceSlug(service.slug)}
-                                        onMouseLeave={() => setHoveredServiceSlug(null)}
                                     >
                                         <motion.h3
                                             className={`text-3xl md:text-4xl lg:text-5xl font-bold transition-colors duration-300 py-2 ${displayedServiceSlug === service.slug
@@ -154,7 +160,7 @@ export const ServicesSection: React.FC = () => {
                                                             {currentArticle?.title || activeService.name}
                                                         </h4>
                                                         <p className="text-white/90 text-sm mt-2 line-clamp-2 drop-shadow">
-                                                            {currentArticle?.content?.slice(0, 100) || activeService.short_description || 'Click để xem thêm thông tin về dịch vụ này'}
+                                                            {currentArticle?.content ? stripHtmlTags(currentArticle.content).slice(0, 100) : activeService.short_description || 'Click để xem thêm thông tin về dịch vụ này'}
                                                         </p>
                                                     </div>
                                                 </div>

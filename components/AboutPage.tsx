@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, Target, Heart, Zap } from 'lucide-react';
 import { FooterSection } from './FooterSection';
+import { PageNavbar } from './PageNavbar';
 
 interface SectionProps {
     title: string;
@@ -60,31 +61,7 @@ export const AboutPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-white text-gray-900">
             {/* Navbar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-                    <a href="/" className="flex items-center gap-2">
-                        <img src="/logo hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-                    </a>
-
-                    <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-                        <a href="/" className="hover:text-brand-pink transition-colors">Trang chủ</a>
-                        <a href="/about" className="text-brand-pink">Giới thiệu</a>
-                        <a href="/service" className="hover:text-brand-pink transition-colors">Dịch vụ</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Dự án</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
-                        <a href="#" className="hover:text-brand-pink transition-colors">Tin tức</a>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs font-bold text-gray-500 cursor-pointer hover:border-brand-pink hover:text-brand-pink">
-                            VN
-                        </div>
-                        <button className="bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
-                            Đăng ký tư vấn
-                        </button>
-                    </div>
-                </div>
-            </nav>
+            <PageNavbar activePage="about" />
 
             {/* Hero Section */}
             <section className="pt-32 pb-16 bg-gradient-to-b from-gray-50 to-white">

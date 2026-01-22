@@ -57,6 +57,8 @@
       color: #374151;
       line-height: 1.75;
       margin-bottom: 1.25rem;
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
 
     .article-content ul {
@@ -87,6 +89,71 @@
     .article-content strong {
       color: #1a1a1a;
       font-weight: 600;
+    }
+
+    /* Quill Editor Styles */
+    .ql-container {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+    }
+
+    .ql-editor {
+      min-height: 200px;
+      padding: 1rem;
+    }
+
+    .ql-editor.ql-blank::before {
+      color: #9ca3af;
+      font-style: normal;
+    }
+
+    .ql-toolbar.ql-snow {
+      border-color: #e5e7eb;
+      border-radius: 0.5rem 0.5rem 0 0;
+      background: #f9fafb;
+    }
+
+    .ql-container.ql-snow {
+      border-color: #e5e7eb;
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+
+    .ql-snow .ql-picker.ql-header .ql-picker-label::before,
+    .ql-snow .ql-picker.ql-header .ql-picker-item::before {
+      content: 'Paragraph';
+    }
+
+    .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="1"]::before,
+    .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+      content: 'Heading 1';
+    }
+
+    .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="2"]::before,
+    .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+      content: 'Heading 2';
+    }
+
+    .ql-snow .ql-picker.ql-header .ql-picker-label[data-value="3"]::before,
+    .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+      content: 'Heading 3';
+    }
+
+    .ql-snow .ql-stroke {
+      stroke: #4b5563;
+    }
+
+    .ql-snow .ql-fill {
+      fill: #4b5563;
+    }
+
+    .ql-snow button:hover .ql-stroke,
+    .ql-snow button.ql-active .ql-stroke {
+      stroke: #eb2166;
+    }
+
+    .ql-snow button:hover .ql-fill,
+    .ql-snow button.ql-active .ql-fill {
+      fill: #eb2166;
     }
   </style>
   <script type="importmap">

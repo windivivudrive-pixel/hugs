@@ -73,7 +73,7 @@ export const PartnersSection: React.FC = () => {
                     <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
                     {/* First row - scrolling left */}
-                    <div className="flex overflow-hidden mb-6">
+                    <div className="flex overflow-hidden mb-6 pb-4">
                         <motion.div
                             className="flex gap-8 items-center"
                             animate={{ x: ['0%', '-50%'] }}
@@ -102,7 +102,7 @@ export const PartnersSection: React.FC = () => {
                     </div>
 
                     {/* Second row - scrolling right */}
-                    <div className="flex overflow-hidden">
+                    <div className="flex overflow-hidden pb-4">
                         <motion.div
                             className="flex gap-8 items-center"
                             animate={{ x: ['-50%', '0%'] }}

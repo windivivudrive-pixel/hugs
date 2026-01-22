@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Calendar, User, Building2, Share2, Facebook, Linkedin, Link2 } from 'lucide-react';
+import { Calendar, User, Building2, Share2, Facebook, Linkedin, Link2 } from 'lucide-react';
 import { FooterSection } from './FooterSection';
 import { supabase, ServiceArticle, NewsArticle } from '../lib/supabase';
 import { marked } from 'marked';
@@ -129,13 +129,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
             <div className="pt-20 bg-gradient-to-b from-pink-50 to-white">
                 <div className="max-w-4xl mx-auto px-6 py-16">
                     {/* Back button */}
-                    <a
-                        href="/service"
-                        className="inline-flex items-center gap-2 text-gray-500 hover:text-brand-pink transition-colors mb-8"
-                    >
-                        <ArrowLeft size={18} />
-                        <span className="text-sm font-medium">Quay lại</span>
-                    </a>
+
 
                     {/* Category Tag */}
                     <motion.div
@@ -230,17 +224,25 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
                 >
-                    {/* Render markdown content using marked */}
+                    {/* Render content - supports both HTML (from Quill) and markdown */}
                     <div
                         className="article-content text-gray-700"
                         dangerouslySetInnerHTML={{
-                            __html: marked.parse(displayArticle.content || (displayArticle as any).excerpt || sampleContent) as string
+                            __html: (() => {
+                                const content = displayArticle.content || (displayArticle as any).excerpt || sampleContent;
+                                // If content already starts with HTML tags, render directly
+                                if (content.trim().startsWith('<')) {
+                                    return content;
+                                }
+                                // Otherwise, parse as markdown
+                                return marked.parse(content) as string;
+                            })()
                         }}
                     />
                 </motion.article>
 
                 {/* Inline Image */}
-                <motion.div
+                {/* <motion.div
                     className="my-12 rounded-2xl overflow-hidden shadow-lg"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -259,10 +261,10 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                             Dịch vụ thiết kế gian hàng trưng bày sản phẩm của HUGs Agency
                         </p>
                     </div>
-                </motion.div>
+                </motion.div> */}
 
                 {/* CTA Section */}
-                <motion.div
+                {/* <motion.div
                     className="bg-gradient-to-r from-brand-pink to-pink-400 rounded-2xl p-8 text-white text-center my-12"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -273,11 +275,11 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                     <button className="bg-white text-brand-pink px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors">
                         Đăng ký tư vấn miễn phí
                     </button>
-                </motion.div>
+                </motion.div> */}
             </div>
 
             {/* Related Articles */}
-            <div className="bg-gray-50 py-16">
+            {/* <div className="bg-gray-50 py-16">
                 <div className="max-w-7xl mx-auto px-6">
                     <h2 className="text-2xl font-bold text-gray-900 mb-8">Bài viết liên quan</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -304,7 +306,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                         ))}
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Footer */}
             <FooterSection />
