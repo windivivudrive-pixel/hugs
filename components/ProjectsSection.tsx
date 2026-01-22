@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, ServiceArticle } from '../lib/supabase';
+import { Link } from 'react-router-dom';
 
 export const ProjectsSection: React.FC = () => {
     const [projects, setProjects] = useState<ServiceArticle[]>([]);
@@ -53,13 +54,14 @@ export const ProjectsSection: React.FC = () => {
                             Các dự án <span className="text-brand-pink">nổi bật</span>
                         </h2>
                     </div>
-                    <motion.a
-                        href="/projects"
-                        className="mt-4 md:mt-0 text-brand-pink font-semibold flex items-center gap-2 hover:gap-3 transition-all"
-                        whileHover={{ x: 5 }}
-                    >
-                        Xem tất cả <ArrowRight size={18} />
-                    </motion.a>
+                    <Link to="/projects">
+                        <motion.div
+                            className="mt-4 md:mt-0 text-brand-pink font-semibold flex items-center gap-2 hover:gap-3 transition-all cursor-pointer"
+                            whileHover={{ x: 5 }}
+                        >
+                            Xem tất cả <ArrowRight size={18} />
+                        </motion.div>
+                    </Link>
                 </motion.div>
 
                 {/* Loading state */}
@@ -84,67 +86,71 @@ export const ProjectsSection: React.FC = () => {
                         }}
                     >
                         {projects.map((project) => (
-                            <motion.a
+                            <Link
                                 key={project.id}
-                                href={`/article?id=${project.id}`}
-                                className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer block"
-                                variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0 }
-                                }}
+                                to={`/article?id=${project.id}`}
+                                className="block"
                             >
-                                {/* Background Image */}
-                                <motion.img
-                                    src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover"
-                                    whileHover={{ scale: 1.05 }}
-                                    transition={{ duration: 0.4 }}
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = `https://picsum.photos/600/600?random=${project.id}`;
+                                <motion.div
+                                    className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer"
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 }
                                     }}
-                                />
-
-                                {/* Default overlay - subtle gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-0" />
-
-                                {/* Hover overlay - pink */}
-                                <div className="absolute inset-0 bg-brand-pink/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                {/* Logo - centered */}
-                                <div className="absolute inset-0 flex items-center justify-center z-10">
-                                    <motion.div
-                                        className="w-28 h-28 bg-white rounded-2xl shadow-lg flex items-center justify-center p-4"
+                                >
+                                    {/* Background Image */}
+                                    <motion.img
+                                        src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
+                                        alt={project.title}
+                                        className="w-full h-full object-cover"
                                         whileHover={{ scale: 1.05 }}
-                                    >
-                                        <img
-                                            src={project.logo || '/logo-hugs-only.png'}
-                                            alt={project.title}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </motion.div>
-                                </div>
+                                        transition={{ duration: 0.4 }}
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = `https://picsum.photos/600/600?random=${project.id}`;
+                                        }}
+                                    />
 
-                                {/* Category Tag - always visible */}
-                                {project.category && (
-                                    <div className="absolute top-4 left-4 z-10">
-                                        <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-full">
-                                            {project.category}
+                                    {/* Default overlay - subtle gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-0" />
+
+                                    {/* Hover overlay - pink */}
+                                    <div className="absolute inset-0 bg-brand-pink/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                                    {/* Logo - centered */}
+                                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                                        <motion.div
+                                            className="w-28 h-28 bg-white rounded-2xl shadow-lg flex items-center justify-center p-4"
+                                            whileHover={{ scale: 1.05 }}
+                                        >
+                                            <img
+                                                src={project.logo || '/logo-hugs-only.png'}
+                                                alt={project.title}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Category Tag - always visible */}
+                                    {project.category && (
+                                        <div className="absolute top-4 left-4 z-10">
+                                            <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-full">
+                                                {project.category}
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {/* Bottom content - visible on hover */}
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-center flex flex-col items-center">
+                                        <h3 className="text-white font-bold text-lg leading-tight mb-3 line-clamp-2">
+                                            {project.title}
+                                        </h3>
+                                        <span className="px-5 py-2 bg-white text-brand-pink font-bold text-sm rounded-full flex items-center gap-2 hover:bg-gray-100 transition-colors">
+                                            Xem chi tiết
+                                            <ArrowRight size={16} />
                                         </span>
                                     </div>
-                                )}
-
-                                {/* Bottom content - visible on hover */}
-                                <div className="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-center flex flex-col items-center">
-                                    <h3 className="text-white font-bold text-lg leading-tight mb-3 line-clamp-2">
-                                        {project.title}
-                                    </h3>
-                                    <span className="px-5 py-2 bg-white text-brand-pink font-bold text-sm rounded-full flex items-center gap-2 hover:bg-gray-100 transition-colors">
-                                        Xem chi tiết
-                                        <ArrowRight size={16} />
-                                    </span>
-                                </div>
-                            </motion.a>
+                                </motion.div>
+                            </Link>
                         ))}
                     </motion.div>
                 )}

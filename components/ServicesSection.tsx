@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, Service, ServiceArticle } from '../lib/supabase';
+import { Link } from 'react-router-dom';
 
 // Helper function to strip HTML tags from rich text content
 const stripHtmlTags = (html: string): string => {
@@ -132,8 +133,8 @@ export const ServicesSection: React.FC = () => {
                                             transition={{ duration: 0.3, ease: 'easeOut' }}
                                         >
                                             {/* Clickable container */}
-                                            <a
-                                                href={currentArticle ? `/article?id=${currentArticle.id}` : `/service?s=${activeService.slug}`}
+                                            <Link
+                                                to={currentArticle ? `/article?id=${currentArticle.id}` : `/service?s=${activeService.slug}`}
                                                 className="relative w-full h-full bg-gray-900 rounded-2xl overflow-hidden shadow-2xl block group"
                                             >
                                                 {/* Browser-like frame */}
@@ -164,7 +165,7 @@ export const ServicesSection: React.FC = () => {
                                                         </p>
                                                     </div>
                                                 </div>
-                                            </a>
+                                            </Link>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -179,15 +180,16 @@ export const ServicesSection: React.FC = () => {
                             transition={{ duration: 0.6, delay: 0.4 }}
                             viewport={{ once: true }}
                         >
-                            <motion.a
-                                href="/service"
-                                className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                Xem tất cả dịch vụ
-                                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                            </motion.a>
+                            <Link to="/service">
+                                <motion.div
+                                    className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    Xem tất cả dịch vụ
+                                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                                </motion.div>
+                            </Link>
                         </motion.div>
                     </>
                 )}

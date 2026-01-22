@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { supabase, Service } from '../lib/supabase';
@@ -156,13 +156,13 @@ export const ServicePage: React.FC = () => {
                         <p className="text-white/80 mb-8 text-lg">
                             Liên hệ với HUGs để được tư vấn chiến lược truyền thông phù hợp với doanh nghiệp của bạn
                         </p>
-                        <a
-                            href="/#contact"
+                        <Link
+                            to="/#contact"
                             className="inline-flex items-center gap-2 bg-white text-brand-pink px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors"
                         >
                             Liên hệ ngay
                             <ArrowRight size={20} />
-                        </a>
+                        </Link>
                     </motion.div>
                 </div>
             </section>

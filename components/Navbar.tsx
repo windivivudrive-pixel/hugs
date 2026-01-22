@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // All 11 services for navbar dropdown
 const allServices = [
@@ -41,14 +42,14 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 w-full flex justify-between items-center">
         <div className="flex items-center gap-2">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-          </a>
+          </Link>
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-          <a href="/" className="hover:text-brand-pink transition-colors">Trang chủ</a>
-          <a href="/about" className="hover:text-brand-pink transition-colors">Giới thiệu</a>
+          <Link to="/" className="hover:text-brand-pink transition-colors">Trang chủ</Link>
+          <Link to="/about" className="hover:text-brand-pink transition-colors">Giới thiệu</Link>
 
           {/* Services Dropdown */}
           <div
@@ -56,13 +57,13 @@ export const Navbar: React.FC = () => {
             onMouseEnter={() => setShowServicesDropdown(true)}
             onMouseLeave={() => setShowServicesDropdown(false)}
           >
-            <a
-              href="/service"
+            <Link
+              to="/service"
               className="hover:text-brand-pink transition-colors flex items-center gap-1"
             >
               Dịch vụ
               <ChevronDown size={14} className={`transition-transform ${showServicesDropdown ? 'rotate-180' : ''}`} />
-            </a>
+            </Link>
 
             <AnimatePresence>
               {showServicesDropdown && (
@@ -75,13 +76,13 @@ export const Navbar: React.FC = () => {
                 >
                   <div className="py-2">
                     {allServices.map((service) => (
-                      <a
+                      <Link
                         key={service.id}
-                        href={`/service?s=${service.slug}`}
+                        to={`/service?s=${service.slug}`}
                         className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-brand-pink/10 hover:text-brand-pink transition-colors normal-case"
                       >
                         {service.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </motion.div>
@@ -89,9 +90,9 @@ export const Navbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          <a href="/projects" className="hover:text-brand-pink transition-colors">Dự án</a>
-          <a href="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</a>
-          <a href="/news" className="hover:text-brand-pink transition-colors">Tin tức</a>
+          <Link to="/projects" className="hover:text-brand-pink transition-colors">Dự án</Link>
+          <Link to="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</Link>
+          <Link to="/news" className="hover:text-brand-pink transition-colors">Tin tức</Link>
         </div>
 
         <div className="flex items-center gap-3">
