@@ -146,7 +146,7 @@ export const CultureSection: React.FC = () => {
                         viewport={{ once: true }}
                     >
                         <img
-                            src="/logo partner/team.png"
+                            src="/logo-partner/team.png"
                             alt="HUGs Team"
                             className="w-full h-auto object-cover"
                         />

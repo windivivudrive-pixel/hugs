@@ -336,7 +336,7 @@ export const AdminPage: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                 >
                     <div className="text-center mb-8">
-                        <img src="/logo hugs.png" alt="HUGs" className="h-16 mx-auto mb-4" />
+                        <img src="/logo-hugs.png" alt="HUGs" className="h-16 mx-auto mb-4" />
                         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
                         <p className="text-gray-500 text-sm mt-1">Đăng nhập để quản lý nội dung</p>
                     </div>
@@ -400,7 +400,7 @@ export const AdminPage: React.FC = () => {
             <header className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <img src="/logo hugs.png" alt="HUGs" className="h-10" />
+                        <img src="/logo-hugs.png" alt="HUGs" className="h-10" />
                         <h1 className="text-xl font-bold text-gray-900">Admin Dashboard</h1>
                         <span className="px-3 py-1 rounded-full text-xs font-semibold bg-brand-pink/10 text-brand-pink uppercase">
                             {currentUser?.role}

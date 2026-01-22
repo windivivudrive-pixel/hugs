@@ -42,7 +42,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-2">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <img src="/logo hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
+            <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
           </a>
         </div>
 

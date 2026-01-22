@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 // Partner logos from logo partner directory (partner0 to partner25)
 const partnerLogos = Array.from({ length: 26 }, (_, i) => ({
     id: i,
-    logo: `/logo partner/partner${i}.png`,
+    logo: `/logo-partner/partner${i}.png`,
 }));
 
 // CountUp component for animated number

@@ -102,7 +102,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
             <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
                 <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
                     <a href="/" className="flex items-center gap-2">
-                        <img src="/logo hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
+                        <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
                     </a>
 
                     <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
