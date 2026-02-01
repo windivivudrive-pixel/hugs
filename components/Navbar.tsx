@@ -3,24 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// All 11 services for navbar dropdown
-const allServices = [
-  { id: 1, name: 'Quản Trị Page Facebook', slug: 'quan-tri-page-facebook' },
-  { id: 2, name: 'Xây Kênh TikTok', slug: 'xay-kenh-tiktok' },
-  { id: 3, name: 'Media Production', slug: 'media-production' },
-  { id: 4, name: 'Booking KOL/KOC', slug: 'booking-kol-koc' },
-  { id: 5, name: 'SEO', slug: 'seo' },
-  { id: 6, name: 'Social Media', slug: 'social-media' },
-  { id: 7, name: 'Quảng cáo đa nền tảng', slug: 'quang-cao-da-nen-tang' },
-  { id: 8, name: 'Seeding', slug: 'seeding' },
-  { id: 9, name: 'Thiết kế ấn phẩm truyền thông', slug: 'thiet-ke-an-pham' },
-  { id: 10, name: 'Tổ chức sự kiện & activation', slug: 'to-chuc-su-kien' },
-  { id: 11, name: 'Thiết kế website', slug: 'thiet-ke-website' },
-];
+import { supabase, Service } from '../lib/supabase';
 
 export const Navbar: React.FC = () => {
   const [showNavbar, setShowNavbar] = useState(false);
   const [showServicesDropdown, setShowServicesDropdown] = useState(false);
+  const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +18,25 @@ export const Navbar: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Fetch services for dropdown
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('*')
+          .order('display_order');
+
+        if (error) throw error;
+        setServices(data || []);
+      } catch (err) {
+        console.error('Error fetching services:', err);
+      }
+    };
+
+    fetchServices();
   }, []);
 
   return (
@@ -75,10 +82,10 @@ export const Navbar: React.FC = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="py-2">
-                    {allServices.map((service) => (
+                    {services.map((service) => (
                       <Link
                         key={service.id}
-                        to={`/service?s=${service.slug}`}
+                        to={`/projects?service=${service.slug}`}
                         className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-brand-pink/10 hover:text-brand-pink transition-colors normal-case"
                       >
                         {service.name}

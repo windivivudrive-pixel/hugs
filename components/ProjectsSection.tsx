@@ -4,9 +4,25 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, ServiceArticle } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 
+// Fixed masonry layout for exactly 8 items to match the "bento" style
+// Columns: 4
+// Row Height: 240px (Tall enough for text)
+// Pattern leverages CSS Grid auto-placement to fill holes
+const masonryConfig = [
+    { rowSpan: 1 }, // Item 1: Big (Fills Col 1)
+    { rowSpan: 2 }, // Item 2: Big (Fills Col 2)
+    { rowSpan: 1 }, // Item 3: Small (Fills Col 3 Top)
+    { rowSpan: 2 }, // Item 4: Big (Fills Col 4)
+    { rowSpan: 2 }, // Item 5: Big (Fills Col 3 Bottom - finding the gap)
+    { rowSpan: 2 }, // Item 6: Small (Fills Col 1 Bottom)
+    { rowSpan: 1 }, // Item 7: Small (Fills Col 2 Bottom)
+    { rowSpan: 1 }, // Item 8: Small (Fills Col 4 Bottom)
+];
+
 export const ProjectsSection: React.FC = () => {
     const [projects, setProjects] = useState<ServiceArticle[]>([]);
     const [loading, setLoading] = useState(true);
+    const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -18,7 +34,7 @@ export const ProjectsSection: React.FC = () => {
                     .eq('published', true)
                     .eq('featured', true)
                     .order('display_order')
-                    .limit(6);
+                    .limit(8);
 
                 if (error) throw error;
                 setProjects(data || []);
@@ -51,7 +67,7 @@ export const ProjectsSection: React.FC = () => {
                             Dự án
                         </span>
                         <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                            Các dự án <span className="text-brand-pink">nổi bật</span>
+                            Các dự án <span className="text-brand-pink">đã triển khai</span>
                         </h2>
                     </div>
                     <Link to="/projects">
@@ -74,9 +90,9 @@ export const ProjectsSection: React.FC = () => {
                         <p className="text-gray-500">Chưa có dự án nào</p>
                     </div>
                 ) : (
-                    /* Grid layout - 2x3 */
+                    /* Masonry Grid Layout - manual 8-item config */
                     <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                        className="grid grid-cols-2 md:grid-cols-4 auto-rows-[240px] gap-4"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -85,73 +101,94 @@ export const ProjectsSection: React.FC = () => {
                             visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
                         }}
                     >
-                        {projects.map((project) => (
-                            <Link
-                                key={project.id}
-                                to={`/article?id=${project.id}`}
-                                className="block"
-                            >
-                                <motion.div
-                                    className="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer"
-                                    variants={{
-                                        hidden: { opacity: 0, y: 20 },
-                                        visible: { opacity: 1, y: 0 }
+                        {projects.map((project, index) => {
+                            // Loop the config if more than 8 items, though limit is 8
+                            const config = masonryConfig[index % masonryConfig.length];
+                            const isHovered = hoveredId === project.id;
+
+                            return (
+                                <Link
+                                    key={project.id}
+                                    to={`/article?id=${project.id}`}
+                                    className="block relative group rounded-2xl overflow-hidden cursor-pointer"
+                                    style={{
+                                        gridColumn: 'span 1', // Always single column width
+                                        gridRow: `span ${config.rowSpan}`,
                                     }}
+                                    onMouseEnter={() => setHoveredId(project.id)}
+                                    onMouseLeave={() => setHoveredId(null)}
                                 >
-                                    {/* Background Image */}
-                                    <motion.img
-                                        src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
-                                        alt={project.title}
-                                        className="w-full h-full object-cover"
-                                        whileHover={{ scale: 1.05 }}
-                                        transition={{ duration: 0.4 }}
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = `https://picsum.photos/600/600?random=${project.id}`;
+                                    <motion.div
+                                        className="w-full h-full"
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            visible: { opacity: 1, y: 0 }
                                         }}
-                                    />
+                                    >
+                                        {/* Project Thumbnail - always visible */}
+                                        <img
+                                            src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
+                                            alt={project.title}
+                                            className="absolute inset-0 w-full h-full object-cover"
+                                            style={{
+                                                transition: 'transform 0.4s ease-in-out',
+                                                transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+                                            }}
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = `https://picsum.photos/600/600?random=${project.id}`;
+                                            }}
+                                        />
 
-                                    {/* Default overlay - subtle gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-0" />
+                                        {/* Pink Overlay - 60% opacity by default, fades on hover */}
+                                        <div
+                                            className="absolute inset-0 bg-brand-pink"
+                                            style={{
+                                                opacity: isHovered ? 0 : 1,
+                                                transition: 'opacity 0.5s ease-in-out'
+                                            }}
+                                        />
 
-                                    {/* Hover overlay - pink */}
-                                    <div className="absolute inset-0 bg-brand-pink/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                                    {/* Logo - centered */}
-                                    <div className="absolute inset-0 flex items-center justify-center z-10">
-                                        <motion.div
-                                            className="w-28 h-28 bg-white rounded-2xl shadow-lg flex items-center justify-center p-4"
-                                            whileHover={{ scale: 1.05 }}
+                                        {/* Logo - white by default, moves up on hover */}
+                                        <div
+                                            className="absolute inset-0 flex items-center justify-center z-10"
+                                            style={{
+                                                transform: isHovered ? 'translateY(-30px)' : 'translateY(0)',
+                                                transition: 'transform 0.4s ease-in-out'
+                                            }}
                                         >
-                                            <img
+                                            <motion.img
                                                 src={project.logo || '/logo-hugs-only.png'}
                                                 alt={project.title}
-                                                className="w-full h-full object-contain"
+                                                className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-lg"
+                                                style={{
+                                                    filter: 'brightness(0) invert(1)',
+                                                    transition: 'filter 0.4s ease-in-out'
+                                                }}
+                                                whileHover={{ scale: 1.05 }}
                                             />
-                                        </motion.div>
-                                    </div>
+                                        </div>
 
-                                    {/* Category Tag - always visible */}
-                                    {project.category && (
-                                        <div className="absolute top-4 left-4 z-10">
-                                            <span className="bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-full">
-                                                {project.category}
+                                        {/* Bottom content - visible on hover */}
+                                        <div
+                                            className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-center flex flex-col items-center"
+                                            style={{
+                                                opacity: isHovered ? 1 : 0,
+                                                transform: isHovered ? 'translateY(0)' : 'translateY(16px)',
+                                                transition: 'all 0.4s ease-in-out'
+                                            }}
+                                        >
+                                            <h3 className="text-white font-semibold text-sm md:text-base leading-tight mb-2 line-clamp-2 drop-shadow-lg">
+                                                {project.title}
+                                            </h3>
+                                            <span className="px-4 py-2 bg-white/0 text-white font-medium text-xs tracking-wider uppercase flex items-center gap-1.5 hover:underline transition-all">
+                                                Xem chi tiết
+                                                <ArrowRight size={16} />
                                             </span>
                                         </div>
-                                    )}
-
-                                    {/* Bottom content - visible on hover */}
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300 text-center flex flex-col items-center">
-                                        <h3 className="text-white font-bold text-lg leading-tight mb-3 line-clamp-2">
-                                            {project.title}
-                                        </h3>
-                                        <span className="px-5 py-2 bg-white text-brand-pink font-bold text-sm rounded-full flex items-center gap-2 hover:bg-gray-100 transition-colors">
-                                            Xem chi tiết
-                                            <ArrowRight size={16} />
-                                        </span>
-                                    </div>
-                                </motion.div>
-                            </Link>
-                        ))}
+                                    </motion.div>
+                                </Link>
+                            );
+                        })}
                     </motion.div>
                 )}
             </div>

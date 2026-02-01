@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ArrowRight, Loader2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
-import { supabase, Service, ServiceArticle } from '../lib/supabase';
+import { supabase, Service, ServiceArticle, ProjectCategory, fetchProjectCategories } from '../lib/supabase';
 
 // Helper to strip HTML tags and entities for preview
 const stripHtml = (html: string | null): string => {
@@ -26,9 +27,11 @@ export const ProjectsPage: React.FC = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [articles, setArticles] = useState<ServiceArticle[]>([]);
     const [selectedService, setSelectedService] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [categories, setCategories] = useState<ProjectCategory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // Scroll to top on mount
     useEffect(() => {
@@ -50,16 +53,6 @@ export const ProjectsPage: React.FC = () => {
                 if (servicesError) throw servicesError;
 
                 setServices(servicesData || []);
-
-                // Set initial selected service from URL or first item
-                const params = new URLSearchParams(window.location.search);
-                const serviceSlug = params.get('service');
-                if (serviceSlug) {
-                    setSelectedService(serviceSlug);
-                } else if (servicesData && servicesData.length > 0) {
-                    setSelectedService(servicesData[0].slug);
-                }
-
             } catch (err) {
                 console.error('Error fetching services:', err);
                 setError('Không thể tải danh sách dịch vụ');
@@ -71,22 +64,44 @@ export const ProjectsPage: React.FC = () => {
         fetchData();
     }, []);
 
+    // Sync selected service with URL params
+    useEffect(() => {
+        const serviceSlug = searchParams.get('service');
+        if (serviceSlug) {
+            setSelectedService(serviceSlug);
+        } else if (services.length > 0 && !selectedService) {
+            // Only set default if nothing selected and no param
+            setSelectedService(services[0].slug);
+        }
+    }, [searchParams, services]);
+
     // Fetch articles when selected service changes
     useEffect(() => {
         const fetchArticles = async () => {
             if (!selectedService) return;
 
             try {
-                setSelectedCategory(null); // Reset category filter when service changes
+                setSelectedCategoryId(null); // Reset category filter
+
+                // Fetch articles
                 const { data, error } = await supabase
                     .from('service_articles')
-                    .select('*, service:services!inner(*)')
+                    .select('*, service:services!inner(*), project_category:project_categories(*)')
                     .eq('service.slug', selectedService)
                     .eq('published', true)
                     .order('display_order');
 
                 if (error) throw error;
                 setArticles(data || []);
+
+                // Fetch categories for this service
+                const service = services.find(s => s.slug === selectedService);
+                if (service) {
+                    const cats = await fetchProjectCategories(service.id);
+                    setCategories(cats);
+                } else {
+                    setCategories([]);
+                }
             } catch (err) {
                 console.error('Error fetching articles:', err);
             }
@@ -129,7 +144,7 @@ export const ProjectsPage: React.FC = () => {
                                     services.map((service) => (
                                         <button
                                             key={service.id}
-                                            onClick={() => setSelectedService(service.slug)}
+                                            onClick={() => setSearchParams({ service: service.slug })}
                                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
                                                 ? 'bg-brand-pink text-white border-brand-pink'
                                                 : 'bg-white text-gray-600 border-brand-pink/50 hover:border-brand-pink hover:text-brand-pink'
@@ -182,26 +197,26 @@ export const ProjectsPage: React.FC = () => {
                                     {/* Category Filter */}
                                     <div className="space-y-2">
                                         <button
-                                            onClick={() => setSelectedCategory(null)}
-                                            className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === null
+                                            onClick={() => setSelectedCategoryId(null)}
+                                            className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategoryId === null
                                                 ? 'bg-brand-pink text-white border-brand-pink'
                                                 : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
                                                 }`}
                                         >
                                             Tất cả
-                                            <ChevronRight size={16} className={`${selectedCategory === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
+                                            <ChevronRight size={16} className={`${selectedCategoryId === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
                                         </button>
-                                        {Array.from(new Set(articles.map(a => a.category).filter(Boolean))).map((cat, index) => (
+                                        {categories.map((cat) => (
                                             <button
-                                                key={index}
-                                                onClick={() => setSelectedCategory(cat as string)}
-                                                className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === cat
+                                                key={cat.id}
+                                                onClick={() => setSelectedCategoryId(cat.id)}
+                                                className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategoryId === cat.id
                                                     ? 'bg-brand-pink text-white border-brand-pink'
                                                     : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
                                                     }`}
                                             >
-                                                {cat}
-                                                <ChevronRight size={16} className={`${selectedCategory === cat ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
+                                                {cat.name}
+                                                <ChevronRight size={16} className={`${selectedCategoryId === cat.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
                                             </button>
                                         ))}
                                     </div>
@@ -212,7 +227,7 @@ export const ProjectsPage: React.FC = () => {
                             <div className="lg:col-span-9">
                                 <AnimatePresence mode="wait">
                                     <motion.div
-                                        key={activeService.slug + (selectedCategory || 'all')}
+                                        key={activeService.slug + (selectedCategoryId || 'all')}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20 }}
@@ -220,7 +235,7 @@ export const ProjectsPage: React.FC = () => {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h3 className="text-xl font-bold text-gray-900">
-                                                {selectedCategory ? selectedCategory : 'Dự án tiêu biểu'}
+                                                {selectedCategoryId ? categories.find(c => c.id === selectedCategoryId)?.name : 'Dự án tiêu biểu'}
                                             </h3>
                                             <a href="#" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
                                                 Xem tất cả <ArrowRight size={14} />
@@ -228,8 +243,8 @@ export const ProjectsPage: React.FC = () => {
                                         </div>
 
                                         {(() => {
-                                            const filteredArticles = selectedCategory
-                                                ? articles.filter(a => a.category === selectedCategory)
+                                            const filteredArticles = selectedCategoryId
+                                                ? articles.filter(a => a.project_category_id === selectedCategoryId)
                                                 : articles;
 
                                             return filteredArticles.length > 0 ? (
@@ -251,9 +266,9 @@ export const ProjectsPage: React.FC = () => {
                                                                     }}
                                                                 />
                                                                 {/* Category Tag */}
-                                                                {article.category && (
+                                                                {article.project_category?.name && (
                                                                     <span className="absolute bottom-3 left-3 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded">
-                                                                        {article.category}
+                                                                        {article.project_category.name}
                                                                     </span>
                                                                 )}
                                                             </div>
@@ -270,7 +285,7 @@ export const ProjectsPage: React.FC = () => {
                                                 </div>
                                             ) : (
                                                 <div className="text-center py-12 bg-gray-50 rounded-2xl">
-                                                    <p className="text-gray-500">Chưa có bài viết nào{selectedCategory ? ` cho category "${selectedCategory}"` : ''}</p>
+                                                    <p className="text-gray-500">Chưa có bài viết nào{selectedCategoryId ? ` cho category này` : ''}</p>
                                                 </div>
                                             );
                                         })()}

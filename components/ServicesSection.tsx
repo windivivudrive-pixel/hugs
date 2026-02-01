@@ -26,7 +26,7 @@ export const ServicesSection: React.FC = () => {
                     .from('services')
                     .select('*')
                     .order('display_order')
-                    .limit(6); // Only show first 6 services on homepage
+                    .limit(9); // Show first 9 services on homepage
 
                 if (error) throw error;
                 setServices(data || []);
@@ -107,7 +107,7 @@ export const ServicesSection: React.FC = () => {
                                         onMouseEnter={() => setHoveredServiceSlug(service.slug)}
                                     >
                                         <motion.h3
-                                            className={`text-3xl md:text-4xl lg:text-5xl font-bold transition-colors duration-300 py-2 ${displayedServiceSlug === service.slug
+                                            className={`text-xl md:text-2xl lg:text-3xl font-bold transition-colors duration-300 py-2 ${displayedServiceSlug === service.slug
                                                 ? 'text-brand-pink'
                                                 : 'text-gray-300'
                                                 }`}

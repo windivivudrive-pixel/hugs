@@ -51,6 +51,56 @@ const socialPages = [
         description: "Cập nhật nhanh những tin tức nóng hổi, sự kiện đang được quan tâm tại Đà Nẵng.",
         image: "/logo-partner/social8.jpg",
         link: "https://www.facebook.com/share/1GJa8BLRqw/?mibextid=wwXIfr"
+    },
+    // Facebook Groups
+    {
+        name: "Đà Nẵng Riviu Tất Tần Tật",
+        description: "Group review mọi thứ tại Đà Nẵng - từ ẩm thực, dịch vụ đến du lịch.",
+        image: "/logo-partner/g3.png",
+        link: "https://www.facebook.com/share/g/1Co66mr7ew/?mibextid=wwXIfr"
+    },
+    {
+        name: "Cộng Đồng Marketing Đà Nẵng",
+        description: "Kết nối dân Marketing tại Đà Nẵng, chia sẻ kiến thức và cơ hội nghề nghiệp.",
+        image: "/logo-partner/g2.png",
+        link: "https://www.facebook.com/share/g/17qV81uYei/?mibextid=wwXIfr"
+    },
+    {
+        name: "Việc Làm Đà Nẵng",
+        description: "Cầu nối tuyển dụng và tìm việc làm uy tín tại Đà Nẵng.",
+        image: "/logo-partner/g1.png",
+        link: "https://www.facebook.com/share/g/19ZU33mMtG/?mibextid=wwXIfr"
+    },
+    // TikTok Pages
+    {
+        name: "Mê Miền Trung",
+        description: "Khám phá vẻ đẹp miền Trung qua những video ngắn hấp dẫn trên TikTok.",
+        image: "/logo-partner/t0.png",
+        link: "https://www.tiktok.com/@memientrung?_r=1&_t=ZS-9260qu7Bs0Y"
+    },
+    {
+        name: "Ăn Sập Đà Nẵng",
+        description: "Food tour Đà Nẵng cùng những video ẩm thực hấp dẫn trên TikTok.",
+        image: "/logo-partner/t1.png",
+        link: "https://www.tiktok.com/@ansapdanang.official?_r=1&_t=ZS-9260mWMWn7y"
+    },
+    {
+        name: "Ở Đà Nẵng",
+        description: "Cuộc sống thường ngày tại Đà Nẵng qua góc nhìn TikToker.",
+        image: "/logo-partner/t2.png",
+        link: "https://www.tiktok.com/@odanang43?_r=1&_t=ZS-9260hTB2fZf"
+    },
+    {
+        name: "Đà Nẵng News",
+        description: "Tin tức Đà Nẵng cập nhật nhanh nhất trên nền tảng TikTok.",
+        image: "/logo-partner/t3.png",
+        link: "https://www.tiktok.com/@ansapdanang.official?_r=1&_t=ZS-9260mWMWn7y"
+    },
+    {
+        name: "Đà Nẵng",
+        description: "Trang TikTok chính thức về thành phố Đà Nẵng xinh đẹp.",
+        image: "/logo-partner/t4.png",
+        link: "https://www.tiktok.com/@danang_city?_r=1&_t=ZS-9260eKY9qae"
     }
 ];
 
@@ -105,7 +155,7 @@ export const SocialSection: React.FC = () => {
     }, []);
 
     return (
-        <section className="py-20 relative overflow-hidden" style={{ background: '#f5f5f5' }}>
+        <section className="py-5 relative overflow-hidden" style={{ background: '#f5f5f5' }}>
             {/* Background pattern */}
             <div
                 className="absolute inset-0 opacity-30 pointer-events-none z-0"
@@ -117,7 +167,7 @@ export const SocialSection: React.FC = () => {
             />
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     {/* Left side - Title and description */}
                     <motion.div
                         className="lg:col-span-4"
@@ -131,21 +181,22 @@ export const SocialSection: React.FC = () => {
                             <span className="text-brand-pink">HUGE Network</span>
                         </h2>
                         <p className="text-gray-600 text-base leading-relaxed mb-8">
-                            HUGE Network mang tới một hệ sinh thái phong phú, trải dài các mảng nội dung,
-                            cộng đồng góp phần vào sự phát triển mạnh mẽ của truyền thông internet tại Việt Nam.
+                            HUGs Network là hệ sinh thái các fanpage & group chủ đề Đà Nẵng và khu vực miền Trung, được vận hành bởi HUGs Agency,
+                            giúp kết nối thương hiệu với tệp người dùng địa phương thông qua tương tác tự nhiên và lan tỏa nội dung hiệu quả.
+
                         </p>
 
                         {/* Navigation arrows */}
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => scroll('left')}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink transition-all duration-200 hover:scale-105 active:scale-95"
+                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink hover:bg-brand-pink/5 hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
                             >
                                 <ChevronLeft size={24} />
                             </button>
                             <button
                                 onClick={() => scroll('right')}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink transition-all duration-200 hover:scale-105 active:scale-95"
+                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink hover:bg-brand-pink/5 hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
                             >
                                 <ChevronRight size={24} />
                             </button>
@@ -156,7 +207,7 @@ export const SocialSection: React.FC = () => {
                     <div className="lg:col-span-8 -mr-6 lg:-mr-[calc((100vw-1280px)/2+24px)]">
                         <div
                             ref={scrollContainerRef}
-                            className="flex gap-6 overflow-x-scroll pb-4 pr-6 pt-4"
+                            className="flex gap-6 overflow-x-scroll py-8 pr-6"
                             style={{
                                 cursor: 'grab',
                                 scrollbarWidth: 'none',
@@ -200,7 +251,7 @@ export const SocialSection: React.FC = () => {
                                         href={page.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center justify-center gap-2 text-brand-pink font-semibold text-sm hover:gap-3 transition-all mt-auto"
+                                        className="flex items-center justify-center gap-2 text-brand-pink font-bold text-base hover:gap-3 hover:scale-105 hover:brightness-110 transition-all mt-auto"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             if (isDragging) e.preventDefault();

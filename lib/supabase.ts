@@ -31,6 +31,14 @@ export interface Service {
     category?: ServiceCategory;
 }
 
+export interface ProjectCategory {
+    id: string;
+    service_id: string;
+    name: string;
+    display_order: number;
+    created_at: string;
+}
+
 export interface ServiceArticle {
     id: string;
     service_id: string;
@@ -43,7 +51,10 @@ export interface ServiceArticle {
     featured: boolean;
     display_order: number;
     created_at: string;
+    author_id: string | null;
+    project_category_id: string | null;
     service?: Service;
+    project_category?: ProjectCategory;
 }
 
 // Helper functions to fetch data
@@ -74,10 +85,26 @@ export const fetchServicesByCategory = async (categorySlug: string): Promise<Ser
     return data || [];
 };
 
+
+
+export const fetchProjectCategories = async (serviceId: string): Promise<ProjectCategory[]> => {
+    const { data, error } = await supabase
+        .from('project_categories')
+        .select('*')
+        .eq('service_id', serviceId)
+        .order('display_order');
+
+    if (error) {
+        console.error('Error fetching project categories:', error);
+        return [];
+    }
+    return data || [];
+};
+
 export const fetchArticlesByService = async (serviceSlug: string): Promise<ServiceArticle[]> => {
     const { data, error } = await supabase
         .from('service_articles')
-        .select('*, service:services!inner(*)')
+        .select('*, service:services!inner(*), project_category:project_categories(*)')
         .eq('service.slug', serviceSlug)
         .eq('published', true)
         .order('display_order');
@@ -92,7 +119,7 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<Servi
 export const fetchAllArticles = async (): Promise<ServiceArticle[]> => {
     const { data, error } = await supabase
         .from('service_articles')
-        .select('*, service:services(*)')
+        .select('*, service:services(*), project_category:project_categories(*)')
         .eq('published', true)
         .order('created_at', { ascending: false })
         .limit(10);
@@ -115,6 +142,7 @@ export interface NewsArticle {
     category: string;
     category_color: string | null;
     author: string | null;
+    author_id: string | null;
     published: boolean;
     display_order: number;
     created_at: string;

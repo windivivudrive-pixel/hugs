@@ -26,7 +26,7 @@ const App: React.FC = () => {
             element={
               <>
                 {/* MainSite - ALWAYS rendered underneath */}
-                <MainSite />
+                <MainSite isLoading={isLoading} />
                 {/* Loading Screen - renders ON TOP */}
                 {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
               </>
