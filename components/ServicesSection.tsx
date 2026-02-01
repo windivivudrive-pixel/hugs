@@ -80,7 +80,7 @@ export const ServicesSection: React.FC = () => {
     const currentArticle = activeService ? latestArticles[activeService.slug] : null;
 
     return (
-        <section className="pt-20 pb-8 bg-gray-50 overflow-x-clip">
+        <section className="pt-20 pb-8 bg-white overflow-x-clip">
 
             {/* Services Section - Haptic Style */}
             <div className="max-w-7xl mx-auto px-6">

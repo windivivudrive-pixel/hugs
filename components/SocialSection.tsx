@@ -155,16 +155,7 @@ export const SocialSection: React.FC = () => {
     }, []);
 
     return (
-        <section className="py-5 relative overflow-hidden" style={{ background: '#f5f5f5' }}>
-            {/* Background pattern */}
-            <div
-                className="absolute inset-0 opacity-30 pointer-events-none z-0"
-                style={{
-                    backgroundImage: 'url(/pattern.png)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
-            />
+        <section className="py-5 relative overflow-hidden bg-white">
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -190,13 +181,13 @@ export const SocialSection: React.FC = () => {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={() => scroll('left')}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink hover:bg-brand-pink/5 hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
+                                className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
                             >
                                 <ChevronLeft size={24} />
                             </button>
                             <button
                                 onClick={() => scroll('right')}
-                                className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-brand-pink hover:text-brand-pink hover:bg-brand-pink/5 hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
+                                className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
                             >
                                 <ChevronRight size={24} />
                             </button>
@@ -222,12 +213,12 @@ export const SocialSection: React.FC = () => {
                             {socialPages.map((page, index) => (
                                 <div
                                     key={index}
-                                    className="social-card flex-shrink-0 w-72 bg-white rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 cursor-pointer flex flex-col"
+                                    className="social-card flex-shrink-0 w-72 bg-white border-2 border-brand-pink rounded-2xl p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-brand-pink/20 hover:-translate-y-1 cursor-pointer flex flex-col"
                                     style={{ pointerEvents: isDragging ? 'none' : 'auto' }}
                                     onClick={() => !isDragging && window.open(page.link, '_blank')}
                                 >
                                     {/* Logo image */}
-                                    <div className="w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto border-4 border-brand-pink/20">
+                                    <div className="w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto border-2 border-brand-pink">
                                         <img
                                             src={page.image}
                                             alt={page.name}
@@ -251,7 +242,7 @@ export const SocialSection: React.FC = () => {
                                         href={page.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center justify-center gap-2 text-brand-pink font-bold text-base hover:gap-3 hover:scale-105 hover:brightness-110 transition-all mt-auto"
+                                        className="flex items-center justify-center gap-2 text-brand-pink font-bold text-base hover:gap-3 transition-all mt-auto"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             if (isDragging) e.preventDefault();

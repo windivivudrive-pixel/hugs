@@ -25,7 +25,7 @@ export const TestimonialsSection: React.FC = () => {
     ];
 
     return (
-        <section className="py-24 bg-gray-50/80 backdrop-blur-sm overflow-hidden">
+        <section className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <motion.div
                     className="text-center mb-16"
@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC = () => {
                     {testimonials.map((item, i) => (
                         <motion.div
                             key={i}
-                            className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-shadow relative flex flex-col group"
+                            className="bg-white border-2 border-brand-pink p-8 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-brand-pink/20 transition-shadow relative flex flex-col group"
                             variants={{
                                 hidden: { opacity: 0, y: 40 },
                                 visible: { opacity: 1, y: 0 }
@@ -83,7 +83,7 @@ export const TestimonialsSection: React.FC = () => {
 
                             {/* Footer - always at bottom */}
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-16 h-16 bg-gray-50 flex items-center justify-center p-2">
+                                <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center p-2">
                                     <img
                                         src={item.logo}
                                         alt={item.name}

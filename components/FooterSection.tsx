@@ -75,10 +75,6 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
     return (
         <footer className="bg-white text-gray-900 pt-20 pb-8 relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-pink/5 rounded-full blur-3xl"></div>
-
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* CTA Section - Contact Form */}
                 {!hideCTA && (
