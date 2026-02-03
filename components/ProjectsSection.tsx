@@ -24,6 +24,17 @@ export const ProjectsSection: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     useEffect(() => {
         const fetchProjects = async () => {
             try {
@@ -32,7 +43,6 @@ export const ProjectsSection: React.FC = () => {
                     .from('service_articles')
                     .select('*')
                     .eq('published', true)
-                    .eq('featured', true)
                     .order('display_order')
                     .limit(8);
 
@@ -49,10 +59,7 @@ export const ProjectsSection: React.FC = () => {
     }, []);
 
     return (
-        <section className="py-20 bg-white relative overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-pink/5 rounded-full blur-3xl"></div>
-
+        <section className="py-24 bg-white relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 {/* Header */}
                 <motion.div
@@ -70,7 +77,7 @@ export const ProjectsSection: React.FC = () => {
                             Các dự án <span className="text-brand-pink">đã triển khai</span>
                         </h2>
                     </div>
-                    <Link to="/projects">
+                    <Link to="/allprojects">
                         <motion.div
                             className="mt-4 md:mt-0 text-brand-pink font-semibold flex items-center gap-2 hover:gap-3 transition-all cursor-pointer"
                             whileHover={{ x: 5 }}
@@ -92,7 +99,7 @@ export const ProjectsSection: React.FC = () => {
                 ) : (
                     /* Masonry Grid Layout - manual 8-item config */
                     <motion.div
-                        className="grid grid-cols-2 md:grid-cols-4 auto-rows-[240px] gap-4"
+                        className="grid grid-cols-1 md:grid-cols-4 md:auto-rows-[240px] gap-4"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -106,17 +113,27 @@ export const ProjectsSection: React.FC = () => {
                             const config = masonryConfig[index % masonryConfig.length];
                             const isHovered = hoveredId === project.id;
 
+                            // Logic for mobile tap interaction
+                            const handleMobileClick = (e: React.MouseEvent) => {
+                                if (isMobile && hoveredId !== project.id) {
+                                    e.preventDefault(); // Prevent navigation on first tap
+                                    setHoveredId(project.id); // Set hover state (show details)
+                                }
+                                // If already hovered (or on desktop), allow default navigation
+                            };
+
                             return (
                                 <Link
                                     key={project.id}
                                     to={`/article?id=${project.id}`}
-                                    className="block relative group rounded-2xl overflow-hidden cursor-pointer"
+                                    onClick={handleMobileClick}
+                                    className={`block relative group overflow-hidden cursor-pointer ${isMobile ? 'aspect-video' : ''}`}
                                     style={{
                                         gridColumn: 'span 1', // Always single column width
-                                        gridRow: `span ${config.rowSpan}`,
+                                        gridRow: isMobile ? 'auto' : `span ${config.rowSpan}`,
                                     }}
-                                    onMouseEnter={() => setHoveredId(project.id)}
-                                    onMouseLeave={() => setHoveredId(null)}
+                                    onMouseEnter={() => !isMobile && setHoveredId(project.id)}
+                                    onMouseLeave={() => !isMobile && setHoveredId(null)}
                                 >
                                     <motion.div
                                         className="w-full h-full"
@@ -129,6 +146,7 @@ export const ProjectsSection: React.FC = () => {
                                         <img
                                             src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
                                             alt={project.title}
+                                            loading="lazy"
                                             className="absolute inset-0 w-full h-full object-cover"
                                             style={{
                                                 transition: 'transform 0.4s ease-in-out',

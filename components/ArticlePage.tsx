@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, User, Building2, Share2, Facebook, Linkedin, Link2 } from 'lucide-react';
 import { FooterSection } from './FooterSection';
+import { PageNavbar } from './PageNavbar';
 import { supabase, ServiceArticle, NewsArticle } from '../lib/supabase';
 import { marked } from 'marked';
 import { Link } from 'react-router-dom';
@@ -100,34 +101,10 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
     return (
         <div className="min-h-screen bg-white text-gray-900">
             {/* Navbar */}
-            <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 h-20 flex items-center">
-                <div className="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-                    <Link to="/" className="flex items-center gap-2">
-                        <img src="/logo-hugs.png" alt="HUGs Agency" className="h-12 object-contain" />
-                    </Link>
+            <PageNavbar activePage="news" />
 
-                    <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-                        <Link to="/" className="hover:text-brand-pink transition-colors">Trang chủ</Link>
-                        <Link to="/about" className="hover:text-brand-pink transition-colors">Giới thiệu</Link>
-                        <Link to="/service" className="hover:text-brand-pink transition-colors">Dịch vụ</Link>
-                        <Link to="/projects" className="hover:text-brand-pink transition-colors">Dự án</Link>
-                        <Link to="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</Link>
-                        <Link to="/news" className="text-brand-pink">Tin tức</Link>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs font-bold text-gray-500 cursor-pointer hover:border-brand-pink hover:text-brand-pink">
-                            VN
-                        </div>
-                        <button className="bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
-                            Đăng ký tư vấn
-                        </button>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero Section with Gradient */}
-            <div className="pt-20 bg-gradient-to-b from-pink-50 to-white">
+            {/* Hero Section with white background */}
+            <div className="pt-20 bg-white">
                 <div className="max-w-4xl mx-auto px-6 py-16">
                     {/* Back button */}
 
@@ -138,7 +115,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                         animate={{ opacity: 1, y: 0 }}
                         className="mb-6"
                     >
-                        <span className="inline-block px-4 py-1.5 bg-brand-pink/10 text-brand-pink text-sm font-bold rounded-full border border-brand-pink/20">
+                        <span className="inline-block px-4 py-1.5 bg-brand-pink/10 text-brand-pink text-sm font-bold border border-brand-pink/20">
                             {(displayArticle as any).service?.name || 'Thiết kế'}
                         </span>
                     </motion.div>
@@ -185,13 +162,13 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                         transition={{ delay: 0.3 }}
                     >
                         <span className="text-sm text-gray-500">Chia sẻ:</span>
-                        <button className="w-9 h-9 rounded-full bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
+                        <button className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
                             <Facebook size={16} />
                         </button>
-                        <button className="w-9 h-9 rounded-full bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
+                        <button className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
                             <Linkedin size={16} />
                         </button>
-                        <button className="w-9 h-9 rounded-full bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
+                        <button className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
                             <Link2 size={16} />
                         </button>
                     </motion.div>
@@ -205,10 +182,11 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4 }}
             >
-                <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+                <div className="overflow-hidden shadow-2xl border-4 border-white">
                     <img
                         src={displayArticle.thumbnail || '/projects/design-project.jpg'}
                         alt={displayArticle.title}
+                        loading="lazy"
                         className="w-full aspect-video object-cover"
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://picsum.photos/1200/600?random=1';

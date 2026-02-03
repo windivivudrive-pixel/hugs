@@ -72,7 +72,7 @@ export const ServicePage: React.FC = () => {
             <PageNavbar activePage="service" />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-16 bg-gradient-to-b from-brand-pink/5 to-white">
+            <section className="pt-32 pb-16 bg-white">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -112,7 +112,7 @@ export const ServicePage: React.FC = () => {
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                     viewport={{ once: true }}
                                     onClick={() => handleServiceClick(service.slug)}
-                                    className="group bg-white border border-gray-200 rounded-2xl p-8 hover:border-brand-pink hover:shadow-xl transition-all cursor-pointer"
+                                    className="group bg-white border border-gray-200 p-8 hover:border-brand-pink hover:shadow-xl transition-all cursor-pointer"
                                 >
                                     {/* Icon */}
                                     <div className="text-4xl mb-4">

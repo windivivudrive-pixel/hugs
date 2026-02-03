@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import {
+    checkRateLimit,
+    recordSubmission,
+    validateHoneypot,
+    submitToGoogleForm,
+    CTA_FORM_CONFIG,
+    SERVICE_OPTIONS,
+} from '../lib/formUtils';
 
-const INTEREST_TAGS = [
-    'Social Media',
-    'Thiết kế Website',
-    'TikTok Shop',
-    'Thiết kế đồ họa',
-    'UI/UX',
-    'Video Production',
-    'Booking - PR',
-    'KOL/KOC',
-    'Khác'
-];
+// Use service options from Google Form
+const INTEREST_TAGS = SERVICE_OPTIONS;
 
 // Social links with platform colors
 const socialLinks = [
@@ -65,6 +64,17 @@ interface FooterSectionProps {
 export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false }) => {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
+    // Form state
+    const [formData, setFormData] = useState({
+        fullName: '',
+        email: '',
+        phone: '',
+        description: '',
+        honeypot: '', // Anti-spam honeypot field
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'ratelimit'>('idle');
+
     const toggleTag = (tag: string) => {
         setSelectedTags(prev =>
             prev.includes(tag)
@@ -73,13 +83,69 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
         );
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async () => {
+        // Validate honeypot (anti-spam)
+        if (!validateHoneypot(formData.honeypot)) {
+            console.log('Spam detected');
+            return;
+        }
+
+        // Check rate limit
+        if (!checkRateLimit('cta')) {
+            setSubmitStatus('ratelimit');
+            return;
+        }
+
+        // Validate required fields
+        if (!formData.fullName || !formData.email) {
+            setSubmitStatus('error');
+            return;
+        }
+
+        setIsSubmitting(true);
+        setSubmitStatus('idle');
+
+        try {
+            await submitToGoogleForm(CTA_FORM_CONFIG, {
+                fullName: formData.fullName,
+                email: formData.email,
+                phone: formData.phone,
+                description: formData.description,
+                interests: selectedTags,
+            });
+
+            // Record submission for rate limiting
+            recordSubmission('cta');
+
+            setSubmitStatus('success');
+
+            // Reset form after success
+            setTimeout(() => {
+                setFormData({ fullName: '', email: '', phone: '', description: '', honeypot: '' });
+                setSelectedTags([]);
+                setSubmitStatus('idle');
+            }, 3000);
+        } catch (error) {
+            console.error('Submit error:', error);
+            setSubmitStatus('error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+
     return (
         <footer className="bg-white text-gray-900 pt-20 pb-8 relative overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* CTA Section - Contact Form */}
                 {!hideCTA && (
                     <motion.div
-                        className="bg-gray-50 rounded-3xl p-8 md:p-12 mb-16 text-gray-900 border border-gray-100"
+                        className="bg-gray-50 p-8 md:p-12 mb-16 text-gray-900 border border-gray-100"
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -92,25 +158,58 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                         <div className="grid md:grid-cols-2 gap-8 mb-8">
                             {/* Left - Input Fields */}
                             <div className="space-y-6">
+                                {/* Honeypot - hidden anti-spam field */}
+                                <input
+                                    type="text"
+                                    name="honeypot"
+                                    value={formData.honeypot}
+                                    onChange={handleInputChange}
+                                    className="absolute -left-[9999px]"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                />
                                 <div>
                                     <input
                                         type="text"
-                                        placeholder="Tên của bạn*"
+                                        name="fullName"
+                                        value={formData.fullName}
+                                        onChange={handleInputChange}
+                                        placeholder="Họ và tên*"
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-400 focus:border-brand-pink outline-none transition-colors bg-transparent"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 <div>
                                     <input
                                         type="email"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleInputChange}
                                         placeholder="Email của bạn*"
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-400 focus:border-brand-pink outline-none transition-colors bg-transparent"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                                 <div>
                                     <input
-                                        type="text"
-                                        placeholder="Mô tả về dự án của bạn..."
+                                        type="tel"
+                                        name="phone"
+                                        value={formData.phone}
+                                        onChange={handleInputChange}
+                                        placeholder="Số điện thoại"
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-400 focus:border-brand-pink outline-none transition-colors bg-transparent"
+                                        disabled={isSubmitting}
+                                    />
+                                </div>
+                                <div>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
+                                        placeholder="Mô tả về dự án của bạn..."
+                                        rows={3}
+                                        className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-400 focus:border-brand-pink outline-none transition-colors bg-transparent resize-none"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
                             </div>
@@ -122,11 +221,13 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                     {INTEREST_TAGS.map((tag, i) => (
                                         <button
                                             key={i}
+                                            type="button"
                                             onClick={() => toggleTag(tag)}
-                                            className={`px-4 py-2 border rounded-full text-sm transition-all duration-200 ${selectedTags.includes(tag)
+                                            disabled={isSubmitting}
+                                            className={`px-4 py-2 border text-sm transition-all duration-200 ${selectedTags.includes(tag)
                                                 ? 'bg-brand-pink text-white border-brand-pink'
                                                 : 'border-gray-300 text-gray-700 hover:border-brand-pink hover:text-brand-pink'
-                                                }`}
+                                                } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
                                             {tag}
                                         </button>
@@ -135,14 +236,49 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                             </div>
                         </div>
 
+                        {/* Status Messages */}
+                        {submitStatus === 'success' && (
+                            <div className="flex items-center justify-center gap-2 text-green-600 mb-4">
+                                <CheckCircle size={20} />
+                                <span className="font-medium">Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm nhất.</span>
+                            </div>
+                        )}
+                        {submitStatus === 'error' && (
+                            <div className="flex items-center justify-center gap-2 text-red-600 mb-4">
+                                <AlertCircle size={20} />
+                                <span className="font-medium">Vui lòng điền đầy đủ thông tin bắt buộc.</span>
+                            </div>
+                        )}
+                        {submitStatus === 'ratelimit' && (
+                            <div className="flex items-center justify-center gap-2 text-orange-600 mb-4">
+                                <AlertCircle size={20} />
+                                <span className="font-medium">Bạn đã gửi quá nhiều lần. Vui lòng thử lại sau.</span>
+                            </div>
+                        )}
+
                         {/* Square Send Button */}
                         <div className="flex justify-center mt-12">
                             <button
-                                className="w-24 h-24 bg-brand-pink text-white font-bold flex items-center justify-center hover:bg-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
+                                onClick={handleSubmit}
+                                disabled={isSubmitting || submitStatus === 'success'}
+                                className={`w-24 h-24 font-bold flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl ${submitStatus === 'success'
+                                    ? 'bg-green-500 text-white cursor-default'
+                                    : isSubmitting
+                                        ? 'bg-gray-400 text-white cursor-wait'
+                                        : 'bg-brand-pink text-white hover:bg-pink-600 hover:scale-110'
+                                    }`}
                             >
                                 <span className="flex flex-col items-center">
-                                    <Send size={20} className="mb-1" />
-                                    <span className="text-sm">Gửi</span>
+                                    {isSubmitting ? (
+                                        <Loader2 size={20} className="animate-spin" />
+                                    ) : submitStatus === 'success' ? (
+                                        <CheckCircle size={20} />
+                                    ) : (
+                                        <>
+                                            <Send size={20} className="mb-1" />
+                                            <span className="text-sm">Gửi</span>
+                                        </>
+                                    )}
                                 </span>
                             </button>
                         </div>
@@ -167,7 +303,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                     href={social.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-900 transition-colors ${social.hoverColor}`}
+                                    className={`w-10 h-10 bg-gray-100 flex items-center justify-center text-gray-900 transition-colors ${social.hoverColor}`}
                                     whileHover={{ scale: 1.1 }}
                                     title={social.name}
                                 >

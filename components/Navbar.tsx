@@ -107,7 +107,7 @@ export const Navbar: React.FC = () => {
               <AnimatePresence>
                 {showServicesDropdown && (
                   <motion.div
-                    className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+                    className="absolute top-full left-0 mt-2 w-72 bg-white shadow-xl border border-gray-100 overflow-hidden"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -129,7 +129,7 @@ export const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            <Link to="/projects" className="hover:text-brand-pink transition-colors">Dự án</Link>
+            <Link to="/allprojects" className="hover:text-brand-pink transition-colors">Dự án</Link>
             <Link to="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</Link>
             <Link to="/news" className="hover:text-brand-pink transition-colors">Tin tức</Link>
           </div>
@@ -235,7 +235,7 @@ export const Navbar: React.FC = () => {
                 </div>
 
                 <Link
-                  to="/projects"
+                  to="/allprojects"
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >

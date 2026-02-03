@@ -155,7 +155,15 @@ export const SocialSection: React.FC = () => {
     }, []);
 
     return (
-        <section className="py-5 relative overflow-hidden bg-white">
+        <section className="py-16 relative overflow-hidden bg-white">
+            {/* Background Pattern */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <img
+                    src="/pattern1.png"
+                    alt=""
+                    className="w-full h-full object-cover opacity-20"
+                />
+            </div>
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -167,11 +175,13 @@ export const SocialSection: React.FC = () => {
                         transition={{ duration: 0.6 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-6">
-                            Hệ sinh thái<br />
-                            <span className="text-brand-pink">HUGE Network</span>
+                        <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                            Mạng lưới
+                        </span>
+                        <h2 className="text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-6">
+                            Hệ sinh thái <span className="text-brand-pink">HUGs Network</span>
                         </h2>
-                        <p className="text-gray-600 text-base leading-relaxed mb-8">
+                        <p className="text-gray-600 text-lg lg:text-xl leading-relaxed mb-8">
                             HUGs Network là hệ sinh thái các fanpage & group chủ đề Đà Nẵng và khu vực miền Trung, được vận hành bởi HUGs Agency,
                             giúp kết nối thương hiệu với tệp người dùng địa phương thông qua tương tác tự nhiên và lan tỏa nội dung hiệu quả.
 
@@ -213,27 +223,28 @@ export const SocialSection: React.FC = () => {
                             {socialPages.map((page, index) => (
                                 <div
                                     key={index}
-                                    className="social-card flex-shrink-0 w-72 bg-white border-2 border-brand-pink rounded-2xl p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-brand-pink/20 hover:-translate-y-1 cursor-pointer flex flex-col"
+                                    className="social-card flex-shrink-0 w-56 md:w-72 bg-white border-2 border-brand-pink p-4 md:p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-brand-pink/20 hover:-translate-y-1 cursor-pointer flex flex-col"
                                     style={{ pointerEvents: isDragging ? 'none' : 'auto' }}
                                     onClick={() => !isDragging && window.open(page.link, '_blank')}
                                 >
                                     {/* Logo image */}
-                                    <div className="w-20 h-20 rounded-full overflow-hidden mb-6 mx-auto border-2 border-brand-pink">
+                                    <div className="w-14 h-14 md:w-20 md:h-20 overflow-hidden mb-4 md:mb-6 mx-auto border-2 border-brand-pink">
                                         <img
                                             src={page.image}
                                             alt={page.name}
+                                            loading="lazy"
                                             className="w-full h-full object-cover"
                                             draggable={false}
                                         />
                                     </div>
 
                                     {/* Title */}
-                                    <h3 className="text-lg font-bold text-gray-900 mb-3 text-center">
+                                    <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2 md:mb-3 text-center">
                                         {page.name}
                                     </h3>
 
                                     {/* Description */}
-                                    <p className="text-gray-500 text-sm leading-relaxed mb-6 text-center flex-grow">
+                                    <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-4 md:mb-6 text-center flex-grow">
                                         {page.description}
                                     </p>
 

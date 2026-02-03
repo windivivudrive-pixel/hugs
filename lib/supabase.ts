@@ -52,7 +52,8 @@ export interface ServiceArticle {
     display_order: number;
     created_at: string;
     author_id: string | null;
-    project_category_id: string | null;
+    project_category_id: string | null; // Legacy, will be deprecated
+    project_category_ids: string[]; // New array field
     service?: Service;
     project_category?: ProjectCategory;
 }
@@ -86,6 +87,19 @@ export const fetchServicesByCategory = async (categorySlug: string): Promise<Ser
 };
 
 
+
+export const fetchServiceCategories = async (): Promise<ServiceCategory[]> => {
+    const { data, error } = await supabase
+        .from('service_categories')
+        .select('*')
+        .order('display_order');
+
+    if (error) {
+        console.error('Error fetching service categories:', error);
+        return [];
+    }
+    return data || [];
+};
 
 export const fetchProjectCategories = async (serviceId: string): Promise<ProjectCategory[]> => {
     const { data, error } = await supabase
@@ -224,5 +238,36 @@ export const deleteThumbnail = async (thumbnailUrl: string): Promise<boolean> =>
     } catch (err) {
         console.error('Error deleting thumbnail:', err);
         return false;
+    }
+};
+
+// Upload CV/Resume files
+export const uploadCV = async (file: File): Promise<{ url: string | null; error: any }> => {
+    try {
+        // Generate unique filename with original extension
+        const fileExt = file.name.split('.').pop();
+        const fileName = `cv/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) {
+            console.error('Error uploading CV:', error);
+            return { url: null, error };
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .getPublicUrl(data.path);
+
+        return { url: urlData.publicUrl, error: null };
+    } catch (err) {
+        console.error('Error uploading CV:', err);
+        return { url: null, error: err };
     }
 };

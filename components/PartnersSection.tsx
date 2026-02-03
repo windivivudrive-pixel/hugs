@@ -73,9 +73,9 @@ export const PartnersSection: React.FC = () => {
                     <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
                     {/* First row - scrolling left */}
-                    <div className="flex overflow-hidden mb-6 pb-4">
+                    <div className="flex overflow-hidden mb-4 md:mb-6 pb-4">
                         <motion.div
-                            className="flex gap-8 items-center"
+                            className="flex gap-4 md:gap-8 items-center"
                             animate={{ x: ['0%', '-50%'] }}
                             transition={{
                                 x: {
@@ -89,12 +89,13 @@ export const PartnersSection: React.FC = () => {
                             {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                                 <div
                                     key={`row1-${index}`}
-                                    className="flex-shrink-0 h-20 px-6 bg-gray-50/80 rounded-2xl flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                    className="flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
                                 >
                                     <img
                                         src={partner.logo}
                                         alt={`Partner ${partner.id}`}
-                                        className="h-12 w-auto object-contain max-w-[140px]"
+                                        loading="lazy"
+                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px]"
                                     />
                                 </div>
                             ))}
@@ -104,7 +105,7 @@ export const PartnersSection: React.FC = () => {
                     {/* Second row - scrolling right */}
                     <div className="flex overflow-hidden pb-4">
                         <motion.div
-                            className="flex gap-8 items-center"
+                            className="flex gap-4 md:gap-8 items-center"
                             animate={{ x: ['-50%', '0%'] }}
                             transition={{
                                 x: {
@@ -118,12 +119,13 @@ export const PartnersSection: React.FC = () => {
                             {[...partnerLogos.slice().reverse(), ...partnerLogos.slice().reverse()].map((partner, index) => (
                                 <div
                                     key={`row2-${index}`}
-                                    className="flex-shrink-0 h-20 px-6 bg-gray-50/80 rounded-2xl flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                    className="flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
                                 >
                                     <img
                                         src={partner.logo}
                                         alt={`Partner ${partner.id}`}
-                                        className="h-12 w-auto object-contain max-w-[140px]"
+                                        loading="lazy"
+                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px]"
                                     />
                                 </div>
                             ))}

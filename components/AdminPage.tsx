@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { LogOut, Newspaper, FileText, Plus, Edit, Trash2, Save, X, Eye, EyeOff, Users, Upload, Loader2, Star } from 'lucide-react';
-import { supabase, NewsArticle, uploadThumbnail, deleteThumbnail, ProjectCategory, fetchProjectCategories } from '../lib/supabase';
+import { supabase, NewsArticle, uploadThumbnail, deleteThumbnail, ProjectCategory, fetchProjectCategories, fetchServiceCategories, ServiceCategory } from '../lib/supabase';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -25,13 +25,15 @@ interface ServiceArticle {
     display_order: number;
     created_at: string;
     author_id: string | null;
-    project_category_id: string | null;
+    project_category_id: string | null; // Legacy
+    project_category_ids: string[] | null; // New array field
 }
 
 interface Service {
     id: string;
     name: string;
     slug: string;
+    category_id: string;
 }
 
 export const AdminPage: React.FC = () => {
@@ -47,6 +49,7 @@ export const AdminPage: React.FC = () => {
     const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
     const [serviceArticles, setServiceArticles] = useState<ServiceArticle[]>([]);
     const [services, setServices] = useState<Service[]>([]);
+    const [categories, setCategories] = useState<ServiceCategory[]>([]);
     const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
     const [projectCategories, setProjectCategories] = useState<ProjectCategory[]>([]);
     const [loading, setLoading] = useState(false);
@@ -68,7 +71,9 @@ export const AdminPage: React.FC = () => {
         display_order: 0,
 
         service_id: '',
-        project_category_id: ''
+        category_id: '', // Helper for UI filtering
+        project_category_id: '', // Legacy
+        project_category_ids: [] as string[] // New array field
     });
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -125,13 +130,19 @@ export const AdminPage: React.FC = () => {
         if (isLoggedIn) {
             fetchData();
             fetchServices();
+            fetchCategoriesList();
         }
     }, [isLoggedIn, activeTab]);
+
+    const fetchCategoriesList = async () => {
+        const cats = await fetchServiceCategories();
+        setCategories(cats);
+    };
 
     const fetchServices = async () => {
         const { data, error } = await supabase
             .from('services')
-            .select('id, name, slug')
+            .select('id, name, slug, category_id')
             .order('display_order');
         if (!error && data) setServices(data);
     };
@@ -239,12 +250,12 @@ export const AdminPage: React.FC = () => {
             featured: false,
             display_order: 0,
 
-            service_id: services.length > 0 ? services[0].id : '',
-            project_category_id: ''
+            service_id: '',
+            category_id: '',
+            project_category_id: '',
+            project_category_ids: []
         });
-        if (services.length > 0) {
-            fetchCategories(services[0].id);
-        }
+        // No default service/category selected initially to force user choice or keep clean
         setIsModalOpen(true);
     };
 
@@ -252,6 +263,9 @@ export const AdminPage: React.FC = () => {
         setEditingArticle(article);
         setThumbnailFile(null);
         setLogoFile(null);
+
+        const currentService = services.find(s => s.id === (article as ServiceArticle).service_id);
+
         setFormData({
             title: article.title,
             slug: (article as NewsArticle).slug || '',
@@ -266,8 +280,11 @@ export const AdminPage: React.FC = () => {
             display_order: article.display_order,
 
             service_id: (article as ServiceArticle).service_id || '',
-            project_category_id: (article as ServiceArticle).project_category_id || ''
+            category_id: currentService?.category_id || '',
+            project_category_id: (article as ServiceArticle).project_category_id || '',
+            project_category_ids: (article as ServiceArticle).project_category_ids || []
         });
+
         if ((article as ServiceArticle).service_id) {
             fetchCategories((article as ServiceArticle).service_id);
         }
@@ -277,6 +294,14 @@ export const AdminPage: React.FC = () => {
     const handleSave = async () => {
         try {
             setIsUploading(true);
+
+            // Validation
+            if (activeTab === 'service' && !formData.service_id) {
+                alert('Vui lòng chọn Dịch vụ cho dự án');
+                setIsUploading(false);
+                return;
+            }
+
             let uploadedThumbnailUrl = formData.thumbnail;
             let uploadedLogoUrl = formData.logo;
 
@@ -346,7 +371,8 @@ export const AdminPage: React.FC = () => {
                     display_order: formData.display_order,
 
                     service_id: formData.service_id,
-                    project_category_id: formData.project_category_id || null
+                    project_category_id: formData.project_category_id || null,
+                    project_category_ids: formData.project_category_ids.length > 0 ? formData.project_category_ids : null
                 };
 
                 if (editingArticle) {
@@ -516,7 +542,7 @@ export const AdminPage: React.FC = () => {
                             }`}
                     >
                         <FileText size={18} />
-                        Dịch Vụ
+                        Dự Án
                     </button>
                     {canManageUsers() && (
                         <button
@@ -848,21 +874,48 @@ export const AdminPage: React.FC = () => {
 
                                     {projectCategories.length > 0 && (
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                                Danh mục dự án
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Danh mục dự án (chọn nhiều)
                                             </label>
-                                            <select
-                                                value={formData.project_category_id}
-                                                onChange={(e) => setFormData({ ...formData, project_category_id: e.target.value })}
-                                                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
-                                            >
-                                                <option value="">-- Chọn danh mục (Tiêu biểu) --</option>
-                                                {projectCategories.map((cat) => (
-                                                    <option key={cat.id} value={cat.id}>
-                                                        {cat.name}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-gray-50 max-h-40 overflow-y-auto">
+                                                {projectCategories.map((cat) => {
+                                                    const isChecked = formData.project_category_ids.includes(cat.id);
+                                                    return (
+                                                        <label
+                                                            key={cat.id}
+                                                            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded border cursor-pointer transition-all text-sm ${isChecked
+                                                                    ? 'bg-brand-pink text-white border-brand-pink'
+                                                                    : 'bg-white text-gray-700 border-gray-300 hover:border-brand-pink'
+                                                                }`}
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isChecked}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            project_category_ids: [...formData.project_category_ids, cat.id]
+                                                                        });
+                                                                    } else {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            project_category_ids: formData.project_category_ids.filter(id => id !== cat.id)
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                className="sr-only"
+                                                            />
+                                                            {cat.name}
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                            {formData.project_category_ids.length > 0 && (
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Đã chọn: {formData.project_category_ids.length} danh mục
+                                                </p>
+                                            )}
                                         </div>
                                     )}
                                 </>

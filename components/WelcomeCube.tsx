@@ -30,8 +30,19 @@ export const WelcomeCube: React.FC = () => {
   const currentRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number | undefined>(undefined);
 
-  const baseCubeSize = 300;
+  const [baseCubeSize, setBaseCubeSize] = useState(300);
   const perspective = 1200;
+
+  // Responsive cube size
+  useEffect(() => {
+    const updateCubeSize = () => {
+      const isMobile = window.innerWidth < 768;
+      setBaseCubeSize(isMobile ? 160 : 300);
+    };
+    updateCubeSize();
+    window.addEventListener('resize', updateCubeSize);
+    return () => window.removeEventListener('resize', updateCubeSize);
+  }, []);
 
   // Lerp function for smooth interpolation
   const lerp = (start: number, end: number, factor: number) => {
@@ -50,7 +61,7 @@ export const WelcomeCube: React.FC = () => {
         introStateRef.current.started = true;
         introStateRef.current.startTime = performance.now();
       }
-    }, 2800);
+    }, 2000);
 
     const animate = () => {
       const now = performance.now();
@@ -61,7 +72,7 @@ export const WelcomeCube: React.FC = () => {
       if (introStateRef.current.started) {
         if (!introStateRef.current.completed) {
           const elapsed = now - introStateRef.current.startTime;
-          const duration = 3200; // Duration 3.5s
+          const duration = 4500; // Duration 3.5s
           const progress = Math.min(elapsed / duration, 1);
           const ease = 1 - Math.pow(1 - progress, 3);
           introAngle = 0 + (540 - 0) * ease;
@@ -124,12 +135,16 @@ export const WelcomeCube: React.FC = () => {
       } else {
         // Sidebar phase
         setPhase('sidebar');
-        setCubeScale(0.30);
+        // Mobile: smaller cube in sidebar
+        const isMobile = window.innerWidth < 768;
+        setCubeScale(isMobile ? 0.40 : 0.30);
 
         scrollStateRef.current.isInSidebar = true;
 
-        // Position logic
-        const rightOffset = window.innerWidth / 2 - 80;
+        // Position logic - mobile closer to right edge
+        const rightOffset = isMobile
+          ? window.innerWidth / 2 - 45  // Closer to right on mobile
+          : window.innerWidth / 2 - 80;
         const totalScrollableHeight = document.documentElement.scrollHeight - windowHeight;
         const remainingScroll = totalScrollableHeight - rotationEnd;
         const verticalProgress = Math.min((scrollY - rotationEnd) / remainingScroll, 1);

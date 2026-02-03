@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC = () => {
                     {testimonials.map((item, i) => (
                         <motion.div
                             key={i}
-                            className="bg-white border-2 border-brand-pink p-8 rounded-3xl shadow-sm hover:shadow-xl hover:shadow-brand-pink/20 transition-shadow relative flex flex-col group"
+                            className="bg-white border-2 border-brand-pink p-8 shadow-sm hover:shadow-xl hover:shadow-brand-pink/20 transition-shadow relative flex flex-col group"
                             variants={{
                                 hidden: { opacity: 0, y: 40 },
                                 visible: { opacity: 1, y: 0 }
@@ -63,7 +63,7 @@ export const TestimonialsSection: React.FC = () => {
                             whileHover={{ y: -5 }}
                         >
                             {/* Quote icon */}
-                            <div className="absolute -top-4 right-8 w-10 h-10 bg-brand-pink rounded-full flex items-center justify-center">
+                            <div className="absolute -top-4 right-8 w-10 h-10 bg-brand-pink flex items-center justify-center">
                                 <Quote className="text-white" size={16} />
                             </div>
 
@@ -83,10 +83,11 @@ export const TestimonialsSection: React.FC = () => {
 
                             {/* Footer - always at bottom */}
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center p-2">
+                                <div className="w-16 h-16 bg-gray-50 flex items-center justify-center p-2">
                                     <img
                                         src={item.logo}
                                         alt={item.name}
+                                        loading="lazy"
                                         className="w-full h-full object-contain"
                                     />
                                 </div>

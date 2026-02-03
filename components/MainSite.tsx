@@ -55,17 +55,17 @@ export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false 
       >
         <a href="tel:0924392222" className="relative block group">
           {/* Ripple Effects using CSS Keyframes */}
-          <div className="absolute w-14 h-14 rounded-full bg-brand-pink animate-ripple" />
-          <div className="absolute w-14 h-14 rounded-full bg-brand-pink animate-ripple" style={{ animationDelay: '1s' }} />
+          <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" />
+          <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" style={{ animationDelay: '1s' }} />
 
           {/* Main Button */}
           <motion.div
-            className="relative bg-brand-pink w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-brand-pink/30 cursor-pointer overflow-hidden z-10"
+            className="relative bg-brand-pink w-11 h-11 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg shadow-brand-pink/30 cursor-pointer overflow-hidden z-10"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 1.0 }}
           >
             <div className="absolute inset-0 bg-white/20 rounded-full scale-0 group-hover:scale-150 transition-transform duration-500 origin-center" />
-            <Phone className="text-white relative z-10 w-6 h-6" />
+            <Phone className="text-white relative z-10 w-5 h-5 md:w-6 md:h-6" />
           </motion.div>
         </a>
 
