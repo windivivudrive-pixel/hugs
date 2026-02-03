@@ -23,7 +23,7 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
     >
         <div className={`space-y-6 ${reverse ? 'lg:order-2' : ''}`}>
             {icon && (
-                <div className="w-14 h-14 bg-brand-pink/10 rounded-2xl flex items-center justify-center text-brand-pink">
+                <div className="w-14 h-14 bg-brand-pink/10 flex items-center justify-center text-brand-pink">
                     {icon}
                 </div>
             )}
@@ -34,13 +34,14 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
         </div>
         <div className={`${reverse ? 'lg:order-1' : ''}`}>
             <motion.div
-                className="relative rounded-3xl overflow-hidden shadow-2xl"
+                className="relative overflow-hidden shadow-2xl"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
             >
                 <img
                     src={image}
                     alt={title}
+                    loading="lazy"
                     className="w-full aspect-[4/3] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -65,7 +66,7 @@ export const AboutPage: React.FC = () => {
             <PageNavbar activePage="about" />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-16 bg-gradient-to-b from-gray-50 to-white">
+            <section className="pt-32 pb-16 bg-white">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -96,14 +97,9 @@ export const AboutPage: React.FC = () => {
                     content={
                         <>
                             <p>
-                                Chúng tôi phát triển các giải pháp truyền thông gắn với thực tế triển khai,
-                                giúp thương hiệu hiện diện đúng cách, đúng thời điểm và duy trì tăng trưởng
-                                bền vững trên Facebook, TikTok và các nền tảng khác.
-                            </p>
-                            <p>
-                                HUGs không tiếp cận truyền thông theo hướng ngắn hạn. Chúng tôi xây dựng
-                                và vận hành hệ thống nội dung và kênh như một <strong>tài sản chiến lược</strong>,
-                                được đầu tư và phát triển lâu dài cho thương hiệu.
+                                HUGs là cái ôm, cái chạm, chất xúc tác tạo phản ứng giữa thương hiệu với khách hàng.
+                                Chúng tôi thấu hiểu và là nơi kết nối, để giúp khách hàng truyền tải thông điệp kinh doanh,
+                                dịch vụ, sản phẩm đến với người tiêu dùng. Kết nối nhờ kết hợp truyền thông đa kênh tối ưu hoá trên từng chiến dịch.
                             </p>
                         </>
                     }
@@ -141,7 +137,7 @@ export const AboutPage: React.FC = () => {
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
                 >
-                    <div className="w-16 h-16 bg-brand-pink/10 rounded-full flex items-center justify-center text-brand-pink mx-auto mb-8">
+                    <div className="w-16 h-16 bg-brand-pink/10 flex items-center justify-center text-brand-pink mx-auto mb-8">
                         <ArrowRight size={32} />
                     </div>
                     <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-8">Tầm nhìn</h2>
@@ -160,7 +156,8 @@ export const AboutPage: React.FC = () => {
                     <img
                         src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"
                         alt="HUGs Vision"
-                        className="w-full aspect-[21/9] object-cover rounded-3xl shadow-2xl"
+                        loading="lazy"
+                        className="w-full aspect-[21/9] object-cover shadow-2xl"
                     />
                 </motion.div>
             </section>
@@ -198,7 +195,7 @@ export const AboutPage: React.FC = () => {
                             { number: '50+', label: 'Dự án/năm' },
                             { number: '4', label: 'Năm kinh nghiệm' }
                         ].map((stat, i) => (
-                            <div key={i} className="bg-gray-50 rounded-2xl p-6 text-center">
+                            <div key={i} className="bg-gray-50 p-6 text-center">
                                 <div className="text-4xl lg:text-5xl font-black text-brand-pink mb-2">{stat.number}</div>
                                 <div className="text-gray-600 font-medium">{stat.label}</div>
                             </div>
@@ -216,9 +213,9 @@ export const AboutPage: React.FC = () => {
                         {departments.map((dept, i) => (
                             <div
                                 key={i}
-                                className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-pink hover:shadow-lg transition-all group"
+                                className="bg-white border border-gray-200 p-5 hover:border-brand-pink hover:shadow-lg transition-all group"
                             >
-                                <div className="w-10 h-10 bg-brand-pink/10 rounded-lg flex items-center justify-center text-brand-pink mb-3 group-hover:bg-brand-pink group-hover:text-white transition-colors">
+                                <div className="w-10 h-10 bg-brand-pink/10 flex items-center justify-center text-brand-pink mb-3 group-hover:bg-brand-pink group-hover:text-white transition-colors">
                                     <span className="font-bold">{String(i + 1).padStart(2, '0')}</span>
                                 </div>
                                 <p className="font-semibold text-gray-900">{dept}</p>
@@ -249,7 +246,7 @@ export const AboutPage: React.FC = () => {
                         transition={{ duration: 0.5 }}
                         viewport={{ once: true }}
                     >
-                        <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-white mx-auto mb-6">
+                        <div className="w-14 h-14 bg-white/20 flex items-center justify-center text-white mx-auto mb-6">
                             <Heart size={28} />
                         </div>
                         <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">Văn hoá</h2>
@@ -273,7 +270,7 @@ export const AboutPage: React.FC = () => {
                         ].map((value, i) => (
                             <div
                                 key={i}
-                                className="bg-white rounded-2xl p-8 hover:shadow-xl transition-all hover:-translate-y-1"
+                                className="bg-white p-8 hover:shadow-xl transition-all hover:-translate-y-1"
                             >
                                 <div className="text-5xl font-black text-brand-pink mb-4">{String(i + 1).padStart(2, '0')}</div>
                                 <h3 className="text-2xl font-bold text-gray-900 mb-3">{value.title}</h3>

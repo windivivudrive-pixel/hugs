@@ -97,12 +97,13 @@ export const CultureSection: React.FC = () => {
                             <img
                                 src="/culture2.png"
                                 alt="HUGs Agency Culture"
+                                loading="lazy"
                                 className="w-full h-auto object-cover"
                             />
 
                             {/* Stats badge - top right (smaller) */}
                             <motion.div
-                                className="absolute -top-2 right-2 bg-brand-pink text-white rounded-xl shadow-lg px-3 py-2 z-20"
+                                className="absolute -top-2 right-2 bg-brand-pink text-white shadow-lg px-3 py-2 z-20"
                                 initial={{ opacity: 0, scale: 0.8 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5, delay: 0.5 }}
@@ -114,14 +115,14 @@ export const CultureSection: React.FC = () => {
 
                             {/* Location badge - bottom left (smaller) */}
                             <motion.div
-                                className="absolute -bottom-2 -left-2 bg-white rounded-xl shadow-lg p-3 z-20"
+                                className="absolute -bottom-2 -left-2 bg-white shadow-lg p-3 z-20"
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.4 }}
                                 viewport={{ once: true }}
                             >
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-brand-pink/10 rounded-lg flex items-center justify-center">
+                                    <div className="w-8 h-8 bg-brand-pink/10 flex items-center justify-center">
                                         <MapPin className="text-brand-pink" size={16} />
                                     </div>
                                     <div>

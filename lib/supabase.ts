@@ -31,6 +31,14 @@ export interface Service {
     category?: ServiceCategory;
 }
 
+export interface ProjectCategory {
+    id: string;
+    service_id: string;
+    name: string;
+    display_order: number;
+    created_at: string;
+}
+
 export interface ServiceArticle {
     id: string;
     service_id: string;
@@ -43,7 +51,11 @@ export interface ServiceArticle {
     featured: boolean;
     display_order: number;
     created_at: string;
+    author_id: string | null;
+    project_category_id: string | null; // Legacy, will be deprecated
+    project_category_ids: string[]; // New array field
     service?: Service;
+    project_category?: ProjectCategory;
 }
 
 // Helper functions to fetch data
@@ -74,10 +86,39 @@ export const fetchServicesByCategory = async (categorySlug: string): Promise<Ser
     return data || [];
 };
 
+
+
+export const fetchServiceCategories = async (): Promise<ServiceCategory[]> => {
+    const { data, error } = await supabase
+        .from('service_categories')
+        .select('*')
+        .order('display_order');
+
+    if (error) {
+        console.error('Error fetching service categories:', error);
+        return [];
+    }
+    return data || [];
+};
+
+export const fetchProjectCategories = async (serviceId: string): Promise<ProjectCategory[]> => {
+    const { data, error } = await supabase
+        .from('project_categories')
+        .select('*')
+        .eq('service_id', serviceId)
+        .order('display_order');
+
+    if (error) {
+        console.error('Error fetching project categories:', error);
+        return [];
+    }
+    return data || [];
+};
+
 export const fetchArticlesByService = async (serviceSlug: string): Promise<ServiceArticle[]> => {
     const { data, error } = await supabase
         .from('service_articles')
-        .select('*, service:services!inner(*)')
+        .select('*, service:services!inner(*), project_category:project_categories(*)')
         .eq('service.slug', serviceSlug)
         .eq('published', true)
         .order('display_order');
@@ -92,7 +133,7 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<Servi
 export const fetchAllArticles = async (): Promise<ServiceArticle[]> => {
     const { data, error } = await supabase
         .from('service_articles')
-        .select('*, service:services(*)')
+        .select('*, service:services(*), project_category:project_categories(*)')
         .eq('published', true)
         .order('created_at', { ascending: false })
         .limit(10);
@@ -115,6 +156,7 @@ export interface NewsArticle {
     category: string;
     category_color: string | null;
     author: string | null;
+    author_id: string | null;
     published: boolean;
     display_order: number;
     created_at: string;
@@ -196,5 +238,36 @@ export const deleteThumbnail = async (thumbnailUrl: string): Promise<boolean> =>
     } catch (err) {
         console.error('Error deleting thumbnail:', err);
         return false;
+    }
+};
+
+// Upload CV/Resume files
+export const uploadCV = async (file: File): Promise<{ url: string | null; error: any }> => {
+    try {
+        // Generate unique filename with original extension
+        const fileExt = file.name.split('.').pop();
+        const fileName = `cv/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+        const { data, error } = await supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) {
+            console.error('Error uploading CV:', error);
+            return { url: null, error };
+        }
+
+        // Get public URL
+        const { data: urlData } = supabase.storage
+            .from(THUMBNAIL_BUCKET)
+            .getPublicUrl(data.path);
+
+        return { url: urlData.publicUrl, error: null };
+    } catch (err) {
+        console.error('Error uploading CV:', err);
+        return { url: null, error: err };
     }
 };

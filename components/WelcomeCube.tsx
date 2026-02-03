@@ -9,13 +9,13 @@ const ImageFace: React.FC<{
   alt: string;
 }> = ({ transform, cubeSize, imageSrc, alt }) => (
   <div
-    className="absolute backface-hidden overflow-hidden shadow-lg"
+    className="absolute backface-hidden overflow-hidden shadow-lg bg-white"
     style={{ transform, width: cubeSize, height: cubeSize }}
   >
     <img
       src={imageSrc}
       alt={alt}
-      className="w-full h-full object-cover"
+      className="w-full h-full object-contain"
     />
   </div>
 );
@@ -30,21 +30,75 @@ export const WelcomeCube: React.FC = () => {
   const currentRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number | undefined>(undefined);
 
-  const baseCubeSize = 300;
+  const [baseCubeSize, setBaseCubeSize] = useState(300);
   const perspective = 1200;
+
+  // Responsive cube size
+  useEffect(() => {
+    const updateCubeSize = () => {
+      const isMobile = window.innerWidth < 768;
+      setBaseCubeSize(isMobile ? 160 : 300);
+    };
+    updateCubeSize();
+    window.addEventListener('resize', updateCubeSize);
+    return () => window.removeEventListener('resize', updateCubeSize);
+  }, []);
 
   // Lerp function for smooth interpolation
   const lerp = (start: number, end: number, factor: number) => {
     return start + (end - start) * factor;
   };
 
-  // Animation loop with Lerp smoothing
-  useEffect(() => {
-    const animate = () => {
-      const lerpFactor = 0.08;
+  // Refs for animation state
+  const introStateRef = useRef({ startTime: 0, completed: false, started: false });
+  const scrollStateRef = useRef({ rotProgress: 0, sidebarProgress: 0, isInSidebar: false });
 
-      currentRef.current.x = lerp(currentRef.current.x, targetRef.current.x, lerpFactor);
-      currentRef.current.y = lerp(currentRef.current.y, targetRef.current.y, lerpFactor);
+  // Start Timer and Animation loop
+  useEffect(() => {
+    // Timer to start intro at 2300ms
+    const timer = setTimeout(() => {
+      if (!introStateRef.current.started) {
+        introStateRef.current.started = true;
+        introStateRef.current.startTime = performance.now();
+      }
+    }, 2000);
+
+    const animate = () => {
+      const now = performance.now();
+
+      // Calculate Intro Angle
+      let introAngle = 0;
+
+      if (introStateRef.current.started) {
+        if (!introStateRef.current.completed) {
+          const elapsed = now - introStateRef.current.startTime;
+          const duration = 4500; // Duration 3.5s
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3);
+          introAngle = 0 + (540 - 0) * ease;
+
+          if (progress >= 1) introStateRef.current.completed = true;
+        } else {
+          introAngle = 540;
+        }
+      }
+
+      // Calculate Target Rotation
+      let targetY = introAngle;
+      let targetX = 0;
+
+      if (scrollStateRef.current.isInSidebar) {
+        targetY += 270 + scrollStateRef.current.sidebarProgress * 180;
+        targetX = 15;
+      } else {
+        targetY += scrollStateRef.current.rotProgress * 270;
+        targetX = 0;
+      }
+
+      // Smooth Interpolation
+      const lerpFactor = 0.08;
+      currentRef.current.x = lerp(currentRef.current.x, targetX, lerpFactor);
+      currentRef.current.y = lerp(currentRef.current.y, targetY, lerpFactor);
 
       setRotation({
         x: currentRef.current.x,
@@ -55,64 +109,61 @@ export const WelcomeCube: React.FC = () => {
     };
 
     rafRef.current = requestAnimationFrame(animate);
+
     return () => {
+      clearTimeout(timer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
-  // Scroll handler
+  // Update Scroll State
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
-
-      // Phase 1: Center rotation (0 to 270deg)
       const rotationEnd = windowHeight * 0.75;
 
       if (scrollY < rotationEnd) {
-        // Center phase - rotate
+        // Center phase
         setPhase('center');
         setCubeScale(1);
         setCubePosition({ x: 0, y: 0 });
         setSidebarVerticalProgress(0);
 
-        const rotProgress = scrollY / rotationEnd;
-        targetRef.current = {
-          y: rotProgress * 270,
-          x: 0,
-        };
+        scrollStateRef.current.isInSidebar = false;
+        scrollStateRef.current.rotProgress = scrollY / rotationEnd;
       } else {
         // Sidebar phase
         setPhase('sidebar');
-        setCubeScale(0.30); // 10% smaller
+        // Mobile: smaller cube in sidebar
+        const isMobile = window.innerWidth < 768;
+        setCubeScale(isMobile ? 0.40 : 0.30);
 
-        // Calculate position to right side (moved left a bit)
-        const rightOffset = window.innerWidth / 2 - 80;
+        scrollStateRef.current.isInSidebar = true;
 
-        // Calculate vertical progress
+        // Position logic - mobile closer to right edge
+        const rightOffset = isMobile
+          ? window.innerWidth / 2 - 45  // Closer to right on mobile
+          : window.innerWidth / 2 - 80;
         const totalScrollableHeight = document.documentElement.scrollHeight - windowHeight;
         const remainingScroll = totalScrollableHeight - rotationEnd;
         const verticalProgress = Math.min((scrollY - rotationEnd) / remainingScroll, 1);
         setSidebarVerticalProgress(verticalProgress);
 
-        // Vertical position: from top to 1/4 screen from bottom
-        const startY = -windowHeight * 0.35; // Start near top
-        const endY = windowHeight * 0.25; // End at 1/4 from bottom (center + 0.25 = 0.75 from top)
+        const startY = -windowHeight * 0.35;
+        const endY = windowHeight * 0.25;
         const topOffset = startY + verticalProgress * (endY - startY);
 
         setCubePosition({ x: rightOffset, y: topOffset });
 
-        // Continuous rotation
+        // Rotation logic
         const sidebarProgress = (scrollY - rotationEnd) / windowHeight;
-        targetRef.current = {
-          y: 270 + sidebarProgress * 180,
-          x: 15,
-        };
+        scrollStateRef.current.sidebarProgress = sidebarProgress;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    handleScroll(); // Initial check
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -135,16 +186,7 @@ export const WelcomeCube: React.FC = () => {
               className="fixed inset-0 z-0"
             >
               {/* Background gradient */}
-              <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute inset-0 bg-white/70" />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255,2,144,0.15) 0%, rgba(147,51,234,0.15) 25%, rgba(59,130,246,0.15) 50%, rgba(255,2,144,0.15) 75%, rgba(147,51,234,0.15) 100%)',
-                    backgroundSize: '400% 400%',
-                    animation: 'gradientShift 8s ease-in-out infinite',
-                  }}
-                />
+              <div className="absolute inset-0 overflow-hidden pointer-events-none bg-white">
               </div>
 
               {/* Floating Text */}
@@ -197,6 +239,7 @@ export const WelcomeCube: React.FC = () => {
           }}
           style={{ perspective: `${perspective}px` }}
         >
+
           <div
             className="relative transform-style-3d will-change-transform"
             style={{
@@ -206,12 +249,47 @@ export const WelcomeCube: React.FC = () => {
               transformOrigin: 'center center',
             }}
           >
-            <ImageFace transform={`translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube3.png" alt="Cube Front" />
-            <ImageFace transform={`rotateY(180deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube4.png" alt="Cube Back" />
-            <ImageFace transform={`rotateY(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube1.png" alt="Cube Right" />
-            <ImageFace transform={`rotateY(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube2.png" alt="Cube Left" />
-            <ImageFace transform={`rotateX(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube2.png" alt="Cube Top" />
-            <ImageFace transform={`rotateX(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube3.png" alt="Cube Bottom" />
+            {(() => {
+              const effectiveRot = rotation.y % 720;
+              // Effectively "post intro" once we hit 540.
+              // Note: During scroll, y goes > 540.
+              const isPostIntro = rotation.y >= 535; // Slight buffer before 540 to ensure switch happens while hidden if possible, or exactly at finish.
+
+              // Mapping based on user request & state:
+              // Post-Intro (Cube Mode):
+              // Front -> cube4
+              // Back  -> cube3
+              // Right -> cube2 (User's latest edit)
+              // Left  -> cube1 (User's latest edit)
+
+              // Front logic:
+              const frontImg = isPostIntro
+                ? '/cube4.png'
+                : (effectiveRot > 135 && effectiveRot < 540 ? '/logo-partner/partner4.png' : '/cube3.png');
+
+              // Back logic:
+              // Must handle isPostIntro to prevent reverting to partner8 when effectiveRot wraps (e.g. 90)
+              const backImg = isPostIntro
+                ? '/cube3.png'
+                : (effectiveRot > 315 ? '/cube3.png' : '/logo-partner/partner8.png');
+
+              // Right logic:
+              const rightImg = isPostIntro ? '/cube2.png' : '/logo-partner/partner9.png';
+
+              // Left logic:
+              const leftImg = isPostIntro ? '/cube1.png' : '/logo-partner/partner3.png';
+
+              return (
+                <>
+                  <ImageFace transform={`translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc={frontImg} alt="Cube Front" />
+                  <ImageFace transform={`rotateY(180deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc={backImg} alt="Cube Back" />
+                  <ImageFace transform={`rotateY(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc={rightImg} alt="Cube Right" />
+                  <ImageFace transform={`rotateY(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc={leftImg} alt="Cube Left" />
+                  <ImageFace transform={`rotateX(90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube2.png" alt="Cube Top" />
+                  <ImageFace transform={`rotateX(-90deg) translateZ(${baseCubeSize / 2}px)`} cubeSize={baseCubeSize} imageSrc="/cube3.png" alt="Cube Bottom" />
+                </>
+              );
+            })()}
           </div>
         </motion.div>
       </div>

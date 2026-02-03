@@ -10,7 +10,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'loading' | 'opening' | 'done'>('loading');
 
   useEffect(() => {
-    const duration = 2000; // 2 seconds
+    const duration = 1200; // 2 seconds
     const intervalTime = 20;
     const steps = duration / intervalTime;
     const increment = 100 / steps;

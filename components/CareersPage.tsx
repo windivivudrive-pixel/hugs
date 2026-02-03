@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, Briefcase, Send, Upload, ChevronDown } from 'lucide-react';
+import { MapPin, Clock, Briefcase, Send, Upload, ChevronDown, AlertCircle } from 'lucide-react';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
+import {
+    checkRateLimit,
+    recordSubmission,
+    validateHoneypot,
+    submitToGoogleForm,
+    validateFileSize,
+    RECRUITMENT_FORM_CONFIG,
+} from '../lib/formUtils';
+import { uploadCV } from '../lib/supabase';
 
 // Sample job positions data
 const jobPositions = [
@@ -12,6 +21,7 @@ const jobPositions = [
         location: 'Hồ Chí Minh',
         type: 'Full-time',
         level: 'Junior',
+        active: true,
         description: 'Sáng tạo nội dung cho các kênh social media của khách hàng.',
         fullDescription: `
             <h4>Mô tả công việc:</h4>
@@ -42,6 +52,7 @@ const jobPositions = [
         location: 'Hồ Chí Minh',
         type: 'Full-time',
         level: 'Senior',
+        active: true,
         description: 'Thiết kế ấn phẩm truyền thông, branding cho các dự án lớn.',
         fullDescription: `
             <h4>Mô tả công việc:</h4>
@@ -72,6 +83,7 @@ const jobPositions = [
         location: 'Hồ Chí Minh / Remote',
         type: 'Part-time',
         level: 'Junior',
+        active: false,
         description: 'Dựng video cho các chiến dịch marketing và social media.',
         fullDescription: `
             <h4>Mô tả công việc:</h4>
@@ -102,6 +114,7 @@ const jobPositions = [
         location: 'Hồ Chí Minh',
         type: 'Full-time',
         level: 'Middle',
+        active: true,
         description: 'Quản lý dự án và chăm sóc khách hàng.',
         fullDescription: `
             <h4>Mô tả công việc:</h4>
@@ -132,6 +145,7 @@ const jobPositions = [
         location: 'Hồ Chí Minh',
         type: 'Internship',
         level: 'Intern',
+        active: true,
         description: 'Hỗ trợ team vận hành và phát triển các kênh social media.',
         fullDescription: `
             <h4>Mô tả công việc:</h4>
@@ -161,6 +175,7 @@ const jobPositions = [
 export const CareersPage: React.FC = () => {
     const formRef = useRef<HTMLDivElement>(null);
     const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
+
     const [formData, setFormData] = useState({
         position: '',
         fullName: '',
@@ -168,10 +183,12 @@ export const CareersPage: React.FC = () => {
         phone: '',
         portfolio: '',
         message: '',
+        honeypot: '', // Anti-spam honeypot field
     });
     const [cvFile, setCvFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     // Scroll to top on mount
     useEffect(() => {
@@ -186,37 +203,104 @@ export const CareersPage: React.FC = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear error when user starts typing
+        if (submitError) setSubmitError(null);
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setCvFile(e.target.files[0]);
+            const file = e.target.files[0];
+
+            // Validate file size (10MB max)
+            if (!validateFileSize(file, 10)) {
+                setSubmitError('File CV không được vượt quá 10MB');
+                return;
+            }
+
+            setCvFile(file);
+            setSubmitError(null);
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setSubmitError(null);
+
+        // Validate honeypot (anti-spam)
+        if (!validateHoneypot(formData.honeypot)) {
+            console.log('Spam detected');
+            return;
+        }
+
+        // Check rate limit
+        if (!checkRateLimit('recruitment')) {
+            setSubmitError('Bạn đã gửi quá nhiều đơn. Vui lòng thử lại sau 1 giờ.');
+            return;
+        }
+
+        // Validate required fields
+        if (!formData.fullName || !formData.email || !formData.phone) {
+            setSubmitError('Vui lòng điền đầy đủ thông tin bắt buộc.');
+            return;
+        }
+
+        // Validate CV file
+        if (!cvFile) {
+            setSubmitError('Vui lòng đính kèm CV của bạn.');
+            return;
+        }
+
         setIsSubmitting(true);
 
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        try {
+            // Step 1: Upload CV to Supabase
+            const { url: cvUrl, error: uploadError } = await uploadCV(cvFile);
 
-        setSubmitSuccess(true);
-        setIsSubmitting(false);
+            if (uploadError || !cvUrl) {
+                setSubmitError('Không thể tải lên CV. Vui lòng thử lại.');
+                setIsSubmitting(false);
+                return;
+            }
 
-        // Reset form after 3 seconds
-        setTimeout(() => {
-            setSubmitSuccess(false);
-            setFormData({
-                position: '',
-                fullName: '',
-                email: '',
-                phone: '',
-                portfolio: '',
-                message: '',
+            // Step 2: Submit form data with CV URL to Google Form
+            const result = await submitToGoogleForm(RECRUITMENT_FORM_CONFIG, {
+                fullName: formData.fullName,
+                email: formData.email,
+                phone: formData.phone,
+                position: formData.position,
+                portfolio: formData.portfolio,
+                cvUrl: cvUrl, // Supabase URL for the CV
+                message: formData.message,
             });
-            setCvFile(null);
-        }, 3000);
+
+            if (result.success) {
+                // Record submission for rate limiting
+                recordSubmission('recruitment');
+                setSubmitSuccess(true);
+
+                // Reset form after 3 seconds
+                setTimeout(() => {
+                    setSubmitSuccess(false);
+                    setFormData({
+                        position: '',
+                        fullName: '',
+                        email: '',
+                        phone: '',
+                        portfolio: '',
+                        message: '',
+                        honeypot: '',
+                    });
+                    setCvFile(null);
+                }, 3000);
+            } else {
+                setSubmitError(result.message || 'Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+        } catch (error) {
+            console.error('Submit error:', error);
+            setSubmitError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -225,7 +309,7 @@ export const CareersPage: React.FC = () => {
             <PageNavbar activePage="careers" />
 
             {/* Hero Section */}
-            <section className="pt-32 pb-16 bg-gradient-to-b from-brand-pink/5 to-white">
+            <section className="pt-32 pb-16 bg-white">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
@@ -250,12 +334,14 @@ export const CareersPage: React.FC = () => {
             <section className="py-16">
                 <div className="max-w-4xl mx-auto px-6">
                     <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                        Vị trí đang tuyển ({jobPositions.length})
+                        Vị trí đang tuyển ({jobPositions.filter(j => j.active).length})
                     </h2>
 
                     <div className="space-y-4">
                         {jobPositions.map((job, index) => {
                             const isExpanded = expandedJobId === job.id;
+                            const isActive = job.active;
+
                             return (
                                 <motion.div
                                     key={job.id}
@@ -263,32 +349,49 @@ export const CareersPage: React.FC = () => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.4, delay: index * 0.1 }}
                                     viewport={{ once: true }}
-                                    className={`bg-white border rounded-xl overflow-hidden transition-all ${isExpanded
+                                    className={`bg-white border overflow-hidden transition-all duration-300 ${isExpanded
                                         ? 'border-brand-pink shadow-lg shadow-brand-pink/10'
                                         : 'border-gray-200 hover:border-brand-pink hover:shadow-lg'
-                                        }`}
+                                        } ${!isActive ? 'opacity-50 grayscale bg-gray-50' : ''}`}
                                 >
                                     {/* Clickable Header */}
                                     <div
-                                        onClick={() => setExpandedJobId(isExpanded ? null : job.id)}
-                                        className="p-6 cursor-pointer group"
+                                        onClick={() => isActive && setExpandedJobId(isExpanded ? null : job.id)}
+                                        className={`p-6 ${isActive ? 'cursor-pointer group' : 'cursor-not-allowed'}`}
                                     >
-                                        {/* Job Title with expand icon */}
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className={`text-xl font-bold transition-colors ${isExpanded ? 'text-brand-pink' : 'text-gray-900 group-hover:text-brand-pink'
-                                                }`}>
-                                                {job.title}
-                                            </h3>
-                                            <motion.div
-                                                animate={{ rotate: isExpanded ? 180 : 0 }}
-                                                transition={{ duration: 0.3 }}
-                                            >
-                                                <ChevronDown
-                                                    size={24}
-                                                    className={`transition-colors ${isExpanded ? 'text-brand-pink' : 'text-gray-400'
-                                                        }`}
-                                                />
-                                            </motion.div>
+                                            <div className="flex items-center gap-4 flex-wrap">
+                                                <h3 className={`text-xl font-bold transition-colors ${isActive
+                                                    ? (isExpanded ? 'text-brand-pink' : 'text-gray-900 group-hover:text-brand-pink')
+                                                    : 'text-gray-500'
+                                                    }`}>
+                                                    {job.title}
+                                                </h3>
+
+                                                {/* Status Badge */}
+                                                {isActive ? (
+                                                    <span className="inline-block px-3 py-1 rounded-full border border-brand-pink text-brand-pink text-xs font-bold leading-none">
+                                                        Đang Tuyển Dụng
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-block px-3 py-1 rounded-full border border-gray-300 text-gray-400 text-xs font-bold leading-none">
+                                                        Đã đóng
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {isActive && (
+                                                <motion.div
+                                                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <ChevronDown
+                                                        size={24}
+                                                        className={`transition-colors ${isExpanded ? 'text-brand-pink' : 'text-gray-400'
+                                                            }`}
+                                                    />
+                                                </motion.div>
+                                            )}
                                         </div>
 
                                         {/* Job Details Grid */}
@@ -321,7 +424,7 @@ export const CareersPage: React.FC = () => {
                                         </div>
 
                                         {/* Expand hint when collapsed */}
-                                        {!isExpanded && (
+                                        {!isExpanded && isActive && (
                                             <div className="mt-4 pt-4 border-t border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <span className="text-sm text-brand-pink font-medium">
                                                     Click để xem chi tiết →
@@ -332,7 +435,7 @@ export const CareersPage: React.FC = () => {
 
                                     {/* Expandable Content */}
                                     <AnimatePresence>
-                                        {isExpanded && (
+                                        {isExpanded && isActive && (
                                             <motion.div
                                                 initial={{ height: 0, opacity: 0 }}
                                                 animate={{ height: 'auto', opacity: 1 }}
@@ -397,7 +500,7 @@ export const CareersPage: React.FC = () => {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="bg-green-50 border border-green-200 rounded-xl p-8 text-center"
+                                className="bg-green-50 border border-green-200 p-8 text-center"
                             >
                                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                     <Send className="text-green-600" size={32} />
@@ -410,7 +513,26 @@ export const CareersPage: React.FC = () => {
                                 </p>
                             </motion.div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+                            <form onSubmit={handleSubmit} className="bg-white shadow-lg p-8 space-y-6">
+                                {/* Honeypot - hidden anti-spam field */}
+                                <input
+                                    type="text"
+                                    name="honeypot"
+                                    value={formData.honeypot}
+                                    onChange={handleInputChange}
+                                    className="absolute -left-[9999px]"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                />
+
+                                {/* Error Message */}
+                                {submitError && (
+                                    <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                                        <AlertCircle size={20} />
+                                        <span className="font-medium">{submitError}</span>
+                                    </div>
+                                )}
+
                                 {/* Position */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -515,7 +637,7 @@ export const CareersPage: React.FC = () => {
                                                 <span className="text-gray-500">
                                                     Kéo thả hoặc <span className="text-brand-pink font-medium">chọn file</span>
                                                     <br />
-                                                    <span className="text-xs">PDF, DOC, DOCX (tối đa 5MB)</span>
+                                                    <span className="text-xs">PDF, DOC, DOCX (tối đa 10MB)</span>
                                                 </span>
                                             )}
                                         </label>

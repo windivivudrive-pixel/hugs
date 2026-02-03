@@ -6,26 +6,26 @@ export const TestimonialsSection: React.FC = () => {
     const testimonials = [
         {
             name: "Ahamove",
-            role: "Marketing Director",
+            role: "Director",
             text: "HUGs Agency rất nhiệt tình và hỗ trợ linh hoạt, luôn sẵn lòng hỗ trợ cả vào buổi khuya và cuối tuần. Hy vọng mối quan hệ hợp tác giữa Ahamove và HUGs sẽ tiếp tục phát triển.",
-            avatar: "AH"
+            logo: "/logo-partner/partner0.png"
         },
         {
             name: "Nessa House",
             role: "CEO",
             text: "Nessa House rất vui được đồng hành cùng HUGs Agency trong năm thứ hai. Chúng tôi đánh giá cao sự tận tâm và hiểu biết sâu sắc của đội ngũ HUGs Agency về thị trường miền Trung.",
-            avatar: "NH"
+            logo: "/logo-partner/partner1.png"
         },
         {
             name: "Kính mắt Anna",
             role: "Brand Manager",
             text: "HUGs Agency không chỉ là đối tác digital marketing mà còn là người bạn đồng hành chiến lược. Sáng tạo và hiểu rõ về khách hàng của chúng tôi.",
-            avatar: "KA"
+            logo: "/logo-partner/partner3.png"
         }
     ];
 
     return (
-        <section className="py-24 bg-gray-50/80 backdrop-blur-sm overflow-hidden">
+        <section className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <motion.div
                     className="text-center mb-16"
@@ -55,7 +55,7 @@ export const TestimonialsSection: React.FC = () => {
                     {testimonials.map((item, i) => (
                         <motion.div
                             key={i}
-                            className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-shadow relative flex flex-col"
+                            className="bg-white border-2 border-brand-pink p-8 shadow-sm hover:shadow-xl hover:shadow-brand-pink/20 transition-shadow relative flex flex-col group"
                             variants={{
                                 hidden: { opacity: 0, y: 40 },
                                 visible: { opacity: 1, y: 0 }
@@ -63,7 +63,7 @@ export const TestimonialsSection: React.FC = () => {
                             whileHover={{ y: -5 }}
                         >
                             {/* Quote icon */}
-                            <div className="absolute -top-4 right-8 w-10 h-10 bg-brand-pink rounded-full flex items-center justify-center">
+                            <div className="absolute -top-4 right-8 w-10 h-10 bg-brand-pink flex items-center justify-center">
                                 <Quote className="text-white" size={16} />
                             </div>
 
@@ -83,19 +83,27 @@ export const TestimonialsSection: React.FC = () => {
 
                             {/* Footer - always at bottom */}
                             <div className="flex items-center gap-4 mt-auto">
-                                <div className="w-12 h-12 bg-brand-pink/10 rounded-full flex items-center justify-center text-brand-pink font-bold text-sm">
-                                    {item.avatar}
+                                <div className="w-16 h-16 bg-gray-50 flex items-center justify-center p-2">
+                                    <img
+                                        src={item.logo}
+                                        alt={item.name}
+                                        loading="lazy"
+                                        className="w-full h-full object-contain"
+                                    />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-gray-900">{item.name}</h4>
-                                    <p className="text-sm text-gray-500">{item.role}</p>
+                                    <h4 className="font-bold text-gray-900 text-lg">{item.name}</h4>
+                                    <p className="text-base text-gray-500">{item.role}</p>
                                 </div>
                                 {/* HUGs logo marker - bottom right */}
-                                <img
-                                    src="/logo-hugs-only.png"
-                                    alt=""
-                                    className="absolute bottom-6 right-6 w-20 h-20 opacity-20 pointer-events-none"
-                                />
+                                {/* "Xem dự án" button - appears on hover */}
+                                {/* "Xem dự án" button - appears on hover */}
+                                <motion.button
+                                    className="ml-auto bg-brand-pink text-white text-xs font-bold px-4 py-2 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 hover:bg-brand-pink/90"
+                                    whileHover={{ scale: 1.05 }}
+                                >
+                                    Xem dự án
+                                </motion.button>
                             </div>
                         </motion.div>
                     ))}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { LogOut, Newspaper, FileText, Plus, Edit, Trash2, Save, X, Eye, EyeOff, Users, Upload, Loader2, Star } from 'lucide-react';
-import { supabase, NewsArticle, uploadThumbnail, deleteThumbnail } from '../lib/supabase';
+import { supabase, NewsArticle, uploadThumbnail, deleteThumbnail, ProjectCategory, fetchProjectCategories, fetchServiceCategories, ServiceCategory } from '../lib/supabase';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -24,13 +24,16 @@ interface ServiceArticle {
     featured: boolean;
     display_order: number;
     created_at: string;
-    author_id?: string;
+    author_id: string | null;
+    project_category_id: string | null; // Legacy
+    project_category_ids: string[] | null; // New array field
 }
 
 interface Service {
     id: string;
     name: string;
     slug: string;
+    category_id: string;
 }
 
 export const AdminPage: React.FC = () => {
@@ -46,7 +49,9 @@ export const AdminPage: React.FC = () => {
     const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
     const [serviceArticles, setServiceArticles] = useState<ServiceArticle[]>([]);
     const [services, setServices] = useState<Service[]>([]);
+    const [categories, setCategories] = useState<ServiceCategory[]>([]);
     const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
+    const [projectCategories, setProjectCategories] = useState<ProjectCategory[]>([]);
     const [loading, setLoading] = useState(false);
 
     // Edit/Add modal state
@@ -64,19 +69,60 @@ export const AdminPage: React.FC = () => {
         published: false,
         featured: false,
         display_order: 0,
-        service_id: ''
+
+        service_id: '',
+        category_id: '', // Helper for UI filtering
+        project_category_id: '', // Legacy
+        project_category_ids: [] as string[] // New array field
     });
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
 
-    // Check login state on mount
+    // Check login state on mount and refresh role
     useEffect(() => {
-        const savedUser = localStorage.getItem('admin_user');
-        if (savedUser) {
-            setCurrentUser(JSON.parse(savedUser));
-            setIsLoggedIn(true);
-        }
+        const checkUser = async () => {
+            const savedUserStr = localStorage.getItem('admin_user');
+            if (savedUserStr) {
+                const savedUser = JSON.parse(savedUserStr);
+                // Optimistically set from local storage first
+                setCurrentUser(savedUser);
+                setIsLoggedIn(true);
+
+                // Verify and refresh from DB
+                try {
+                    const { data, error } = await supabase
+                        .from('admin_users')
+                        .select('id, username, role')
+                        .eq('id', savedUser.id)
+                        .single();
+
+                    if (!error && data) {
+                        const freshUser: AdminUser = {
+                            id: data.id,
+                            username: data.username,
+                            role: data.role as UserRole
+                        };
+                        console.log('Refreshed user from DB:', freshUser);
+                        // Update local storage and state if changed
+                        if (JSON.stringify(freshUser) !== savedUserStr) {
+                            localStorage.setItem('admin_user', JSON.stringify(freshUser));
+                            setCurrentUser(freshUser);
+                        }
+                    } else {
+                        // User might be deleted or error
+                        console.error('Error refreshing user:', error);
+                        if (error?.code === 'PGRST116') { // No rows found
+                            handleLogout();
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error verifying user:', err);
+                }
+            }
+        };
+
+        checkUser();
     }, []);
 
     // Fetch data when logged in
@@ -84,13 +130,19 @@ export const AdminPage: React.FC = () => {
         if (isLoggedIn) {
             fetchData();
             fetchServices();
+            fetchCategoriesList();
         }
     }, [isLoggedIn, activeTab]);
+
+    const fetchCategoriesList = async () => {
+        const cats = await fetchServiceCategories();
+        setCategories(cats);
+    };
 
     const fetchServices = async () => {
         const { data, error } = await supabase
             .from('services')
-            .select('id, name, slug')
+            .select('id, name, slug, category_id')
             .order('display_order');
         if (!error && data) setServices(data);
     };
@@ -101,6 +153,15 @@ export const AdminPage: React.FC = () => {
             .select('id, username, role')
             .order('created_at');
         if (!error && data) setAdminUsers(data as AdminUser[]);
+    };
+
+    const fetchCategories = async (serviceId: string) => {
+        if (!serviceId) {
+            setProjectCategories([]);
+            return;
+        }
+        const cats = await fetchProjectCategories(serviceId);
+        setProjectCategories(cats);
     };
 
     const fetchData = async () => {
@@ -160,10 +221,12 @@ export const AdminPage: React.FC = () => {
 
     // Permission helpers
     const canEdit = (article?: NewsArticle | ServiceArticle) => {
+        if (!article) return true; // Can always create new
         if (currentUser?.role === 'admin' || currentUser?.role === 'agent') return true;
+
         // Member can edit their own articles
-        if (currentUser?.role === 'member' && article) {
-            return (article as any).author_id === currentUser.id;
+        if (currentUser?.role === 'member') {
+            return article.author_id === currentUser.id;
         }
         return false;
     };
@@ -186,8 +249,13 @@ export const AdminPage: React.FC = () => {
             published: false,
             featured: false,
             display_order: 0,
-            service_id: services.length > 0 ? services[0].id : ''
+
+            service_id: '',
+            category_id: '',
+            project_category_id: '',
+            project_category_ids: []
         });
+        // No default service/category selected initially to force user choice or keep clean
         setIsModalOpen(true);
     };
 
@@ -195,6 +263,9 @@ export const AdminPage: React.FC = () => {
         setEditingArticle(article);
         setThumbnailFile(null);
         setLogoFile(null);
+
+        const currentService = services.find(s => s.id === (article as ServiceArticle).service_id);
+
         setFormData({
             title: article.title,
             slug: (article as NewsArticle).slug || '',
@@ -207,14 +278,30 @@ export const AdminPage: React.FC = () => {
             published: article.published,
             featured: (article as ServiceArticle).featured || false,
             display_order: article.display_order,
-            service_id: (article as ServiceArticle).service_id || ''
+
+            service_id: (article as ServiceArticle).service_id || '',
+            category_id: currentService?.category_id || '',
+            project_category_id: (article as ServiceArticle).project_category_id || '',
+            project_category_ids: (article as ServiceArticle).project_category_ids || []
         });
+
+        if ((article as ServiceArticle).service_id) {
+            fetchCategories((article as ServiceArticle).service_id);
+        }
         setIsModalOpen(true);
     };
 
     const handleSave = async () => {
         try {
             setIsUploading(true);
+
+            // Validation
+            if (activeTab === 'service' && !formData.service_id) {
+                alert('Vui lòng chọn Dịch vụ cho dự án');
+                setIsUploading(false);
+                return;
+            }
+
             let uploadedThumbnailUrl = formData.thumbnail;
             let uploadedLogoUrl = formData.logo;
 
@@ -259,6 +346,10 @@ export const AdminPage: React.FC = () => {
                 };
 
                 if (editingArticle) {
+                    if (!canEdit(editingArticle)) {
+                        alert('Bạn không có quyền chỉnh sửa bài viết này');
+                        return;
+                    }
                     await supabase
                         .from('news_articles')
                         .update(articleData)
@@ -278,10 +369,17 @@ export const AdminPage: React.FC = () => {
                     published: formData.published,
                     featured: formData.featured,
                     display_order: formData.display_order,
-                    service_id: formData.service_id
+
+                    service_id: formData.service_id,
+                    project_category_id: formData.project_category_id || null,
+                    project_category_ids: formData.project_category_ids.length > 0 ? formData.project_category_ids : null
                 };
 
                 if (editingArticle) {
+                    if (!canEdit(editingArticle)) {
+                        alert('Bạn không có quyền chỉnh sửa bài viết này');
+                        return;
+                    }
                     await supabase
                         .from('service_articles')
                         .update(articleData)
@@ -289,7 +387,7 @@ export const AdminPage: React.FC = () => {
                 } else {
                     await supabase
                         .from('service_articles')
-                        .insert([articleData]);
+                        .insert([{ ...articleData, author_id: currentUser?.id }]);
                 }
             }
 
@@ -303,6 +401,10 @@ export const AdminPage: React.FC = () => {
     };
 
     const handleDelete = async (id: string) => {
+        if (!canDelete()) {
+            alert('Bạn không có quyền xóa bài viết');
+            return;
+        }
         if (!confirm('Bạn có chắc muốn xóa bài viết này?')) return;
 
         try {
@@ -440,7 +542,7 @@ export const AdminPage: React.FC = () => {
                             }`}
                     >
                         <FileText size={18} />
-                        Dịch Vụ
+                        Dự Án
                     </button>
                     {canManageUsers() && (
                         <button
@@ -747,23 +849,76 @@ export const AdminPage: React.FC = () => {
                             )}
 
                             {activeTab === 'service' && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Dịch vụ *
-                                    </label>
-                                    <select
-                                        value={formData.service_id}
-                                        onChange={(e) => setFormData({ ...formData, service_id: e.target.value })}
-                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
-                                    >
-                                        <option value="">-- Chọn dịch vụ --</option>
-                                        {services.map((service) => (
-                                            <option key={service.id} value={service.id}>
-                                                {service.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Dịch vụ *
+                                        </label>
+                                        <select
+                                            value={formData.service_id}
+                                            onChange={(e) => {
+                                                const newServiceId = e.target.value;
+                                                setFormData({ ...formData, service_id: newServiceId, project_category_id: '' });
+                                                fetchCategories(newServiceId);
+                                            }}
+                                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
+                                        >
+                                            <option value="">-- Chọn dịch vụ --</option>
+                                            {services.map((service) => (
+                                                <option key={service.id} value={service.id}>
+                                                    {service.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {projectCategories.length > 0 && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                Danh mục dự án (chọn nhiều)
+                                            </label>
+                                            <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-gray-50 max-h-40 overflow-y-auto">
+                                                {projectCategories.map((cat) => {
+                                                    const isChecked = formData.project_category_ids.includes(cat.id);
+                                                    return (
+                                                        <label
+                                                            key={cat.id}
+                                                            className={`inline-flex items-center gap-2 px-3 py-1.5 rounded border cursor-pointer transition-all text-sm ${isChecked
+                                                                    ? 'bg-brand-pink text-white border-brand-pink'
+                                                                    : 'bg-white text-gray-700 border-gray-300 hover:border-brand-pink'
+                                                                }`}
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isChecked}
+                                                                onChange={(e) => {
+                                                                    if (e.target.checked) {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            project_category_ids: [...formData.project_category_ids, cat.id]
+                                                                        });
+                                                                    } else {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            project_category_ids: formData.project_category_ids.filter(id => id !== cat.id)
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                className="sr-only"
+                                                            />
+                                                            {cat.name}
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                            {formData.project_category_ids.length > 0 && (
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    Đã chọn: {formData.project_category_ids.length} danh mục
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
+                                </>
                             )}
 
                             <div>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ArrowRight, Loader2 } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import Masonry from 'react-masonry-css';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
-import { supabase, Service, ServiceArticle } from '../lib/supabase';
+import { supabase, Service, ServiceArticle, ProjectCategory, fetchProjectCategories } from '../lib/supabase';
 
 // Helper to strip HTML tags and entities for preview
 const stripHtml = (html: string | null): string => {
@@ -26,9 +28,11 @@ export const ProjectsPage: React.FC = () => {
     const [services, setServices] = useState<Service[]>([]);
     const [articles, setArticles] = useState<ServiceArticle[]>([]);
     const [selectedService, setSelectedService] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [categories, setCategories] = useState<ProjectCategory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // Scroll to top on mount
     useEffect(() => {
@@ -50,16 +54,6 @@ export const ProjectsPage: React.FC = () => {
                 if (servicesError) throw servicesError;
 
                 setServices(servicesData || []);
-
-                // Set initial selected service from URL or first item
-                const params = new URLSearchParams(window.location.search);
-                const serviceSlug = params.get('service');
-                if (serviceSlug) {
-                    setSelectedService(serviceSlug);
-                } else if (servicesData && servicesData.length > 0) {
-                    setSelectedService(servicesData[0].slug);
-                }
-
             } catch (err) {
                 console.error('Error fetching services:', err);
                 setError('Không thể tải danh sách dịch vụ');
@@ -71,22 +65,44 @@ export const ProjectsPage: React.FC = () => {
         fetchData();
     }, []);
 
+    // Sync selected service with URL params
+    useEffect(() => {
+        const serviceSlug = searchParams.get('service');
+        if (serviceSlug) {
+            setSelectedService(serviceSlug);
+        } else if (services.length > 0 && !selectedService) {
+            // Only set default if nothing selected and no param
+            setSelectedService(services[0].slug);
+        }
+    }, [searchParams, services]);
+
     // Fetch articles when selected service changes
     useEffect(() => {
         const fetchArticles = async () => {
             if (!selectedService) return;
 
             try {
-                setSelectedCategory(null); // Reset category filter when service changes
+                setSelectedCategoryId(null); // Reset category filter
+
+                // Fetch articles
                 const { data, error } = await supabase
                     .from('service_articles')
-                    .select('*, service:services!inner(*)')
+                    .select('*, service:services!inner(*), project_category:project_categories(*)')
                     .eq('service.slug', selectedService)
                     .eq('published', true)
                     .order('display_order');
 
                 if (error) throw error;
                 setArticles(data || []);
+
+                // Fetch categories for this service
+                const service = services.find(s => s.slug === selectedService);
+                if (service) {
+                    const cats = await fetchProjectCategories(service.id);
+                    setCategories(cats);
+                } else {
+                    setCategories([]);
+                }
             } catch (err) {
                 console.error('Error fetching articles:', err);
             }
@@ -129,8 +145,8 @@ export const ProjectsPage: React.FC = () => {
                                     services.map((service) => (
                                         <button
                                             key={service.id}
-                                            onClick={() => setSelectedService(service.slug)}
-                                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
+                                            onClick={() => setSearchParams({ service: service.slug })}
+                                            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
                                                 ? 'bg-brand-pink text-white border-brand-pink'
                                                 : 'bg-white text-gray-600 border-brand-pink/50 hover:border-brand-pink hover:text-brand-pink'
                                                 }`}
@@ -182,26 +198,26 @@ export const ProjectsPage: React.FC = () => {
                                     {/* Category Filter */}
                                     <div className="space-y-2">
                                         <button
-                                            onClick={() => setSelectedCategory(null)}
-                                            className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === null
+                                            onClick={() => setSelectedCategoryId(null)}
+                                            className={`w-full text-left px-4 py-3 border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategoryId === null
                                                 ? 'bg-brand-pink text-white border-brand-pink'
                                                 : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
                                                 }`}
                                         >
                                             Tất cả
-                                            <ChevronRight size={16} className={`${selectedCategory === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
+                                            <ChevronRight size={16} className={`${selectedCategoryId === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
                                         </button>
-                                        {Array.from(new Set(articles.map(a => a.category).filter(Boolean))).map((cat, index) => (
+                                        {categories.map((cat) => (
                                             <button
-                                                key={index}
-                                                onClick={() => setSelectedCategory(cat as string)}
-                                                className={`w-full text-left px-4 py-3 rounded-full border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategory === cat
+                                                key={cat.id}
+                                                onClick={() => setSelectedCategoryId(cat.id)}
+                                                className={`w-full text-left px-4 py-3 border transition-all text-sm font-medium flex items-center justify-between group ${selectedCategoryId === cat.id
                                                     ? 'bg-brand-pink text-white border-brand-pink'
                                                     : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
                                                     }`}
                                             >
-                                                {cat}
-                                                <ChevronRight size={16} className={`${selectedCategory === cat ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
+                                                {cat.name}
+                                                <ChevronRight size={16} className={`${selectedCategoryId === cat.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
                                             </button>
                                         ))}
                                     </div>
@@ -212,7 +228,7 @@ export const ProjectsPage: React.FC = () => {
                             <div className="lg:col-span-9">
                                 <AnimatePresence mode="wait">
                                     <motion.div
-                                        key={activeService.slug + (selectedCategory || 'all')}
+                                        key={activeService.slug + (selectedCategoryId || 'all')}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: -20 }}
@@ -220,57 +236,98 @@ export const ProjectsPage: React.FC = () => {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h3 className="text-xl font-bold text-gray-900">
-                                                {selectedCategory ? selectedCategory : 'Dự án tiêu biểu'}
+                                                {selectedCategoryId ? categories.find(c => c.id === selectedCategoryId)?.name : 'Danh sách dự án'}
                                             </h3>
-                                            <a href="#" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
+                                            <Link to="/allprojects" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
                                                 Xem tất cả <ArrowRight size={14} />
-                                            </a>
+                                            </Link>
                                         </div>
 
                                         {(() => {
-                                            const filteredArticles = selectedCategory
-                                                ? articles.filter(a => a.category === selectedCategory)
+                                            const filteredArticles = selectedCategoryId
+                                                ? articles.filter(a => a.project_category_id === selectedCategoryId)
                                                 : articles;
 
+
+
+                                            // Masonry breakpoint columns
+                                            const masonryBreakpoints = {
+                                                default: 3,
+                                                1024: 3,
+                                                768: 2,
+                                                640: 1
+                                            };
+
+                                            // Varied aspect ratios for visual interest
+                                            const getAspectRatioStyle = (idx: number) => {
+                                                const ratios = ['3/4', '4/3', '1/1', '16/9'];
+                                                return ratios[idx % ratios.length];
+                                            };
+
                                             return filteredArticles.length > 0 ? (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                    {filteredArticles.map((article) => (
-                                                        <motion.a
-                                                            key={article.id}
-                                                            href={`/article?id=${article.id}`}
-                                                            className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all cursor-pointer group block"
-                                                            whileHover={{ y: -5 }}
-                                                        >
-                                                            <div className="aspect-[16/10] overflow-hidden bg-gray-100 relative">
-                                                                <img
-                                                                    src={article.thumbnail || `https://picsum.photos/600/400?random=${article.id}`}
-                                                                    alt={article.title}
-                                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                                    onError={(e) => {
-                                                                        (e.target as HTMLImageElement).src = `https://picsum.photos/600/400?random=${article.id}`;
-                                                                    }}
-                                                                />
-                                                                {/* Category Tag */}
-                                                                {article.category && (
-                                                                    <span className="absolute bottom-3 left-3 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded">
-                                                                        {article.category}
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="p-5">
-                                                                <h4 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
-                                                                    {article.title}
-                                                                </h4>
-                                                                <p className="text-sm text-gray-500 line-clamp-2">
-                                                                    {stripHtml(article.content)}
-                                                                </p>
-                                                            </div>
-                                                        </motion.a>
-                                                    ))}
-                                                </div>
+                                                <Masonry
+                                                    breakpointCols={masonryBreakpoints}
+                                                    className="flex -ml-4 w-auto"
+                                                    columnClassName="pl-4 bg-clip-padding"
+                                                >
+                                                    {filteredArticles.map((article, index) => {
+                                                        const aspectRatio = getAspectRatioStyle(index);
+
+                                                        return (
+                                                            <motion.a
+                                                                key={article.id}
+                                                                href={`/article?id=${article.id}`}
+                                                                className="block break-inside-avoid bg-white overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer group rounded-none mb-4"
+                                                                initial={{ opacity: 0, y: 20 }}
+                                                                whileInView={{ opacity: 1, y: 0 }}
+                                                                viewport={{ once: true }}
+                                                                transition={{ duration: 0.4, delay: index * 0.05 }}
+                                                                whileHover={{ y: -5 }}
+                                                            >
+                                                                {/* Image Container with varied aspect ratio */}
+                                                                <div
+                                                                    className="overflow-hidden bg-gray-100 relative w-full"
+                                                                    style={{ aspectRatio: aspectRatio }}
+                                                                >
+                                                                    <img
+                                                                        src={article.thumbnail || `https://picsum.photos/800/600?random=${article.id}`}
+                                                                        alt={article.title}
+                                                                        loading="lazy"
+                                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                                        onError={(e) => {
+                                                                            (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${article.id}`;
+                                                                        }}
+                                                                    />
+
+                                                                    {/* Category Tag */}
+                                                                    {article.project_category?.name && (
+                                                                        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 uppercase tracking-wide">
+                                                                            {article.project_category.name}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Content */}
+                                                                <div className="p-4">
+                                                                    <h4 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
+                                                                        {article.title}
+                                                                    </h4>
+                                                                    <p className="text-sm text-gray-500 line-clamp-3">
+                                                                        {stripHtml(article.content)}
+                                                                    </p>
+
+                                                                    {/* Hover arrow indicator */}
+                                                                    <div className="flex items-center gap-1 mt-3 text-brand-pink text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                        Xem chi tiết <ArrowRight size={14} />
+                                                                    </div>
+                                                                </div>
+                                                            </motion.a>
+                                                        );
+                                                    })}
+                                                </Masonry>
                                             ) : (
-                                                <div className="text-center py-12 bg-gray-50 rounded-2xl">
-                                                    <p className="text-gray-500">Chưa có bài viết nào{selectedCategory ? ` cho category "${selectedCategory}"` : ''}</p>
+                                                <div className="py-4">
+                                                    <p className="text-sm text-gray-500 italic">Chưa có bài viết nào.</p>
                                                 </div>
                                             );
                                         })()}

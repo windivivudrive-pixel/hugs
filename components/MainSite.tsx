@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, ArrowUp } from 'lucide-react';
+import { Phone, ArrowUp } from 'lucide-react';
 
 import { Navbar } from './Navbar';
 import { WelcomeCube } from './WelcomeCube';
@@ -14,7 +14,7 @@ import { TestimonialsSection } from './TestimonialsSection';
 import { NewsSection } from './NewsSection';
 import { FooterSection } from './FooterSection';
 
-export const MainSite: React.FC = () => {
+export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -49,20 +49,41 @@ export const MainSite: React.FC = () => {
         <FooterSection />
       </div>
 
-      {/* Floating Chat Button */}
+      {/* Floating Call Button */}
       <motion.div
-        className="fixed bottom-20 right-6 z-50"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1, type: 'spring' }}
+        className="fixed bottom-20 right-6 z-[100] pointer-events-auto"
       >
-        <motion.div
-          className="bg-brand-pink w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-brand-pink/30 cursor-pointer"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <MessageSquare className="text-white" />
-        </motion.div>
+        <a href="tel:0924392222" className="relative block group">
+          {/* Ripple Effects using CSS Keyframes */}
+          <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" />
+          <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" style={{ animationDelay: '1s' }} />
+
+          {/* Main Button */}
+          <motion.div
+            className="relative bg-brand-pink w-11 h-11 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-lg shadow-brand-pink/30 cursor-pointer overflow-hidden z-10"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 1.0 }}
+          >
+            <div className="absolute inset-0 bg-white/20 rounded-full scale-0 group-hover:scale-150 transition-transform duration-500 origin-center" />
+            <Phone className="text-white relative z-10 w-5 h-5 md:w-6 md:h-6" />
+          </motion.div>
+        </a>
+
+        <style>{`
+          @keyframes ripple {
+            0% {
+              transform: scale(1);
+              opacity: 0.4;
+            }
+            100% {
+              transform: scale(2);
+              opacity: 0;
+            }
+          }
+          .animate-ripple {
+            animation: ripple 2s linear infinite;
+          }
+        `}</style>
       </motion.div>
 
       {/* Scroll Top Button */}

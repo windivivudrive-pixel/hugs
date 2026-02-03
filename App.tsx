@@ -10,6 +10,8 @@ import { AboutPage } from './components/AboutPage';
 import { CareersPage } from './components/CareersPage';
 import { NewsPage } from './components/NewsPage';
 
+import { AllProjectPage } from './components/AllProjectPage';
+
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +28,7 @@ const App: React.FC = () => {
             element={
               <>
                 {/* MainSite - ALWAYS rendered underneath */}
-                <MainSite />
+                <MainSite isLoading={isLoading} />
                 {/* Loading Screen - renders ON TOP */}
                 {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
               </>
@@ -34,6 +36,7 @@ const App: React.FC = () => {
           />
           <Route path="/service" element={<ServicePage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/allprojects" element={<AllProjectPage />} />
           <Route path="/article" element={<ArticlePage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/about" element={<AboutPage />} />

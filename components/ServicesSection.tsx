@@ -26,7 +26,7 @@ export const ServicesSection: React.FC = () => {
                     .from('services')
                     .select('*')
                     .order('display_order')
-                    .limit(6); // Only show first 6 services on homepage
+                    .limit(9); // Show first 9 services on homepage
 
                 if (error) throw error;
                 setServices(data || []);
@@ -80,15 +80,24 @@ export const ServicesSection: React.FC = () => {
     const currentArticle = activeService ? latestArticles[activeService.slug] : null;
 
     return (
-        <section className="pt-20 pb-8 bg-gray-50 overflow-x-clip">
+        <section className="py-24 bg-white overflow-x-clip">
 
-            {/* Services Section - Haptic Style */}
             <div className="max-w-7xl mx-auto px-6">
-                {/* Section Label */}
-                <div className="flex items-center gap-3 mb-12">
-                    <div className="w-2 h-2 rounded-full bg-brand-pink"></div>
-                    <span className="text-xl font-semibold text-gray-900">Dịch Vụ</span>
-                </div>
+                {/* Section Header */}
+                <motion.div
+                    className="mb-12"
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
+                >
+                    <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                        Dịch vụ
+                    </span>
+                    <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
+                        Giải pháp <span className="text-brand-pink">toàn diện</span>
+                    </h2>
+                </motion.div>
 
                 {loading ? (
                     <div className="flex items-center justify-center min-h-[400px]">
@@ -100,24 +109,73 @@ export const ServicesSection: React.FC = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[500px]">
                             {/* Left - Service List from Database */}
                             <div className="space-y-4 lg:col-span-5">
-                                {services.map((service) => (
-                                    <motion.div
-                                        key={service.id}
-                                        className="group cursor-pointer"
-                                        onMouseEnter={() => setHoveredServiceSlug(service.slug)}
-                                    >
-                                        <motion.h3
-                                            className={`text-3xl md:text-4xl lg:text-5xl font-bold transition-colors duration-300 py-2 ${displayedServiceSlug === service.slug
-                                                ? 'text-brand-pink'
-                                                : 'text-gray-300'
-                                                }`}
-                                            whileHover={{ x: 10 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            {service.name}
-                                        </motion.h3>
-                                    </motion.div>
-                                ))}
+                                {services.map((service) => {
+                                    const isSelected = displayedServiceSlug === service.slug;
+                                    const serviceArticle = latestArticles[service.slug];
+
+                                    return (
+                                        <div key={service.id} className="group">
+                                            <motion.div
+                                                className="cursor-pointer"
+                                                onMouseEnter={() => setHoveredServiceSlug(service.slug)}
+                                                onClick={() => setHoveredServiceSlug(service.slug)}
+                                            >
+                                                <motion.h3
+                                                    className={`text-lg md:text-xl lg:text-3xl font-bold transition-colors duration-300 py-1 md:py-2 ${isSelected
+                                                        ? 'text-brand-pink'
+                                                        : 'text-gray-300'
+                                                        }`}
+                                                    whileHover={{ x: 10 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    {service.name}
+                                                </motion.h3>
+                                            </motion.div>
+
+                                            {/* Mobile: Inline Preview (Accordion) */}
+                                            <AnimatePresence>
+                                                {isSelected && (
+                                                    <motion.div
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: 'auto', opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="lg:hidden overflow-hidden"
+                                                    >
+                                                        <Link
+                                                            to={serviceArticle ? `/article?id=${serviceArticle.id}` : `/service?s=${service.slug}`}
+                                                            className="block relative aspect-video w-full bg-gray-900 overflow-hidden shadow-lg mt-2 mb-6"
+                                                        >
+                                                            {/* Browser bar */}
+                                                            <div className="absolute top-0 left-0 right-0 h-6 bg-gray-800 flex items-center px-3 gap-1.5 z-10">
+                                                                <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                                                <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                                                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                                            </div>
+
+                                                            {/* Image */}
+                                                            <div className="pt-6 h-full relative">
+                                                                <img
+                                                                    src={serviceArticle?.thumbnail || `https://picsum.photos/800/600?random=${service.id}`}
+                                                                    alt={serviceArticle?.title || service.name}
+                                                                    className="w-full h-full object-cover"
+                                                                    loading="lazy"
+                                                                />
+
+                                                                {/* Overlay */}
+                                                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-pink/90 via-brand-pink/40 to-transparent p-4">
+                                                                    <h4 className="text-white text-sm font-bold line-clamp-2 drop-shadow-sm">
+                                                                        {serviceArticle?.title || service.name}
+                                                                    </h4>
+                                                                </div>
+                                                            </div>
+                                                        </Link>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    );
+                                })}
                             </div>
 
                             {/* Right - Article Preview with Browser Frame */}
@@ -135,7 +193,7 @@ export const ServicesSection: React.FC = () => {
                                             {/* Clickable container */}
                                             <Link
                                                 to={currentArticle ? `/article?id=${currentArticle.id}` : `/service?s=${activeService.slug}`}
-                                                className="relative w-full h-full bg-gray-900 rounded-2xl overflow-hidden shadow-2xl block group"
+                                                className="relative w-full h-full bg-gray-900 overflow-hidden shadow-2xl block group"
                                             >
                                                 {/* Browser-like frame */}
                                                 <div className="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-3 gap-1.5 z-10">
@@ -182,7 +240,7 @@ export const ServicesSection: React.FC = () => {
                         >
                             <Link to="/service">
                                 <motion.div
-                                    className="group inline-flex items-center gap-3 bg-gray-900 text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-brand-pink transition-colors"
+                                    className="group inline-flex items-center gap-3 bg-brand-pink text-white px-8 py-4 rounded-full text-sm font-bold hover:bg-gray-900 transition-colors"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
@@ -194,6 +252,6 @@ export const ServicesSection: React.FC = () => {
                     </>
                 )}
             </div>
-        </section>
+        </section >
     );
 };

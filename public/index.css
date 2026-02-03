@@ -1,0 +1,199 @@
+/* SVN-Avo Font Family */
+@font-face {
+    font-family: 'SVN-Avo';
+    src: url('/SVN-Avo.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SVN-Avo';
+    src: url('/SVN-Avo bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SVN-Avo';
+    src: url('/SVN-Avo italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'SVN-Avo';
+    src: url('/SVN-Avo bold italic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
+/* ============================================
+   DESIGN SYSTEM - Typography & Colors
+   ============================================ */
+
+:root {
+    /* Brand Colors */
+    --color-brand-pink: #eb2166;
+    --color-brand-dark: #1a1a1a;
+
+    /* Neutral Colors */
+    --color-white: #ffffff;
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-900: #111827;
+
+    /* Typography Scale */
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+    --font-size-5xl: 3rem;
+    /* 48px */
+
+    /* Line Heights */
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 1.75;
+
+    /* Letter Spacing */
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+
+    /* Spacing Scale */
+    --space-section: 6rem;
+    /* py-24 = 96px */
+    --space-content: 1.5rem;
+    /* px-6 = 24px */
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'SVN-Avo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    background-color: var(--color-white);
+    color: var(--color-gray-900);
+    line-height: var(--leading-relaxed);
+    letter-spacing: var(--tracking-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Utilities */
+.text-balance {
+    text-wrap: balance;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+}
+
+p {
+    line-height: var(--leading-relaxed);
+}
+
+/* Hide scrollbar for immersive sections */
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Smooth transitions for all interactive elements */
+a,
+button {
+    transition: all var(--transition-base);
+}
+
+/* Selection styling */
+::selection {
+    background-color: var(--color-brand-pink);
+    color: white;
+}
+
+/* ============================================
+   PERFORMANCE UTILITIES
+   ============================================ */
+
+/* GPU-accelerated animations */
+.gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* Optimize lazy-loaded images only */
+img[loading="lazy"] {
+    content-visibility: auto;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+    outline: 2px solid var(--color-brand-pink);
+    outline-offset: 2px;
+}
+
+/* Scroll snap for sections (optional) */
+.scroll-snap-container {
+    scroll-snap-type: y proximity;
+}
+
+.scroll-snap-section {
+    scroll-snap-align: start;
+}
