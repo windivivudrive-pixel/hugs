@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Image face component for cube
 const ImageFace: React.FC<{
@@ -21,6 +22,7 @@ const ImageFace: React.FC<{
 );
 
 export const WelcomeCube: React.FC = () => {
+  const { t } = useLanguage();
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [phase, setPhase] = useState<'center' | 'sidebar'>('center');
   const [sidebarVerticalProgress, setSidebarVerticalProgress] = useState(0);
@@ -212,12 +214,23 @@ export const WelcomeCube: React.FC = () => {
               {/* Scroll indicator - centered below cube */}
               <motion.div
                 className="fixed bottom-10 left-0 right-0 flex flex-col items-center gap-2 z-20"
-                animate={{ y: [0, 10, 3] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 2.5, duration: 1 }}
               >
-                <span className="text-sm text-gray-500 font-medium">Cuộn để khám phá</span>
-                <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center pt-2">
-                  <div className="w-1.5 h-3 bg-gray-400 rounded-full" />
+                <motion.span
+                  className="text-sm text-gray-400 font-medium tracking-widest uppercase"
+                  animate={{ opacity: [0.4, 1, 0.4] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  {t('hero.scroll')}
+                </motion.span>
+                <div className="w-6 h-10 border-2 border-gray-200 rounded-full flex justify-center pt-2">
+                  <motion.div
+                    className="w-1.5 h-3 bg-brand-pink rounded-full"
+                    animate={{ y: [0, 12, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  />
                 </div>
               </motion.div>
             </motion.div>
