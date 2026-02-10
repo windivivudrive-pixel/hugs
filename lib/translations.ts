@@ -14,7 +14,8 @@ export const translations = {
         },
         hero: {
             title: 'HUGs Agency',
-            subtitle: 'Chúng tôi đang mở ra không gian của chiến lược và sáng tạo…'
+            subtitle: 'Chúng tôi đang mở ra không gian của chiến lược và sáng tạo…',
+            scroll: 'Cuộn để khám phá'
         },
         footer: {
             ctaTitle: 'Bắt đầu dự án mới cùng HUGs',
@@ -511,7 +512,8 @@ export const translations = {
         },
         hero: {
             title: 'HUGs Agency',
-            subtitle: 'We open up spaces for strategy and creativity…'
+            subtitle: 'We open up spaces for strategy and creativity…',
+            scroll: 'Scroll to explore'
         },
         footer: {
             ctaTitle: 'Start a new project with HUGs',
