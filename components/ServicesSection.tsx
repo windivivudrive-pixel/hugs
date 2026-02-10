@@ -3,50 +3,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, Service, ServiceArticle } from '../lib/supabase';
 import { Link } from 'react-router-dom';
-
-// Helper function to strip HTML tags from rich text content
-const stripHtmlTags = (html: string): string => {
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    return temp.textContent || temp.innerText || '';
-};
+import { useLanguage } from '../contexts/LanguageContext';
+import { STATIC_SERVICES } from '../lib/staticData';
 
 export const ServicesSection: React.FC = () => {
-    const [services, setServices] = useState<Service[]>([]);
+    const { t } = useLanguage();
+    // Use static services instead of state
+    const services = STATIC_SERVICES;
+
     const [hoveredServiceSlug, setHoveredServiceSlug] = useState<string | null>(null);
     const [latestArticles, setLatestArticles] = useState<Record<string, ServiceArticle | null>>({});
     const [loading, setLoading] = useState(true);
     const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
-    // Fetch services from database
+    // Fetch latest article for each service
     useEffect(() => {
-        const fetchServices = async () => {
-            try {
-                setLoading(true);
-                const { data, error } = await supabase
-                    .from('services')
-                    .select('*')
-                    .order('display_order')
-                    .limit(9); // Show first 9 services on homepage
-
-                if (error) throw error;
-                setServices(data || []);
-            } catch (err) {
-                console.error('Error fetching services:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchServices();
-    }, []);
-
-    // Fetch latest article for each service when services are loaded
-    useEffect(() => {
-        if (services.length === 0) return;
-
         const fetchArticles = async () => {
+            setLoading(true);
             const articlesMap: Record<string, ServiceArticle | null> = {};
+
+            // We still need to fetch articles, but we can do it based on the static IDs/Slugs
+            // Or better, just fetch all latest articles map once.
+            // For now, keep the logic similar to before but iterate static services.
 
             for (const service of services) {
                 try {
@@ -68,10 +46,11 @@ export const ServicesSection: React.FC = () => {
             }
 
             setLatestArticles(articlesMap);
+            setLoading(false);
         };
 
         fetchArticles();
-    }, [services]);
+    }, []);
 
     // Default to first service (no auto-cycling)
     const displayedServiceSlug = hoveredServiceSlug !== null ? hoveredServiceSlug : services[0]?.slug;
@@ -93,10 +72,10 @@ export const ServicesSection: React.FC = () => {
                     viewport={{ once: true }}
                 >
                     <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        Dịch vụ
+                        {t('services.badge')}
                     </span>
                     <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                        Giải pháp <span className="text-brand-pink">toàn diện</span>
+                        {t('services.title')} <span className="text-brand-pink">{t('services.titleHighlight')}</span>
                     </h2>
                 </motion.div>
 
@@ -108,7 +87,7 @@ export const ServicesSection: React.FC = () => {
                     <>
                         {/* Two Column Layout */}
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[500px]">
-                            {/* Left - Service List from Database */}
+                            {/* Left - Service List from Static Data */}
                             <div className="space-y-4 lg:col-span-5">
                                 {services.map((service, index) => {
                                     const isSelected = displayedServiceSlug === service.slug;
@@ -121,11 +100,11 @@ export const ServicesSection: React.FC = () => {
                                                 className="cursor-pointer"
                                                 onMouseEnter={() => {
                                                     setHoveredServiceSlug(service.slug);
-                                                    setHoveredIndex(services.findIndex(s => s.slug === service.slug));
+                                                    setHoveredIndex(index);
                                                 }}
                                                 onClick={(e) => {
                                                     setHoveredServiceSlug(service.slug);
-                                                    setHoveredIndex(services.findIndex(s => s.slug === service.slug));
+                                                    setHoveredIndex(index);
                                                 }}
                                             >
                                                 <motion.h3
@@ -136,7 +115,8 @@ export const ServicesSection: React.FC = () => {
                                                     whileHover={{ x: 10 }}
                                                     transition={{ duration: 0.2 }}
                                                 >
-                                                    {service.name}
+                                                    {/* Translate the service name using the slug */}
+                                                    {t(`services.items.${service.slug}`)}
                                                 </motion.h3>
                                             </motion.div>
 
@@ -239,7 +219,7 @@ export const ServicesSection: React.FC = () => {
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
-                                    Xem tất cả dịch vụ
+                                    {t('services.viewAll')}
                                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                 </motion.div>
                             </Link>

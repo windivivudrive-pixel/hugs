@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, ServiceArticle } from '../lib/supabase';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const ProjectsSection: React.FC = () => {
+    const { t } = useLanguage();
     const [projects, setProjects] = useState<ServiceArticle[]>([]);
     const [loading, setLoading] = useState(true);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -57,10 +59,10 @@ export const ProjectsSection: React.FC = () => {
                 >
                     <div>
                         <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                            Dự án
+                            {t('projects.badge')}
                         </span>
                         <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                            Các dự án <span className="text-brand-pink">đã triển khai</span>
+                            {t('projects.title')} <span className="text-brand-pink">{t('projects.titleHighlight')}</span>
                         </h2>
                     </div>
                     <Link to="/allprojects">
@@ -68,7 +70,7 @@ export const ProjectsSection: React.FC = () => {
                             className="mt-4 md:mt-0 text-brand-pink font-semibold flex items-center gap-2 hover:gap-3 transition-all cursor-pointer"
                             whileHover={{ x: 5 }}
                         >
-                            Xem tất cả <ArrowRight size={18} />
+                            {t('projects.viewAll')} <ArrowRight size={18} />
                         </motion.div>
                     </Link>
                 </motion.div>
@@ -80,7 +82,7 @@ export const ProjectsSection: React.FC = () => {
                     </div>
                 ) : projects.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 rounded-2xl">
-                        <p className="text-gray-500">Chưa có dự án nào</p>
+                        <p className="text-gray-500">{t('projects.empty')}</p>
                     </div>
                 ) : (
                     /* Precise Proportional Grid Layout - 20 columns (8-5-7, 5-7-8) with 2.4u Row Height */
@@ -200,7 +202,7 @@ export const ProjectsSection: React.FC = () => {
                                                 className="px-4 py-2 text-white font-medium text-xs tracking-wider uppercase flex items-center gap-1.5"
                                                 style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
                                             >
-                                                Xem chi tiết
+                                                {t('projects.viewDetail')}
                                                 <ArrowRight size={16} />
                                             </span>
                                         </div>

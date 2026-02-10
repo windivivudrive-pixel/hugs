@@ -4,6 +4,7 @@ import { ArrowRight, Users, Target, Heart, Zap, ChevronLeft, ChevronRight, MapPi
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SectionProps {
     title: string;
@@ -51,6 +52,7 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
 );
 
 export const AboutPage: React.FC = () => {
+    const { t } = useLanguage();
     const [[page, direction], setPage] = useState([0, 0]);
 
     const visionImages = [
@@ -94,12 +96,12 @@ export const AboutPage: React.FC = () => {
     };
 
     const departments = [
-        'Chiến lược & nội dung',
-        'Sáng tạo & thiết kế',
-        'Sản xuất hình ảnh & video',
-        'Vận hành kênh & hệ thống phân phối',
-        'Quảng cáo đa kênh',
-        'Quản lý dự án & khách hàng'
+        t('departments.d1'),
+        t('departments.d2'),
+        t('departments.d3'),
+        t('departments.d4'),
+        t('departments.d5'),
+        t('departments.d6')
     ];
 
     return (
@@ -116,14 +118,14 @@ export const AboutPage: React.FC = () => {
                         transition={{ duration: 0.6 }}
                     >
                         <span className="inline-block px-4 py-2 bg-brand-pink/10 text-brand-pink rounded-full text-sm font-semibold mb-6">
-                            Về chúng tôi
+                            {t('about.badge')}
                         </span>
                         <h1 className="text-4xl md:text-6xl font-black mb-6">
-                            <span className="block mb-4">Xây dựng thương hiệu</span>
-                            <span className="text-brand-pink">bền vững trên digital</span>
+                            <span className="block mb-4">{t('about.title')}</span>
+                            <span className="text-brand-pink">{t('about.titleHighlight')}</span>
                         </h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            HUGs là một creative agency được thành lập năm 2021, phát triển các giải pháp truyền thông gắn với thực tế triển khai.
+                            {t('about.description')}
                         </p>
                     </motion.div>
                 </div>
@@ -133,15 +135,13 @@ export const AboutPage: React.FC = () => {
             <div className="max-w-7xl mx-auto px-6">
                 {/* About HUGs */}
                 <StorySection
-                    title="HUGs là ai?"
+                    title={t('about.whoTitle')}
                     icon={<Zap size={28} />}
                     image="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
                     content={
                         <>
                             <p>
-                                HUGs là cái ôm, cái chạm, chất xúc tác tạo phản ứng giữa thương hiệu với khách hàng.
-                                Chúng tôi thấu hiểu và là nơi kết nối, để giúp khách hàng truyền tải thông điệp kinh doanh,
-                                dịch vụ, sản phẩm đến với người tiêu dùng. Kết nối nhờ kết hợp truyền thông đa kênh tối ưu hoá trên từng chiến dịch.
+                                {t('about.whoContent')}
                             </p>
                         </>
                     }
@@ -149,21 +149,20 @@ export const AboutPage: React.FC = () => {
 
                 {/* How we work */}
                 <StorySection
-                    title="Cách chúng tôi triển khai"
+                    title={t('about.howTitle')}
                     icon={<Target size={28} />}
                     image="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80"
                     reverse
                     content={
                         <>
                             <p>
-                                HUGs triển khai truyền thông dựa trên sự thấu hiểu bài toán và dữ liệu thực tế.
+                                {t('about.howContent1')}
                             </p>
                             <p>
-                                Mỗi dự án được tiếp cận với định hướng rõ ràng, triển khai nhất quán và
-                                liên tục tối ưu trong quá trình thực hiện.
+                                {t('about.howContent2')}
                             </p>
                             <p className="text-brand-pink font-semibold">
-                                Thực thi hiệu quả là yếu tố tạo nên khác biệt giữa một kế hoạch hay và một kết quả thực.
+                                {t('about.howContentHighlight')}
                             </p>
                         </>
                     }
@@ -182,10 +181,9 @@ export const AboutPage: React.FC = () => {
                     <div className="w-16 h-16 bg-brand-pink/10 flex items-center justify-center text-brand-pink mx-auto mb-8">
                         <ArrowRight size={32} />
                     </div>
-                    <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8">Tầm nhìn</h2>
+                    <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8">{t('about.visionTitle')}</h2>
                     <p className="text-2xl lg:text-3xl text-gray-700 leading-relaxed font-light mb-12">
-                        HUGs hướng đến việc tạo dựng các hệ truyền thông có <span className="text-brand-pink font-semibold">chiều sâu</span> và <span className="text-brand-pink font-semibold">tính bền vững</span>,
-                        giúp thương hiệu duy trì sự hiện diện rõ ràng, nhất quán và có giá trị lâu dài trên các nền tảng số.
+                        {t('about.visionContent')} <span className="text-brand-pink font-semibold">{t('about.visionHighlight1')}</span> {t('about.visionHighlight1') === 'chiều sâu' ? 'và' : 'and'} <span className="text-brand-pink font-semibold">{t('about.visionHighlight2')}</span>{t('about.visionContentEnd')}
                     </p>
                 </motion.div>
                 <motion.div
@@ -272,9 +270,9 @@ export const AboutPage: React.FC = () => {
                         <div className="w-14 h-14 bg-brand-pink/10 rounded-2xl flex items-center justify-center text-brand-pink mx-auto mb-6">
                             <Users size={28} />
                         </div>
-                        <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4">Con người</h2>
+                        <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4">{t('about.peopleTitle')}</h2>
                         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                            HUGs được vận hành bởi một đội ngũ làm việc trong một cấu trúc agency hoàn chỉnh và thống nhất.
+                            {t('about.peopleDesc')}
                         </p>
                     </motion.div>
 
@@ -287,10 +285,10 @@ export const AboutPage: React.FC = () => {
                         viewport={{ once: true }}
                     >
                         {[
-                            { number: '30+', label: 'Nhân sự' },
-                            { number: '6', label: 'Bộ phận' },
-                            { number: '50+', label: 'Dự án/năm' },
-                            { number: '4', label: 'Năm kinh nghiệm' }
+                            { number: '30+', label: t('about.stats.personnel') },
+                            { number: '6', label: t('about.stats.departments') },
+                            { number: '50+', label: t('about.stats.projects') },
+                            { number: '4', label: t('about.stats.experience') }
                         ].map((stat, i) => (
                             <div key={i} className="bg-gray-50 p-6 text-center">
                                 <div className="text-4xl lg:text-5xl font-black text-brand-pink mb-2">{stat.number}</div>
@@ -327,8 +325,7 @@ export const AboutPage: React.FC = () => {
                         transition={{ duration: 0.5, delay: 0.4 }}
                         viewport={{ once: true }}
                     >
-                        Cấu trúc này cho phép HUGs triển khai các hoạt động truyền thông một cách đồng bộ, linh hoạt và ổn định,
-                        đáp ứng tốt cả những dự án dài hạn lẫn các chiến dịch có yêu cầu cao về tiến độ và chất lượng.
+                        {t('about.structureDesc')}
                     </motion.p>
                 </div>
             </section>
@@ -346,9 +343,9 @@ export const AboutPage: React.FC = () => {
                         <div className="w-14 h-14 bg-white/20 flex items-center justify-center text-white mx-auto mb-6">
                             <Heart size={28} />
                         </div>
-                        <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">Văn hoá</h2>
+                        <h2 className="text-3xl lg:text-4xl font-black text-white mb-4">{t('about.cultureTitle')}</h2>
                         <p className="text-white/80 text-lg max-w-2xl mx-auto">
-                            HUGs là nơi những con người làm nghề gặp nhau, cùng học, cùng làm và cùng trưởng thành.
+                            {t('about.cultureDesc')}
                         </p>
                     </motion.div>
 
@@ -361,9 +358,9 @@ export const AboutPage: React.FC = () => {
                         viewport={{ once: true }}
                     >
                         {[
-                            { title: 'Chủ động', desc: 'Tự định hướng công việc và chịu trách nhiệm với kết quả' },
-                            { title: 'Trách nhiệm', desc: 'Cam kết với chất lượng và deadline của mỗi dự án' },
-                            { title: 'Tự hào', desc: 'Niềm vui khi tạo ra những sản phẩm tốt hơn mỗi ngày' }
+                            { title: t('about.values.v1.title'), desc: t('about.values.v1.desc') },
+                            { title: t('about.values.v2.title'), desc: t('about.values.v2.desc') },
+                            { title: t('about.values.v3.title'), desc: t('about.values.v3.desc') }
                         ].map((value, i) => (
                             <div
                                 key={i}
@@ -385,7 +382,7 @@ export const AboutPage: React.FC = () => {
                     >
                         <blockquote className="text-center">
                             <p className="text-2xl text-white italic font-light leading-relaxed">
-                                "Văn hoá tại HUGs không được viết ra, mà được hình thành qua cách chúng tôi làm việc và đối xử với nhau."
+                                {t('about.quote')}
                             </p>
                             <div className="w-12 h-1 bg-white mx-auto mt-8" />
                         </blockquote>
@@ -403,9 +400,9 @@ export const AboutPage: React.FC = () => {
                         transition={{ duration: 0.5 }}
                         viewport={{ once: true }}
                     >
-                        <h2 className="text-3xl lg:text-4xl font-black text-brand-pink mb-4">Tại sao chọn HUGs?</h2>
+                        <h2 className="text-3xl lg:text-4xl font-black text-brand-pink mb-4">{t('about.whyTitle')}</h2>
                         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                            Tư duy chiến lược, kết hợp năng lực thực thi đa kênh giúp thương hiệu tối ưu hiệu quả đầu tư.
+                            {t('about.whyDesc')}
                         </p>
                     </motion.div>
 
@@ -413,23 +410,23 @@ export const AboutPage: React.FC = () => {
                         {[
                             {
                                 icon: <MapPin size={32} />,
-                                title: 'Local Insight',
-                                desc: 'Thấu hiểu văn hóa và hành vi người tiêu dùng Miền Trung để tạo ra thông điệp chạm đúng điểm chạm.'
+                                title: t('about.reasons.r1.title'),
+                                desc: t('about.reasons.r1.desc')
                             },
                             {
                                 icon: <Lightbulb size={32} />,
-                                title: 'Tư duy thực chiến',
-                                desc: 'Không vẽ vời lý thuyết, chúng tôi tập trung vào giải pháp giải quyết bài toán tăng trưởng thực tế.'
+                                title: t('about.reasons.r2.title'),
+                                desc: t('about.reasons.r2.desc')
                             },
                             {
                                 icon: <ShieldCheck size={32} />,
-                                title: 'Quy trình chuẩn mực',
-                                desc: 'Kiểm soát chất lượng chặt chẽ, cam kết deadline và báo cáo minh bạch từng giai đoạn.'
+                                title: t('about.reasons.r3.title'),
+                                desc: t('about.reasons.r3.desc')
                             },
                             {
                                 icon: <Layers size={32} />,
-                                title: 'Giải pháp toàn diện',
-                                desc: 'Từ chiến lược, content, hình ảnh đến chạy quảng cáo, tất cả được vận hành đồng bộ.'
+                                title: t('about.reasons.r4.title'),
+                                desc: t('about.reasons.r4.desc')
                             }
                         ].map((item, i) => (
                             <motion.div
@@ -461,16 +458,16 @@ export const AboutPage: React.FC = () => {
                         viewport={{ once: true }}
                     >
                         <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
-                            Sẵn sàng bắt đầu dự án cùng HUGs?
+                            {t('about.ctaTitle')}
                         </h2>
                         <p className="text-gray-400 mb-8 text-lg">
-                            Liên hệ với chúng tôi để được tư vấn về chiến lược truyền thông phù hợp
+                            {t('about.ctaDesc')}
                         </p>
                         <Link
                             to="/#contact"
                             className="inline-flex items-center gap-2 bg-brand-pink text-white px-8 py-4 rounded-full font-bold hover:bg-pink-600 transition-colors"
                         >
-                            Liên hệ ngay
+                            {t('about.ctaButton')}
                             <ArrowRight size={20} />
                         </Link>
                     </motion.div>

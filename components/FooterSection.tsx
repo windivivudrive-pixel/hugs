@@ -9,6 +9,7 @@ import {
     CTA_FORM_CONFIG,
     SERVICE_OPTIONS,
 } from '../lib/formUtils';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Use service options from Google Form
 const INTEREST_TAGS = SERVICE_OPTIONS;
@@ -72,6 +73,7 @@ interface FooterSectionProps {
 }
 
 export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false }) => {
+    const { t } = useLanguage();
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     // Form state
@@ -162,7 +164,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                         viewport={{ once: true }}
                     >
                         <h3 className="text-2xl md:text-4xl font-black mb-10 text-center">
-                            Bắt đầu dự án mới cùng HUGs
+                            {t('footer.ctaTitle')}
                         </h3>
 
                         <div className="grid md:grid-cols-2 gap-8 mb-8">
@@ -184,7 +186,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                         name="fullName"
                                         value={formData.fullName}
                                         onChange={handleInputChange}
-                                        placeholder="Họ và tên*"
+                                        placeholder={t('footer.placeholderName')}
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-900 hover:placeholder-brand-pink focus:border-brand-pink outline-none transition-colors bg-transparent"
                                         disabled={isSubmitting}
                                     />
@@ -195,7 +197,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                         name="email"
                                         value={formData.email}
                                         onChange={handleInputChange}
-                                        placeholder="Email của bạn*"
+                                        placeholder={t('footer.placeholderEmail')}
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-900 hover:placeholder-brand-pink focus:border-brand-pink outline-none transition-colors bg-transparent"
                                         disabled={isSubmitting}
                                     />
@@ -206,7 +208,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleInputChange}
-                                        placeholder="Số điện thoại"
+                                        placeholder={t('footer.placeholderPhone')}
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-900 hover:placeholder-brand-pink focus:border-brand-pink outline-none transition-colors bg-transparent"
                                         disabled={isSubmitting}
                                     />
@@ -216,7 +218,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                         name="description"
                                         value={formData.description}
                                         onChange={handleInputChange}
-                                        placeholder="Mô tả về dự án của bạn..."
+                                        placeholder={t('footer.placeholderDesc')}
                                         rows={3}
                                         className="w-full border-b-2 border-gray-200 py-3 text-gray-900 placeholder-gray-900 hover:placeholder-brand-pink focus:border-brand-pink outline-none transition-colors bg-transparent resize-none"
                                         disabled={isSubmitting}
@@ -226,7 +228,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
                             {/* Right - Interest Tags */}
                             <div>
-                                <p className="text-lg font-semibold mb-4">Tôi quan tâm đến...</p>
+                                <p className="text-lg font-semibold mb-4">{t('footer.interestedIn')}</p>
                                 <div className="flex flex-wrap gap-3">
                                     {INTEREST_TAGS.map((tag, i) => (
                                         <button
@@ -239,7 +241,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                                 : 'border-gray-300 text-gray-700 hover:border-brand-pink hover:text-brand-pink'
                                                 } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
-                                            {tag}
+                                            {t(`footer.tags.${i}`)}
                                         </button>
                                     ))}
                                 </div>
@@ -250,19 +252,19 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                         {submitStatus === 'success' && (
                             <div className="flex items-center justify-center gap-2 text-green-600 mb-4">
                                 <CheckCircle size={20} />
-                                <span className="font-medium">Cảm ơn bạn! Chúng tôi sẽ liên hệ sớm nhất.</span>
+                                <span className="font-medium">{t('footer.success')}</span>
                             </div>
                         )}
                         {submitStatus === 'error' && (
                             <div className="flex items-center justify-center gap-2 text-red-600 mb-4">
                                 <AlertCircle size={20} />
-                                <span className="font-medium">Vui lòng điền đầy đủ thông tin bắt buộc.</span>
+                                <span className="font-medium">{t('footer.error')}</span>
                             </div>
                         )}
                         {submitStatus === 'ratelimit' && (
                             <div className="flex items-center justify-center gap-2 text-orange-600 mb-4">
                                 <AlertCircle size={20} />
-                                <span className="font-medium">Bạn đã gửi quá nhiều lần. Vui lòng thử lại sau.</span>
+                                <span className="font-medium">{t('footer.rateLimit')}</span>
                             </div>
                         )}
 
@@ -286,7 +288,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                                     ) : (
                                         <>
                                             <Send size={20} className="mb-1" />
-                                            <span className="text-sm">Gửi</span>
+                                            <span className="text-sm">{t('footer.send')}</span>
                                         </>
                                     )}
                                 </span>
@@ -323,11 +325,11 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
                     {/* Services */}
                     <div>
-                        <h4 className="font-bold mb-4 text-gray-900">Dịch vụ</h4>
+                        <h4 className="font-bold mb-4 text-gray-900">{t('footer.services')}</h4>
                         <ul className="space-y-3 text-sm text-gray-600">
-                            {["Social Media Marketing", "Content Creation", "Influencer Marketing", "TikTok Shop", "Booking - PR"].map((item, i) => (
+                            {[0, 1, 2, 3, 4].map((i) => (
                                 <li key={i}>
-                                    <a href="#" className="hover:text-brand-pink transition-colors">{item}</a>
+                                    <a href="#" className="hover:text-brand-pink transition-colors">{t(`footer.servicesList.${i}`)}</a>
                                 </li>
                             ))}
                         </ul>
@@ -335,9 +337,9 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
                     {/* Links */}
                     <div>
-                        <h4 className="font-bold mb-4 text-gray-900">Liên kết</h4>
+                        <h4 className="font-bold mb-4 text-gray-900">{t('footer.links')}</h4>
                         <ul className="space-y-3 text-sm text-gray-600">
-                            {["Về chúng tôi", "Dự án", "Blog", "Tuyển dụng", "Liên hệ"].map((item, i) => (
+                            {[t('footer.linkItems.about'), t('footer.linkItems.projects'), t('footer.linkItems.blog'), t('footer.linkItems.careers'), t('footer.linkItems.contact')].map((item, i) => (
                                 <li key={i}>
                                     <a href="#" className="hover:text-brand-pink transition-colors">{item}</a>
                                 </li>
@@ -347,11 +349,11 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
                     {/* Contact */}
                     <div>
-                        <h4 className="font-bold mb-4 text-gray-900">Liên hệ</h4>
+                        <h4 className="font-bold mb-4 text-gray-900">{t('footer.contact')}</h4>
                         <ul className="space-y-4 text-sm text-gray-600">
                             <li className="flex items-start gap-3">
                                 <MapPin size={18} className="text-brand-pink mt-0.5 flex-shrink-0" />
-                                <span>55 Lý Thường Kiệt, phường Hải Châu, TP. Đà Nẵng</span>
+                                <span className="whitespace-pre-wrap">{t('footer.address')}</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone size={18} className="text-brand-pink flex-shrink-0" />
@@ -367,7 +369,13 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
 
                 {/* Bottom bar */}
                 <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-gray-500">© 2024 HUGs Agency. All rights reserved.</p>
+                    <div className="flex items-center gap-3">
+                        <p className="text-lg text-gray-500">{t('footer.rights')}</p>
+                        <div className="flex items-center gap-2">
+                            <img src="/icon-service/ai.png" alt="AI" className="w-6 h-6 object-contain opacity-70 hover:opacity-100 transition-opacity" title="Powered by AI" />
+                            <img src="/icon-service/network.png" alt="Network" className="w-6 h-6 object-contain opacity-70 hover:opacity-100 transition-opacity" title="HUGs Network" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>

@@ -5,8 +5,10 @@ import { supabase, ServiceArticle, ServiceCategory, fetchServiceCategories } fro
 import { Link, useSearchParams } from 'react-router-dom';
 import { PageNavbar } from './PageNavbar';
 import { FooterSection } from './FooterSection';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const AllProjectPage: React.FC = () => {
+    const { t } = useLanguage();
     const [searchParams] = useSearchParams();
     const serviceSlug = searchParams.get('service');
 
@@ -154,7 +156,7 @@ export const AllProjectPage: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        DỰ ÁN CỦA <span className="text-brand-pink">HUGs</span>
+                        {t('projectPage.title')} <span className="text-brand-pink">{t('projectPage.highlight')}</span>
                     </motion.h1>
                     <motion.p
                         className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto"
@@ -162,8 +164,7 @@ export const AllProjectPage: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        Khám phá những dự án truyền thông mạng xã hội thành công của HUGs Agency,
-                        kiến tạo dấu ấn cho thương hiệu.
+                        {t('projectPage.description')}
                     </motion.p>
                 </div>
             </section>
@@ -225,7 +226,7 @@ export const AllProjectPage: React.FC = () => {
                                                     {project.title}
                                                 </h3>
                                                 <span className="inline-block px-4 py-1 bg-brand-pink text-white text-sm font-semibold">
-                                                    {project.category || 'PROJECT'}
+                                                    {project.category || t('nav.projects').toUpperCase()}
                                                 </span>
                                             </div>
                                         </Link>
@@ -257,7 +258,7 @@ export const AllProjectPage: React.FC = () => {
                     {/* Section Header */}
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                            TẤT CẢ DỰ ÁN
+                            {t('projectPage.allProjects')}
                         </h2>
 
                         {/* Category Filter */}
@@ -266,9 +267,6 @@ export const AllProjectPage: React.FC = () => {
                                 onClick={() => {
                                     setSelectedCategory(null);
                                     setSelectedServiceId(null);
-                                    // Optional: Remove query param without full reload if desired, 
-                                    // but state update is enough for view. 
-                                    // ideally navigate('/projects') to clean URL but let's keep it simple first.
                                     window.history.pushState({}, '', '/projects');
                                 }}
                                 className={`px-4 py-2 text-sm font-medium transition-colors ${!selectedCategory && !selectedServiceId
@@ -276,7 +274,7 @@ export const AllProjectPage: React.FC = () => {
                                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
-                                Tất cả
+                                {t('projectPage.all')}
                             </button>
                             {categories.slice(0, 5).map(cat => (
                                 <button
@@ -343,13 +341,13 @@ export const AllProjectPage: React.FC = () => {
                                         {/* Content */}
                                         <div className="flex-1 p-5 flex flex-col justify-center">
                                             <span className="text-brand-pink text-xs font-bold uppercase tracking-wide mb-2">
-                                                {(project as any).service?.name || project.category || 'PROJECT'}
+                                                {(project as any).service?.name || project.category || t('nav.projects').toUpperCase()}
                                             </span>
                                             <h3 className="text-gray-900 font-bold text-base md:text-lg line-clamp-2 mb-3 group-hover:text-brand-pink transition-colors">
                                                 {project.title}
                                             </h3>
                                             <span className="text-gray-500 text-xs font-medium flex items-center gap-1 mt-auto">
-                                                Xem chi tiết <ArrowRight size={14} />
+                                                {t('projectPage.viewDetails')} <ArrowRight size={14} />
                                             </span>
                                         </div>
                                     </Link>
@@ -365,7 +363,7 @@ export const AllProjectPage: React.FC = () => {
                                 onClick={loadMore}
                                 className="px-8 py-3 bg-brand-pink text-white font-medium hover:bg-pink-600 transition-colors shadow-lg shadow-brand-pink/20"
                             >
-                                Tải thêm dự án
+                                {t('projectPage.loadMore')}
                             </button>
                         </div>
                     )}
@@ -373,7 +371,7 @@ export const AllProjectPage: React.FC = () => {
                     {/* Empty State */}
                     {displayedProjects.length === 0 && (
                         <div className="text-center py-16 bg-gray-50 rounded-2xl">
-                            <p className="text-gray-500 text-lg">Chưa có dự án nào trong danh mục này</p>
+                            <p className="text-gray-500 text-lg">{t('projectPage.noProjects')}</p>
                         </div>
                     )}
                 </div>

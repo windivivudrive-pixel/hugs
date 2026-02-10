@@ -4,33 +4,35 @@ import { Loader2, ChevronRight, TrendingUp, Clock, Flame, Headphones } from 'luc
 import { fetchNewsArticles, fetchTopAuthors, NewsArticle, AdminAuthor } from '../lib/supabase';
 import { PageNavbar } from './PageNavbar';
 import { FooterSection } from './FooterSection';
-
-// Primary navigation tabs
-const primaryTabs = [
-    { id: 'all', label: 'Sôi nổi', icon: TrendingUp },
-    { id: 'hot', label: 'Đang hot', icon: Flame },
-    { id: 'latest', label: 'Mới nhất', icon: Clock },
-    { id: 'podcast', label: 'Podcast', icon: Headphones },
-];
-
-// Category sections
-const categorySections = [
-    { id: 'TIN MARKETING', label: 'Tin Marketing', color: '#E91E63' },
-    { id: 'GÓC NHÌN', label: 'Góc nhìn', color: '#9C27B0' },
-    { id: 'KIẾN THỨC', label: 'Kiến thức', color: '#2196F3' },
-    { id: 'CASE STUDY', label: 'Case study', color: '#FF9800' },
-    { id: 'TOP LIST', label: 'Top List', color: '#00BCD4' },
-    { id: 'TIN HUGS', label: 'Tin HUGs', color: '#eb2166' },
-];
+import { useLanguage } from '../contexts/LanguageContext';
 
 const INITIAL_ITEMS_PER_SECTION = 3;
 
 export const NewsPage: React.FC = () => {
+    const { t } = useLanguage();
     const [articles, setArticles] = useState<NewsArticle[]>([]);
     const [topAuthors, setTopAuthors] = useState<AdminAuthor[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('all');
     const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+
+    // Primary navigation tabs
+    const primaryTabs = [
+        { id: 'all', label: t('news.tabs.all'), icon: TrendingUp },
+        { id: 'hot', label: t('news.tabs.hot'), icon: Flame },
+        { id: 'latest', label: t('news.tabs.latest'), icon: Clock },
+        { id: 'podcast', label: t('news.tabs.podcast'), icon: Headphones },
+    ];
+
+    // Category sections
+    const categorySections = [
+        { id: 'TIN MARKETING', label: t('news.categories.marketing'), color: '#E91E63' },
+        { id: 'GÓC NHÌN', label: t('news.categories.viewpoint'), color: '#9C27B0' },
+        { id: 'KIẾN THỨC', label: t('news.categories.knowledge'), color: '#2196F3' },
+        { id: 'CASE STUDY', label: t('news.categories.casestudy'), color: '#FF9800' },
+        { id: 'TOP LIST', label: t('news.categories.toplist'), color: '#00BCD4' },
+        { id: 'TIN HUGS', label: t('news.categories.hugs'), color: '#eb2166' },
+    ];
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -168,7 +170,7 @@ export const NewsPage: React.FC = () => {
                                                                 {featuredArticles[0].excerpt}
                                                             </p>
                                                             <div className="flex items-center gap-2 text-xs text-white/70">
-                                                                <span className="font-medium">{featuredArticles[0].author_details?.name || featuredArticles[0].author || 'Tác giả'}</span>
+                                                                <span className="font-medium">{featuredArticles[0].author_details?.name || featuredArticles[0].author || t('news.author')}</span>
                                                                 <span>•</span>
                                                                 <span>{new Date(featuredArticles[0].created_at || '').toLocaleDateString('vi-VN')}</span>
                                                             </div>
@@ -207,7 +209,7 @@ export const NewsPage: React.FC = () => {
                                                             {featuredArticles[1].excerpt}
                                                         </p>
                                                         <div className="flex items-center gap-2 text-xs text-gray-500">
-                                                            <span className="font-medium">{featuredArticles[1].author_details?.name || featuredArticles[1].author || 'Tác giả'}</span>
+                                                            <span className="font-medium">{featuredArticles[1].author_details?.name || featuredArticles[1].author || t('news.author')}</span>
                                                             <span>•</span>
                                                             <span>{new Date(featuredArticles[1].created_at || '').toLocaleDateString('vi-VN')}</span>
                                                         </div>
@@ -244,7 +246,7 @@ export const NewsPage: React.FC = () => {
                                                         {article.title}
                                                     </h3>
                                                     <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
-                                                        <span className="font-medium">{article.author_details?.name || article.author || 'Tác giả'}</span>
+                                                        <span className="font-medium">{article.author_details?.name || article.author || t('news.author')}</span>
                                                         <span>•</span>
                                                         <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
                                                     </div>
@@ -261,7 +263,7 @@ export const NewsPage: React.FC = () => {
                                         <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-brand-pink/10">
                                             <h3 className="font-bold text-brand-pink text-lg flex items-center gap-2">
                                                 <Flame size={20} className="fill-brand-pink" />
-                                                Tin Hot
+                                                {t('news.tabs.hot')}
                                             </h3>
                                         </div>
 
@@ -272,7 +274,7 @@ export const NewsPage: React.FC = () => {
                                                 const mainHot = hotNews[0];
                                                 const subHot = hotNews.slice(1, 3);
 
-                                                if (!mainHot) return <div className="text-gray-400 text-sm p-4">Chưa có tin hot nào.</div>;
+                                                if (!mainHot) return <div className="text-gray-400 text-sm p-4">{t('news.empty.hot')}</div>;
 
                                                 return (
                                                     <>
@@ -320,7 +322,7 @@ export const NewsPage: React.FC = () => {
                                         <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-purple-500/20 to-indigo-500/20">
                                             <h3 className="font-bold text-purple-700 text-lg flex items-center gap-2">
                                                 <Headphones size={20} />
-                                                Podcast
+                                                {t('news.tabs.podcast')}
                                             </h3>
                                         </div>
 
@@ -331,7 +333,7 @@ export const NewsPage: React.FC = () => {
                                                 const mainPod = podcasts[0];
                                                 const subPod = podcasts.slice(1, 3);
 
-                                                if (!mainPod) return <div className="text-gray-400 text-sm p-4">Chưa có podcast nào.</div>;
+                                                if (!mainPod) return <div className="text-gray-400 text-sm p-4">{t('news.empty.podcast')}</div>;
 
                                                 return (
                                                     <>
@@ -402,7 +404,7 @@ export const NewsPage: React.FC = () => {
                                                         className="flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all"
                                                         style={{ color: section.color }}
                                                     >
-                                                        {isExpanded ? 'Thu gọn' : 'Xem thêm'}
+                                                        {isExpanded ? t('news.collapse') : t('news.viewMore')}
                                                         <ChevronRight size={16} />
                                                     </button>
                                                 )}
@@ -432,7 +434,7 @@ export const NewsPage: React.FC = () => {
                                                             {article.title}
                                                         </h3>
                                                         <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
-                                                            <span className="font-medium">{article.author_details?.name || article.author || 'Tác giả'}</span>
+                                                            <span className="font-medium">{article.author_details?.name || article.author || t('news.author')}</span>
                                                             <span>•</span>
                                                             <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
                                                         </div>
@@ -449,7 +451,7 @@ export const NewsPage: React.FC = () => {
                                 {/* Top Authors */}
                                 <div className="mb-10">
                                     <h3 className="text-xl font-bold text-gray-900 mb-6 pb-3 border-b-2 border-brand-pink">
-                                        🏆 Top Tác giả
+                                        {t('news.topAuthors')}
                                     </h3>
                                     <div className="space-y-3">
                                         {topAuthors.map((author, index) => {
@@ -493,7 +495,7 @@ export const NewsPage: React.FC = () => {
                                                             {author.name || author.username}
                                                         </p>
                                                         <p className="text-xs text-gray-500">
-                                                            {author.article_count} bài viết
+                                                            {author.article_count} {t('news.articles')}
                                                         </p>
                                                     </div>
 
@@ -502,13 +504,13 @@ export const NewsPage: React.FC = () => {
                                                         <p className="text-sm font-bold text-brand-pink">
                                                             {author.total_views.toLocaleString()}
                                                         </p>
-                                                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">views</p>
+                                                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">{t('news.views')}</p>
                                                     </div>
                                                 </div>
                                             );
                                         })}
                                         {topAuthors.length === 0 && (
-                                            <p className="text-sm text-gray-400 text-center py-4">Chưa có dữ liệu</p>
+                                            <p className="text-sm text-gray-400 text-center py-4">{t('news.empty.data')}</p>
                                         )}
                                     </div>
                                 </div>
@@ -516,7 +518,7 @@ export const NewsPage: React.FC = () => {
                                 {/* Hot Articles */}
                                 <div className="bg-gray-50 p-6">
                                     <h3 className="text-xl font-bold text-gray-900 mb-6">
-                                        Bài hot trong tuần
+                                        {t('news.hotThisWeek')}
                                     </h3>
                                     <div className="space-y-4">
                                         {hotArticles.map((article, index) => (
@@ -533,7 +535,7 @@ export const NewsPage: React.FC = () => {
                                                         {article.title}
                                                     </h4>
                                                     <p className="text-xs text-gray-500 mt-1">
-                                                        {article.author_details?.name || article.author || 'Tác giả'} • {new Date(article.created_at || '').toLocaleDateString('vi-VN')}
+                                                        {article.author_details?.name || article.author || t('news.author')} • {new Date(article.created_at || '').toLocaleDateString('vi-VN')}
                                                     </p>
                                                 </div>
                                             </div>

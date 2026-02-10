@@ -1,8 +1,43 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, MapPin, Users, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
+
+// Stagger container variant
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.25,
+            delayChildren: 0.15,
+        }
+    }
+};
+
+// Child fade-up variant
+const fadeUpChild = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
+    }
+};
+
+// Value tag pop-in variant
+const popIn = {
+    hidden: { opacity: 0, scale: 0.8, y: 15 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: { type: "spring" as const, stiffness: 200, damping: 25 }
+    }
+};
 
 export const CultureSection: React.FC = () => {
+    const { t } = useLanguage();
     const [[page, direction], setPage] = useState([0, 0]);
 
     const cultureImages = [
@@ -61,74 +96,89 @@ export const CultureSection: React.FC = () => {
                 {/* First Block - Text Left (2 sections), Image Right */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center mb-20">
 
-                    {/* Left - Content (2 text blocks) */}
+                    {/* Left - Content (2 text blocks) with staggered children */}
                     <motion.div
                         className="order-2 lg:order-1"
-                        initial={{ opacity: 0, x: -40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.7 }}
-                        viewport={{ once: true }}
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
                     >
                         {/* Block 1: Về chúng tôi */}
-                        <div className="mb-12">
+                        <motion.div className="mb-12" variants={fadeUpChild}>
                             {/* Section label */}
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-[2px] bg-brand-pink"></div>
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">Về chúng tôi</span>
+                                <motion.div
+                                    className="w-8 h-[2px] bg-brand-pink"
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    transition={{ duration: 0.7, delay: 0.3 }}
+                                    viewport={{ once: true }}
+                                    style={{ originX: 0 }}
+                                />
+                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.aboutLabel')}</span>
                             </div>
 
                             {/* Title */}
                             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-8 leading-tight">
-                                HUGs Agency
+                                {t('cultureSection.aboutTitle')}
                             </h2>
 
                             {/* Description */}
                             <div className="space-y-6 text-gray-900 leading-relaxed">
                                 <p className="text-xl">
-                                    Sinh ra ở Đà Nẵng. Lớn lên cùng nhịp sống Miền Trung. HUGs là một đội ngũ trẻ, kỷ luật và giàu năng lượng sáng tạo, làm marketing với tư duy định hướng chiến lược và tiêu chuẩn triển khai chuyên nghiệp.
+                                    {t('cultureSection.aboutDesc')}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Block 2: Tư Duy */}
-                        <div className="mb-10">
+                        <motion.div className="mb-10" variants={fadeUpChild}>
                             {/* Section label */}
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-[2px] bg-brand-pink"></div>
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">Tư Duy</span>
+                                <motion.div
+                                    className="w-8 h-[2px] bg-brand-pink"
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    transition={{ duration: 0.7, delay: 0.4 }}
+                                    viewport={{ once: true }}
+                                    style={{ originX: 0 }}
+                                />
+                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.mindsetLabel')}</span>
                             </div>
 
                             {/* Description */}
                             <div className="space-y-6 text-gray-900 leading-relaxed">
                                 <p className="text-xl">
-                                    HUGs không bắt đầu bằng ý tưởng có sẵn. Chúng tôi bắt đầu từ việc hiểu đúng bối cảnh — thị trường, con người và những áp lực tăng trưởng mà thương hiệu đang đối mặt.
+                                    {t('cultureSection.mindsetDesc')}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        {/* Core values - icons */}
-                        <div className="flex flex-wrap gap-4 mb-10">
-                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                        {/* Core values - icons with pop-in */}
+                        <motion.div className="flex flex-wrap gap-4 mb-10" variants={fadeUpChild}>
+                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
                                 <Lightbulb size={18} className="text-brand-pink" />
-                                <span className="text-sm font-medium text-gray-700">Tư duy sáng tạo</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                                <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.innovative')}</span>
+                            </motion.div>
+                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
                                 <MapPin size={18} className="text-brand-pink" />
-                                <span className="text-sm font-medium text-gray-700">Local Insight Miền Trung</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full">
+                                <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.local')}</span>
+                            </motion.div>
+                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
                                 <Users size={18} className="text-brand-pink" />
-                                <span className="text-sm font-medium text-gray-700">30+ Nhân sự</span>
-                            </div>
-                        </div>
+                                <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.personnel')}</span>
+                            </motion.div>
+                        </motion.div>
 
                         {/* CTA */}
                         <motion.button
                             className="group flex items-center gap-3 bg-brand-pink text-white px-8 py-4 rounded-full text-sm font-bold shadow-lg shadow-brand-pink/25 hover:shadow-xl hover:shadow-brand-pink/30 transition-all"
+                            variants={fadeUpChild}
                             whileHover={{ scale: 1.02, x: 5 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            Khám phá dự án
+                            {t('cultureSection.ctaButton')}
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </motion.button>
                     </motion.div>
@@ -136,10 +186,10 @@ export const CultureSection: React.FC = () => {
                     {/* Right - Visual with floating badges */}
                     <motion.div
                         className="order-1 lg:order-2 relative lg:-mr-20 lg:scale-125 origin-left"
-                        initial={{ opacity: 0, x: 40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.7 }}
-                        viewport={{ once: true }}
+                        initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                        transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                        viewport={{ once: true, margin: "-50px" }}
                     >
                         {/* Main image */}
                         <div className="relative">
@@ -150,33 +200,33 @@ export const CultureSection: React.FC = () => {
                                 className="w-full h-auto object-cover"
                             />
 
-                            {/* Stats badge - top right (smaller) */}
+                            {/* Stats badge - top right (refined size) */}
                             <motion.div
-                                className="absolute -top-2 right-2 bg-brand-pink text-white shadow-lg px-3 py-2 z-20"
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.5 }}
+                                className="absolute -top-3 -right-2 bg-brand-pink text-white shadow-lg px-4 py-2 z-20"
+                                initial={{ opacity: 0, scale: 0.6, y: -15 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: "spring" as const, stiffness: 180, damping: 22, delay: 0.8 }}
                                 viewport={{ once: true }}
                             >
-                                <div className="text-base font-black">2021</div>
-                                <div className="text-[10px] opacity-80">Thành lập</div>
+                                <div className="text-xl font-black">2021</div>
+                                <div className="text-[10px] opacity-90 uppercase tracking-wider">{t('cultureSection.stats.established')}</div>
                             </motion.div>
 
-                            {/* Location badge - bottom left (smaller) */}
+                            {/* Location badge - bottom left (refined size) */}
                             <motion.div
-                                className="absolute -bottom-2 -left-2 bg-white shadow-lg p-3 z-20"
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.4 }}
+                                className="absolute -bottom-3 -left-3 bg-white shadow-xl p-4 z-20 border border-gray-100"
+                                initial={{ opacity: 0, scale: 0.6, y: 15 }}
+                                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                                transition={{ type: "spring" as const, stiffness: 180, damping: 22, delay: 0.7 }}
                                 viewport={{ once: true }}
                             >
-                                <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-brand-pink/10 flex items-center justify-center">
-                                        <MapPin className="text-brand-pink" size={16} />
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-brand-pink/10 flex items-center justify-center rounded-lg">
+                                        <MapPin className="text-brand-pink" size={20} />
                                     </div>
                                     <div>
-                                        <div className="text-sm font-bold text-gray-900">Đà Nẵng</div>
-                                        <div className="text-[10px] text-gray-500">Miền Trung, VN</div>
+                                        <div className="text-base font-black text-gray-900 leading-tight">{t('cultureSection.stats.location')}</div>
+                                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mt-1">{t('cultureSection.stats.region')}</div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -190,10 +240,10 @@ export const CultureSection: React.FC = () => {
                     {/* Left - Image Carousel */}
                     <motion.div
                         className="relative lg:-ml-20 lg:scale-110 origin-right"
-                        initial={{ opacity: 0, x: -40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.7 }}
-                        viewport={{ once: true }}
+                        initial={{ opacity: 0, x: -60, scale: 0.95 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                        transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                        viewport={{ once: true, margin: "-50px" }}
                     >
                         <div className="relative overflow-hidden">
                             <div className="relative w-full aspect-[4/3]">
@@ -231,15 +281,15 @@ export const CultureSection: React.FC = () => {
                             {/* Navigation buttons */}
                             <button
                                 onClick={() => paginate(-1)}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border border-brand-pink/30"
                             >
-                                <ChevronLeft size={20} className="text-gray-800" />
+                                <ChevronLeft size={20} className="text-brand-pink" />
                             </button>
                             <button
                                 onClick={() => paginate(1)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border border-brand-pink/30"
                             >
-                                <ChevronRight size={20} className="text-gray-800" />
+                                <ChevronRight size={20} className="text-brand-pink" />
                             </button>
 
                             {/* Dot indicators */}
@@ -258,44 +308,58 @@ export const CultureSection: React.FC = () => {
                         </div>
                     </motion.div>
 
-                    {/* Right - Content (2 text blocks) */}
+                    {/* Right - Content (2 text blocks) with stagger */}
                     <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.7 }}
-                        viewport={{ once: true }}
+                        variants={staggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
                     >
                         {/* Block 1: Triển khai */}
-                        <div className="mb-12">
+                        <motion.div className="mb-12" variants={fadeUpChild}>
                             {/* Section label */}
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-[2px] bg-brand-pink"></div>
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">Triển Khai</span>
+                                <motion.div
+                                    className="w-8 h-[2px] bg-brand-pink"
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    transition={{ duration: 0.7, delay: 0.3 }}
+                                    viewport={{ once: true }}
+                                    style={{ originX: 0 }}
+                                />
+                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.implementationLabel')}</span>
                             </div>
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
                                 <p className="text-xl">
-                                    Mỗi dự án tại HUGs được xây dựng như một hệ thống. Sáng tạo được dẫn dắt bởi chiến lược, triển khai có kỷ luật và luôn được đo lường để tạo ra hiệu quả thực.
+                                    {t('cultureSection.implementationDesc')}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Block 2: Giá trị */}
-                        <div>
+                        <motion.div variants={fadeUpChild}>
                             {/* Section label */}
                             <div className="flex items-center gap-2 mb-6">
-                                <div className="w-8 h-[2px] bg-brand-pink"></div>
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">Giá Trị</span>
+                                <motion.div
+                                    className="w-8 h-[2px] bg-brand-pink"
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    transition={{ duration: 0.7, delay: 0.4 }}
+                                    viewport={{ once: true }}
+                                    style={{ originX: 0 }}
+                                />
+                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.valueLabel')}</span>
                             </div>
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
                                 <p className="text-xl">
-                                    Giữa một thị trường ngày càng ồn ào, chỉ những thương hiệu xuất hiện đúng cách, đúng thời điểm và đủ chiều sâu mới có thể được ghi nhớ và lựa chọn.
+                                    {t('cultureSection.valueDesc')}
                                 </p>
                             </div>
-                        </div>
+                        </motion.div>
                     </motion.div>
                 </div>
             </div>

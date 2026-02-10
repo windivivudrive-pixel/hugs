@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { supabase, Service } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Service icons mapping
 const serviceIcons: Record<string, string> = {
@@ -22,6 +23,7 @@ const serviceIcons: Record<string, string> = {
 };
 
 export const ServicePage: React.FC = () => {
+    const { t } = useLanguage();
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -80,14 +82,14 @@ export const ServicePage: React.FC = () => {
                         transition={{ duration: 0.6 }}
                     >
                         <span className="inline-block px-4 py-2 bg-brand-pink/10 text-brand-pink rounded-full text-sm font-semibold mb-6">
-                            Dịch vụ của chúng tôi
+                            {t('servicePage.badge')}
                         </span>
                         <h1 className="text-4xl md:text-6xl font-black mb-6">
-                            Giải pháp truyền thông<br />
-                            <span className="text-brand-pink">toàn diện</span>
+                            {t('servicePage.title')}<br />
+                            <span className="text-brand-pink">{t('servicePage.titleHighlight')}</span>
                         </h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            HUGs cung cấp đầy đủ các dịch vụ truyền thông số, từ xây dựng nội dung đến quản lý kênh và quảng cáo đa nền tảng.
+                            {t('servicePage.description')}
                         </p>
                     </motion.div>
                 </div>
@@ -138,12 +140,12 @@ export const ServicePage: React.FC = () => {
 
                                         {/* Description */}
                                         <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                                            {service.short_description || 'Giải pháp chuyên nghiệp giúp thương hiệu phát triển bền vững trên nền tảng số.'}
+                                            {service.short_description || t('servicePage.defaultServiceDesc')}
                                         </p>
 
                                         {/* CTA */}
                                         <div className="flex items-center gap-2 text-brand-pink font-semibold text-sm group-hover:gap-3 transition-all">
-                                            Xem dự án
+                                            {t('servicePage.viewProjects')}
                                             <ArrowRight size={16} />
                                         </div>
                                     </motion.div>
@@ -164,16 +166,16 @@ export const ServicePage: React.FC = () => {
                         viewport={{ once: true }}
                     >
                         <h2 className="text-3xl md:text-4xl font-black text-white mb-6">
-                            Bạn cần tư vấn dịch vụ phù hợp?
+                            {t('servicePage.ctaTitle')}
                         </h2>
                         <p className="text-white/80 mb-8 text-lg">
-                            Liên hệ với HUGs để được tư vấn chiến lược truyền thông phù hợp với doanh nghiệp của bạn
+                            {t('servicePage.ctaDesc')}
                         </p>
                         <Link
                             to="/#contact"
                             className="inline-flex items-center gap-2 bg-white text-brand-pink px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors"
                         >
-                            Liên hệ ngay
+                            {t('servicePage.ctaButton')}
                             <ArrowRight size={20} />
                         </Link>
                     </motion.div>

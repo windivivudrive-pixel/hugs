@@ -7,11 +7,13 @@ import { supabase, ServiceArticle, NewsArticle } from '../lib/supabase';
 import { recordArticleView } from '../lib/viewTracker';
 import { marked } from 'marked';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Combined article type for display
 type DisplayArticle = (ServiceArticle & { category?: string }) | (NewsArticle & { service?: { name: string } });
 
 export const ArticlePage: React.FC = () => {
+    const { t } = useLanguage();
     const [article, setArticle] = useState<DisplayArticle | null>(null);
     const [loading, setLoading] = useState(true);
     const [isNewsArticle, setIsNewsArticle] = useState(false);
@@ -168,7 +170,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                             </span>
                         </div>
                         <div className="flex items-center gap-2 ml-auto">
-                            <span className="text-gray-400">Khách hàng:</span>
+                            <span className="text-gray-400">{t('article.client')}:</span>
                             <div className="flex items-center gap-2">
                                 <Building2 size={16} className="text-brand-pink" />
                                 <span className="font-semibold text-brand-pink">Ahamove</span>
@@ -183,7 +185,7 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <span className="text-sm text-gray-500">Chia sẻ:</span>
+                        <span className="text-sm text-gray-500">{t('article.share')}:</span>
                         <button className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center">
                             <Facebook size={16} />
                         </button>

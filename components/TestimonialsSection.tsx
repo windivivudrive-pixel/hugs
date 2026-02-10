@@ -1,40 +1,25 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const TestimonialsSection: React.FC = () => {
-    const testimonials = [
-        {
-            name: "Ahamove",
-            role: "Director",
-            text: "HUGs Agency rất nhiệt tình và hỗ trợ linh hoạt, luôn sẵn lòng hỗ trợ cả vào buổi khuya và cuối tuần. Hy vọng mối quan hệ hợp tác giữa Ahamove và HUGs sẽ tiếp tục phát triển.",
-            logo: "/logo-partner/partner0.png"
-        },
-        {
-            name: "Nessa House",
-            role: "CEO",
-            text: "Nessa House rất vui được đồng hành cùng HUGs Agency trong năm thứ hai. Chúng tôi đánh giá cao sự tận tâm và hiểu biết sâu sắc của đội ngũ HUGs Agency về thị trường miền Trung.",
-            logo: "/logo-partner/partner1.png"
-        },
-        {
-            name: "Mai Wedding",
-            role: "Brand Manager",
-            text: "HUGs Agency không chỉ là đối tác digital marketing mà còn là người bạn đồng hành chiến lược. Sáng tạo và hiểu rõ về khách hàng của chúng tôi.",
-            logo: "/logo-partner/partner3.png"
-        },
-        {
-            name: "Vinpearl",
-            role: "Marketing Director",
-            text: "Đội ngũ HUGs Agency làm việc rất chuyên nghiệp, đảm bảo tiến độ và chất lượng dự án. Sự sáng tạo trong các chiến dịch marketing đã giúp chúng tôi tiếp cận hiệu quả đến khách hàng mục tiêu.",
-            logo: "/logo-partner/partner4.png"
-        },
-        {
-            name: "Sun Group",
-            role: "Head of Marketing",
-            text: "Giải pháp truyền thông toàn diện từ HUGs Agency đã mang lại hiệu quả vượt mong đợi. Chúng tôi rất ấn tượng với khả năng nắm bắt xu hướng và triển khai chiến dịch của team.",
-            logo: "/logo-partner/partner2.png"
-        }
+    const { t } = useLanguage();
+
+    const testimonialLogos = [
+        "/logo-partner/partner0.png", // Ahamove
+        "/logo-partner/partner1.png", // Nessa House
+        "/logo-partner/partner3.png", // Mai Wedding
+        "/logo-partner/partner4.png", // Vinpearl
+        "/logo-partner/partner2.png"  // Sun Group
     ];
+
+    const testimonials = testimonialLogos.map((logo, i) => ({
+        name: t(`testimonials.items.${i}.name`),
+        role: t(`testimonials.items.${i}.role`),
+        text: t(`testimonials.items.${i}.text`),
+        logo: logo
+    }));
 
     const [currentIndex, setCurrentIndex] = React.useState(0);
     const [width, setWidth] = React.useState(0);
@@ -71,10 +56,10 @@ export const TestimonialsSection: React.FC = () => {
                     viewport={{ once: true }}
                 >
                     <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        Đánh giá
+                        {t('testimonials.badge')}
                     </span>
                     <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                        Khách hàng <span className="text-brand-pink">nói gì</span> về chúng tôi
+                        {t('testimonials.title')} <span className="text-brand-pink">{t('testimonials.titleHighlight')}</span> {t('testimonials.titleEnd')}
                     </h2>
                 </motion.div>
 
@@ -142,7 +127,7 @@ export const TestimonialsSection: React.FC = () => {
                                         className="ml-auto bg-brand-pink text-white text-xs font-bold px-4 py-2 rounded opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 hover:bg-brand-pink/90 whitespace-nowrap"
                                         whileHover={{ scale: 1.05 }}
                                     >
-                                        Xem dự án
+                                        {t('testimonials.viewProject')}
                                     </motion.button>
                                 </div>
                             </motion.div>
