@@ -1,33 +1,25 @@
-/* SVN-Avo Font Family */
+/* Manrope Font Family */
 @font-face {
-    font-family: 'SVN-Avo';
-    src: url('/SVN-Avo.ttf') format('truetype');
+    font-family: 'Manrope';
+    src: url('/Manrope-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'SVN-Avo';
-    src: url('/SVN-Avo bold.ttf') format('truetype');
+    font-family: 'Manrope';
+    src: url('/Manrope-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: 'SVN-Avo';
-    src: url('/SVN-Avo italic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'SVN-Avo';
-    src: url('/SVN-Avo bold italic.ttf') format('truetype');
-    font-weight: 700;
-    font-style: italic;
+    font-family: 'Manrope';
+    src: url('/Manrope-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
     font-display: swap;
 }
 
@@ -108,7 +100,7 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family: 'SVN-Avo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     overflow-x: hidden;
     background-color: var(--color-white);
     color: var(--color-gray-900);

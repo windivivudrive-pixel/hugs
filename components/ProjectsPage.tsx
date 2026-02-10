@@ -6,6 +6,8 @@ import Masonry from 'react-masonry-css';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { supabase, Service, ServiceArticle, ProjectCategory, fetchProjectCategories } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
+import { STATIC_SERVICES } from '../lib/staticData';
 
 // Helper to strip HTML tags and entities for preview
 const stripHtml = (html: string | null): string => {
@@ -25,44 +27,22 @@ const stripHtml = (html: string | null): string => {
 };
 
 export const ProjectsPage: React.FC = () => {
-    const [services, setServices] = useState<Service[]>([]);
+    const { t } = useLanguage();
+    // Use static services instead of DB fetch
+    const services = STATIC_SERVICES;
+
     const [articles, setArticles] = useState<ServiceArticle[]>([]);
     const [selectedService, setSelectedService] = useState<string>('');
     const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
     const [categories, setCategories] = useState<ProjectCategory[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); // Services are static, so initial loading is false (or true if fetching articles)
+    const [articlesLoading, setArticlesLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Scroll to top on mount
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
-
-    // Fetch services on mount
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-
-                // Fetch all services
-                const { data: servicesData, error: servicesError } = await supabase
-                    .from('services')
-                    .select('*, category:service_categories(*)')
-                    .order('display_order');
-
-                if (servicesError) throw servicesError;
-
-                setServices(servicesData || []);
-            } catch (err) {
-                console.error('Error fetching services:', err);
-                setError('Không thể tải danh sách dịch vụ');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
     }, []);
 
     // Sync selected service with URL params
@@ -82,7 +62,9 @@ export const ProjectsPage: React.FC = () => {
             if (!selectedService) return;
 
             try {
+                setArticlesLoading(true);
                 setSelectedCategoryId(null); // Reset category filter
+                setError(null);
 
                 // Fetch articles
                 const { data, error } = await supabase
@@ -105,6 +87,9 @@ export const ProjectsPage: React.FC = () => {
                 }
             } catch (err) {
                 console.error('Error fetching articles:', err);
+                setError(t('projectsPage.error'));
+            } finally {
+                setArticlesLoading(false);
             }
         };
 
@@ -125,10 +110,10 @@ export const ProjectsPage: React.FC = () => {
                 <div className="bg-gray-50 border-b border-gray-200">
                     <div className="max-w-7xl mx-auto px-6 py-12 text-center">
                         <h1 className="text-4xl lg:text-5xl font-black mb-4 text-gray-900">
-                            Dịch Vụ Của HUGs Agency
+                            {t('projectsPage.title')}
                         </h1>
                         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Giải pháp truyền thông toàn diện, từ chiến lược đến triển khai
+                            {t('projectsPage.subtitle')}
                         </p>
                     </div>
 
@@ -136,40 +121,34 @@ export const ProjectsPage: React.FC = () => {
                     <div className="overflow-x-auto pb-4">
                         <div className="px-6 flex justify-center">
                             <div className="flex gap-2 flex-wrap justify-center">
-                                {loading ? (
-                                    <div className="flex items-center gap-2 text-gray-500">
-                                        <Loader2 className="animate-spin" size={20} />
-                                        <span>Đang tải...</span>
-                                    </div>
-                                ) : (
-                                    services.map((service) => (
-                                        <button
-                                            key={service.id}
-                                            onClick={() => setSearchParams({ service: service.slug })}
-                                            className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
-                                                ? 'bg-brand-pink text-white border-brand-pink'
-                                                : 'bg-white text-gray-600 border-brand-pink/50 hover:border-brand-pink hover:text-brand-pink'
-                                                }`}
-                                            style={{
-                                                background: selectedService !== service.slug
-                                                    ? 'linear-gradient(to top, transparent, transparent)'
-                                                    : undefined
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                if (selectedService !== service.slug) {
-                                                    (e.target as HTMLElement).style.background = 'linear-gradient(to top, rgba(255,2,144,0.25) 0%, transparent 70%)';
-                                                }
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                if (selectedService !== service.slug) {
-                                                    (e.target as HTMLElement).style.background = 'transparent';
-                                                }
-                                            }}
-                                        >
-                                            {service.name}
-                                        </button>
-                                    ))
-                                )}
+                                {services.map((service) => (
+                                    <button
+                                        key={service.id}
+                                        onClick={() => setSearchParams({ service: service.slug })}
+                                        className={`px-4 py-2 text-sm font-medium whitespace-nowrap transition-all border relative overflow-hidden ${selectedService === service.slug
+                                            ? 'bg-brand-pink text-white border-brand-pink'
+                                            : 'bg-white text-gray-600 border-brand-pink/50 hover:border-brand-pink hover:text-brand-pink'
+                                            }`}
+                                        style={{
+                                            background: selectedService !== service.slug
+                                                ? 'linear-gradient(to top, transparent, transparent)'
+                                                : undefined
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (selectedService !== service.slug) {
+                                                (e.target as HTMLElement).style.background = 'linear-gradient(to top, rgba(255,2,144,0.25) 0%, transparent 70%)';
+                                            }
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (selectedService !== service.slug) {
+                                                (e.target as HTMLElement).style.background = 'transparent';
+                                            }
+                                        }}
+                                    >
+                                        {/* Translated Service Name */}
+                                        {t(`services.items.${service.slug}`)}
+                                    </button>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -185,15 +164,14 @@ export const ProjectsPage: React.FC = () => {
                 )}
 
                 {/* 2-Column Layout: Categories Left, Articles Right */}
-                {!loading && !error && activeService && (
+                {!error && activeService && (
                     <div className="max-w-7xl mx-auto px-6 py-12">
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
                             {/* Left Column - Category Filter */}
                             <div className="lg:col-span-3">
                                 <div className="sticky top-28">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4">{activeService.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-6">{activeService.short_description}</p>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4">{t(`services.items.${activeService.slug}`)}</h3>
 
                                     {/* Category Filter */}
                                     <div className="space-y-2">
@@ -204,7 +182,7 @@ export const ProjectsPage: React.FC = () => {
                                                 : 'bg-white text-gray-700 border-brand-pink/50 hover:bg-brand-pink hover:text-white hover:border-brand-pink'
                                                 }`}
                                         >
-                                            Tất cả
+                                            {t('projectsPage.all')}
                                             <ChevronRight size={16} className={`${selectedCategoryId === null ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'} transition-opacity`} />
                                         </button>
                                         {categories.map((cat) => (
@@ -226,113 +204,120 @@ export const ProjectsPage: React.FC = () => {
 
                             {/* Right Column - Articles */}
                             <div className="lg:col-span-9">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeService.slug + (selectedCategoryId || 'all')}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <div className="flex items-center justify-between mb-6">
-                                            <h3 className="text-xl font-bold text-gray-900">
-                                                {selectedCategoryId ? categories.find(c => c.id === selectedCategoryId)?.name : 'Danh sách dự án'}
-                                            </h3>
-                                            <Link to="/allprojects" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
-                                                Xem tất cả <ArrowRight size={14} />
-                                            </Link>
+                                {articlesLoading ? (
+                                    <div className="flex items-center justify-center py-20">
+                                        <div className="flex flex-col items-center gap-2 text-gray-500">
+                                            <Loader2 className="animate-spin" size={32} />
+                                            <span>{t('projectsPage.loading')}</span>
                                         </div>
+                                    </div>
+                                ) : (
+                                    <AnimatePresence mode="wait">
+                                        <motion.div
+                                            key={activeService.slug + (selectedCategoryId || 'all')}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -20 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            <div className="flex items-center justify-between mb-6">
+                                                <h3 className="text-xl font-bold text-gray-900">
+                                                    {selectedCategoryId ? categories.find(c => c.id === selectedCategoryId)?.name : t('projectsPage.listTitle')}
+                                                </h3>
+                                                <Link to="/allprojects" className="text-brand-pink text-sm font-medium hover:underline flex items-center gap-1">
+                                                    {t('projectsPage.viewAll')} <ArrowRight size={14} />
+                                                </Link>
+                                            </div>
 
-                                        {(() => {
-                                            const filteredArticles = selectedCategoryId
-                                                ? articles.filter(a => a.project_category_id === selectedCategoryId)
-                                                : articles;
+                                            {(() => {
+                                                const filteredArticles = selectedCategoryId
+                                                    ? articles.filter(a => a.project_category_id === selectedCategoryId)
+                                                    : articles;
 
+                                                // Masonry breakpoint columns
+                                                const masonryBreakpoints = {
+                                                    default: 3,
+                                                    1024: 3,
+                                                    768: 2,
+                                                    640: 1
+                                                };
 
+                                                // Varied aspect ratios for visual interest
+                                                const getAspectRatioStyle = (idx: number) => {
+                                                    const ratios = ['3/4', '4/3', '1/1', '16/9'];
+                                                    return ratios[idx % ratios.length];
+                                                };
 
-                                            // Masonry breakpoint columns
-                                            const masonryBreakpoints = {
-                                                default: 3,
-                                                1024: 3,
-                                                768: 2,
-                                                640: 1
-                                            };
+                                                return filteredArticles.length > 0 ? (
+                                                    <Masonry
+                                                        breakpointCols={masonryBreakpoints}
+                                                        className="flex -ml-4 w-auto"
+                                                        columnClassName="pl-4 bg-clip-padding"
+                                                    >
+                                                        {filteredArticles.map((article, index) => {
+                                                            const aspectRatio = getAspectRatioStyle(index);
 
-                                            // Varied aspect ratios for visual interest
-                                            const getAspectRatioStyle = (idx: number) => {
-                                                const ratios = ['3/4', '4/3', '1/1', '16/9'];
-                                                return ratios[idx % ratios.length];
-                                            };
-
-                                            return filteredArticles.length > 0 ? (
-                                                <Masonry
-                                                    breakpointCols={masonryBreakpoints}
-                                                    className="flex -ml-4 w-auto"
-                                                    columnClassName="pl-4 bg-clip-padding"
-                                                >
-                                                    {filteredArticles.map((article, index) => {
-                                                        const aspectRatio = getAspectRatioStyle(index);
-
-                                                        return (
-                                                            <motion.a
-                                                                key={article.id}
-                                                                href={`/article?id=${article.id}`}
-                                                                className="block break-inside-avoid bg-white overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer group rounded-none mb-4"
-                                                                initial={{ opacity: 0, y: 20 }}
-                                                                whileInView={{ opacity: 1, y: 0 }}
-                                                                viewport={{ once: true }}
-                                                                transition={{ duration: 0.4, delay: index * 0.05 }}
-                                                                whileHover={{ y: -5 }}
-                                                            >
-                                                                {/* Image Container with varied aspect ratio */}
-                                                                <div
-                                                                    className="overflow-hidden bg-gray-100 relative w-full"
-                                                                    style={{ aspectRatio: aspectRatio }}
+                                                            return (
+                                                                <motion.a
+                                                                    key={article.id}
+                                                                    href={`/article?id=${article.id}`}
+                                                                    className="block break-inside-avoid bg-white overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all cursor-pointer group rounded-none mb-4"
+                                                                    initial={{ opacity: 0, y: 20 }}
+                                                                    whileInView={{ opacity: 1, y: 0 }}
+                                                                    viewport={{ once: true }}
+                                                                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                                                                    whileHover={{ y: -5 }}
                                                                 >
-                                                                    <img
-                                                                        src={article.thumbnail || `https://picsum.photos/800/600?random=${article.id}`}
-                                                                        alt={article.title}
-                                                                        loading="lazy"
-                                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                                        onError={(e) => {
-                                                                            (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${article.id}`;
-                                                                        }}
-                                                                    />
+                                                                    {/* Image Container with varied aspect ratio */}
+                                                                    <div
+                                                                        className="overflow-hidden bg-gray-100 relative w-full"
+                                                                        style={{ aspectRatio: aspectRatio }}
+                                                                    >
+                                                                        <img
+                                                                            src={article.thumbnail || `https://picsum.photos/800/600?random=${article.id}`}
+                                                                            alt={article.title}
+                                                                            loading="lazy"
+                                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                                            onError={(e) => {
+                                                                                (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${article.id}`;
+                                                                            }}
+                                                                        />
 
-                                                                    {/* Category Tag */}
-                                                                    {article.project_category?.name && (
-                                                                        <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 uppercase tracking-wide">
-                                                                            {article.project_category.name}
-                                                                        </span>
-                                                                    )}
-                                                                </div>
-
-                                                                {/* Content */}
-                                                                <div className="p-4">
-                                                                    <h4 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
-                                                                        {article.title}
-                                                                    </h4>
-                                                                    <p className="text-sm text-gray-500 line-clamp-3">
-                                                                        {stripHtml(article.content)}
-                                                                    </p>
-
-                                                                    {/* Hover arrow indicator */}
-                                                                    <div className="flex items-center gap-1 mt-3 text-brand-pink text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                        Xem chi tiết <ArrowRight size={14} />
+                                                                        {/* Category Tag */}
+                                                                        {article.project_category?.name && (
+                                                                            <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 uppercase tracking-wide">
+                                                                                {article.project_category.name}
+                                                                            </span>
+                                                                        )}
                                                                     </div>
-                                                                </div>
-                                                            </motion.a>
-                                                        );
-                                                    })}
-                                                </Masonry>
-                                            ) : (
-                                                <div className="py-4">
-                                                    <p className="text-sm text-gray-500 italic">Chưa có bài viết nào.</p>
-                                                </div>
-                                            );
-                                        })()}
-                                    </motion.div>
-                                </AnimatePresence>
+
+                                                                    {/* Content */}
+                                                                    <div className="p-4">
+                                                                        <h4 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
+                                                                            {article.title}
+                                                                        </h4>
+                                                                        <p className="text-sm text-gray-500 line-clamp-3">
+                                                                            {stripHtml(article.content)}
+                                                                        </p>
+
+                                                                        {/* Hover arrow indicator */}
+                                                                        <div className="flex items-center gap-1 mt-3 text-brand-pink text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                            {t('projectsPage.viewDetails')} <ArrowRight size={14} />
+                                                                        </div>
+                                                                    </div>
+                                                                </motion.a>
+                                                            );
+                                                        })}
+                                                    </Masonry>
+                                                ) : (
+                                                    <div className="py-4">
+                                                        <p className="text-sm text-gray-500 italic">{t('projectsPage.noArticles')}</p>
+                                                    </div>
+                                                );
+                                            })()}
+                                        </motion.div>
+                                    </AnimatePresence>
+                                )}
                             </div>
                         </div>
                     </div>

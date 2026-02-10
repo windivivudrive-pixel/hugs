@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { fetchNewsArticles, NewsArticle } from '../lib/supabase';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const NewsSection: React.FC = () => {
+    const { t } = useLanguage();
     const [articles, setArticles] = useState<NewsArticle[]>([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -33,10 +35,10 @@ export const NewsSection: React.FC = () => {
             <section className="py-24 bg-white overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6">
                     <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        Tin tức
+                        {t('newsSection.badge')}
                     </span>
                     <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                        Cập nhật <span className="text-brand-pink">mới nhất</span>
+                        {t('newsSection.title')} <span className="text-brand-pink">{t('newsSection.titleHighlight')}</span>
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[1, 2, 3, 4].map((i) => (
@@ -60,11 +62,7 @@ export const NewsSection: React.FC = () => {
     return (
         <section className="py-24 bg-white overflow-hidden relative">
             {/* Logo marker - bottom right */}
-            <img
-                src="/logo-hugs-only.png"
-                alt=""
-                className="absolute bottom-8 right-8 w-14 h-14 opacity-10 pointer-events-none"
-            />
+
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div
@@ -75,10 +73,10 @@ export const NewsSection: React.FC = () => {
                     viewport={{ once: true }}
                 >
                     <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        Tin tức
+                        {t('newsSection.badge')}
                     </span>
                     <h2 className="text-3xl lg:text-4xl font-black text-gray-900">
-                        Cập nhật <span className="text-brand-pink">mới nhất</span>
+                        {t('newsSection.title')} <span className="text-brand-pink">{t('newsSection.titleHighlight')}</span>
                     </h2>
                 </motion.div>
 
@@ -139,7 +137,7 @@ export const NewsSection: React.FC = () => {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
-                            Xem tất cả tin tức
+                            {t('newsSection.viewAll')}
                             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </motion.div>
                     </Link>

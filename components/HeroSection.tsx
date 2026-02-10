@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, ArrowRight } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const HeroSection: React.FC = () => {
+    const { t } = useLanguage();
     return (
         <section className="relative w-full min-h-screen bg-gray-900 overflow-hidden flex items-center">
             {/* Background Video */}
@@ -27,7 +29,7 @@ export const HeroSection: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                    HUGs Agency
+                    {t('hero.title')}
                 </motion.h1>
 
                 <motion.p
@@ -36,7 +38,7 @@ export const HeroSection: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    Chúng tôi đang mở ra không gian của chiến lược và sáng tạo…
+                    {t('hero.subtitle')}
                 </motion.p>
 
 

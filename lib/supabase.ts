@@ -161,12 +161,26 @@ export interface NewsArticle {
     display_order: number;
     created_at: string;
     updated_at: string;
+    view_count: number;
+    author_details?: {
+        name: string | null;
+        avatar_url: string | null;
+    };
+}
+
+export interface AdminAuthor {
+    id: string;
+    username: string;
+    name: string | null;
+    avatar_url: string | null;
+    total_views: number;
+    article_count: number;
 }
 
 export const fetchNewsArticles = async (limit: number = 4): Promise<NewsArticle[]> => {
     const { data, error } = await supabase
         .from('news_articles')
-        .select('*')
+        .select('*, author_details:admin_users(name, avatar_url)')
         .eq('published', true)
         .order('display_order')
         .limit(limit);
@@ -178,10 +192,70 @@ export const fetchNewsArticles = async (limit: number = 4): Promise<NewsArticle[
     return data || [];
 };
 
+// Fetch top authors ranked by total views
+export const fetchTopAuthors = async (limit: number = 5): Promise<AdminAuthor[]> => {
+    try {
+        // Get all published news articles with author_id and view_count
+        const { data: articles, error: articlesError } = await supabase
+            .from('news_articles')
+            .select('author_id, view_count')
+            .eq('published', true)
+            .not('author_id', 'is', null);
+
+        if (articlesError || !articles) return [];
+
+        // Aggregate views by author
+        const authorStats: Record<string, { total_views: number; article_count: number }> = {};
+        for (const article of articles) {
+            if (!article.author_id) continue;
+            if (!authorStats[article.author_id]) {
+                authorStats[article.author_id] = { total_views: 0, article_count: 0 };
+            }
+            authorStats[article.author_id].total_views += (article.view_count || 0);
+            authorStats[article.author_id].article_count += 1;
+        }
+
+        // Get unique author IDs sorted by views
+        const sortedAuthorIds = Object.entries(authorStats)
+            .sort(([, a], [, b]) => b.total_views - a.total_views)
+            .slice(0, limit)
+            .map(([id]) => id);
+
+        if (sortedAuthorIds.length === 0) return [];
+
+        // Fetch author details
+        const { data: users, error: usersError } = await supabase
+            .from('admin_users')
+            .select('id, username, name, avatar_url')
+            .in('id', sortedAuthorIds);
+
+        if (usersError || !users) return [];
+
+        // Combine and sort
+        return sortedAuthorIds
+            .map(authorId => {
+                const user = users.find(u => u.id === authorId);
+                if (!user) return null;
+                return {
+                    id: user.id,
+                    username: user.username,
+                    name: user.name || user.username, // Fallback to username if name is empty
+                    avatar_url: user.avatar_url || null,
+                    total_views: authorStats[authorId].total_views,
+                    article_count: authorStats[authorId].article_count,
+                };
+            })
+            .filter((a): a is AdminAuthor => a !== null);
+    } catch (err) {
+        console.error('Error fetching top authors:', err);
+        return [];
+    }
+};
+
 // Storage helpers for thumbnail upload/delete
 const THUMBNAIL_BUCKET = 'hugs';
 
-export const uploadThumbnail = async (file: File, folder: 'news' | 'service' | 'logo'): Promise<{ url: string | null; error: any }> => {
+export const uploadThumbnail = async (file: File, folder: 'news' | 'service' | 'logo' | 'avatars'): Promise<{ url: string | null; error: any }> => {
     try {
         // Generate unique filename
         const fileExt = file.name.split('.').pop();

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../contexts/LanguageContext';
 
 // Partner logos from logo partner directory (partner0 to partner25)
 const partnerLogos = Array.from({ length: 26 }, (_, i) => ({
@@ -40,6 +41,8 @@ const CountUp: React.FC<{ end: number; duration?: number }> = ({ end, duration =
 };
 
 export const PartnersSection: React.FC = () => {
+    const { t } = useLanguage();
+
     return (
         <section className="py-24 bg-white overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
@@ -52,17 +55,17 @@ export const PartnersSection: React.FC = () => {
                     viewport={{ once: true }}
                 >
                     <span className="inline-block bg-brand-pink/10 text-brand-pink px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                        Đối tác
+                        {t('partners.badge')}
                     </span>
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-4">
-                        Được tin tưởng bởi{' '}
+                        {t('partners.title')}{' '}
                         <span className="text-brand-pink">
                             <CountUp end={100} duration={2} />+
                         </span>
-                        {' '}thương hiệu
+                        {' '}{t('partners.titleEnd')}
                     </h2>
                     <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-                        Chúng tôi tự hào được đồng hành cùng các thương hiệu lớn nhỏ trên khắp Việt Nam
+                        {t('partners.description')}
                     </p>
                 </motion.div>
 

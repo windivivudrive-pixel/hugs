@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 
 import { supabase, Service } from '../lib/supabase';
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { STATIC_SERVICES } from '../lib/staticData';
 
 export const Navbar: React.FC = () => {
+  const { t } = useLanguage();
   const [showNavbar, setShowNavbar] = useState(false);
   const [showServicesDropdown, setShowServicesDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showMobileServices, setShowMobileServices] = useState(false);
-  const [services, setServices] = useState<Service[]>([]);
+
+  // Use static services
+  const services = STATIC_SERVICES;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,24 +28,7 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch services for dropdown
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('services')
-          .select('*')
-          .order('display_order');
-
-        if (error) throw error;
-        setServices(data || []);
-      } catch (err) {
-        console.error('Error fetching services:', err);
-      }
-    };
-
-    fetchServices();
-  }, []);
+  // Removed DB fetch for services since we use STATIC_SERVICES
 
   // Close mobile menu on route change or resize
   useEffect(() => {
@@ -87,8 +76,8 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase text-gray-700">
-            <Link to="/" className="hover:text-brand-pink transition-colors">Trang chủ</Link>
-            <Link to="/about" className="hover:text-brand-pink transition-colors">Giới thiệu</Link>
+            <Link to="/" className="hover:text-brand-pink transition-colors">{t('nav.home')}</Link>
+            <Link to="/about" className="hover:text-brand-pink transition-colors">{t('nav.about')}</Link>
 
             {/* Services Dropdown */}
             <div
@@ -100,7 +89,7 @@ export const Navbar: React.FC = () => {
                 to="/service"
                 className="hover:text-brand-pink transition-colors flex items-center gap-1"
               >
-                Dịch vụ
+                {t('nav.service')}
                 <ChevronDown size={14} className={`transition-transform ${showServicesDropdown ? 'rotate-180' : ''}`} />
               </Link>
 
@@ -120,7 +109,8 @@ export const Navbar: React.FC = () => {
                           to={`/projects?service=${service.slug}`}
                           className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-brand-pink/10 hover:text-brand-pink transition-colors normal-case"
                         >
-                          {service.name}
+                          {/* Translated service name */}
+                          {t(`services.items.${service.slug}`)}
                         </Link>
                       ))}
                     </div>
@@ -129,9 +119,9 @@ export const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            <Link to="/allprojects" className="hover:text-brand-pink transition-colors">Dự án</Link>
-            <Link to="/careers" className="hover:text-brand-pink transition-colors">Tuyển dụng</Link>
-            <Link to="/news" className="hover:text-brand-pink transition-colors">Tin tức</Link>
+            <Link to="/allprojects" className="hover:text-brand-pink transition-colors">{t('nav.projects')}</Link>
+            <Link to="/careers" className="hover:text-brand-pink transition-colors">{t('nav.careers')}</Link>
+            <Link to="/news" className="hover:text-brand-pink transition-colors">{t('nav.news')}</Link>
           </div>
 
           <div className="flex items-center gap-3">
@@ -144,12 +134,10 @@ export const Navbar: React.FC = () => {
               <Menu size={24} />
             </button>
 
-            <div className="hidden md:flex w-8 h-8 rounded-full border border-gray-300 items-center justify-center text-xs font-bold text-gray-500 cursor-pointer hover:border-brand-pink hover:text-brand-pink">
-              VN
-            </div>
-            <button className="hidden md:block bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
-              Đăng ký tư vấn
-            </button>
+            <LanguageSwitcher />
+            <Link to="/advise" className="hidden md:block bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
+              {t('nav.register')}
+            </Link>
           </div>
         </div>
       </motion.nav>
@@ -186,14 +174,14 @@ export const Navbar: React.FC = () => {
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >
-                  Trang chủ
+                  {t('nav.home')}
                 </Link>
                 <Link
                   to="/about"
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >
-                  Giới thiệu
+                  {t('nav.about')}
                 </Link>
 
                 {/* Services Dropdown */}
@@ -202,7 +190,7 @@ export const Navbar: React.FC = () => {
                     onClick={() => setShowMobileServices(!showMobileServices)}
                     className="flex items-center justify-between w-full text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                   >
-                    <span>Dịch vụ</span>
+                    <span>{t('nav.service')}</span>
                     <ChevronDown
                       size={24}
                       className={`transition-transform duration-300 ${showMobileServices ? 'rotate-180' : ''}`}
@@ -225,7 +213,8 @@ export const Navbar: React.FC = () => {
                               onClick={closeMobileMenu}
                               className="block text-lg text-gray-600 hover:text-brand-pink transition-colors"
                             >
-                              {service.name}
+                              {/* Translated service name */}
+                              {t(`services.items.${service.slug}`)}
                             </Link>
                           ))}
                         </div>
@@ -239,33 +228,34 @@ export const Navbar: React.FC = () => {
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >
-                  Dự án
+                  {t('nav.projects')}
                 </Link>
                 <Link
                   to="/careers"
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >
-                  Tuyển dụng
+                  {t('nav.careers')}
                 </Link>
                 <Link
                   to="/news"
                   onClick={closeMobileMenu}
                   className="block text-2xl font-bold text-gray-900 hover:text-brand-pink transition-colors"
                 >
-                  Tin tức
+                  {t('nav.news')}
                 </Link>
               </nav>
             </div>
 
             {/* Footer CTA */}
             <div className="px-6 py-6 border-t border-gray-100">
-              <button
+              <Link
+                to="/advise"
                 onClick={closeMobileMenu}
-                className="w-full bg-brand-pink text-white py-4 rounded-full text-sm font-bold uppercase hover:bg-pink-600 transition-colors"
+                className="block w-full bg-brand-pink text-white py-4 rounded-full text-sm font-bold uppercase hover:bg-pink-600 transition-colors text-center"
               >
-                Đăng ký tư vấn
-              </button>
+                {t('nav.register')}
+              </Link>
             </div>
           </motion.div>
         )}
