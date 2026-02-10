@@ -144,8 +144,14 @@ export const Navbar: React.FC = () => {
               <Menu size={24} />
             </button>
 
-            <div className="hidden md:flex w-8 h-8 rounded-full border border-gray-300 items-center justify-center text-xs font-bold text-gray-500 cursor-pointer hover:border-brand-pink hover:text-brand-pink">
-              VN
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 cursor-pointer hover:border-brand-pink transition-colors group">
+              <img
+                src="https://flagcdn.com/w40/vn.png"
+                alt="Vietnam Flag"
+                className="w-5 h-auto object-cover rounded-sm"
+              />
+              <span className="text-sm font-bold text-gray-700 group-hover:text-brand-pink transition-colors">VI</span>
+              <ChevronDown size={14} className="text-gray-500 group-hover:text-brand-pink transition-colors" />
             </div>
             <button className="hidden md:block bg-brand-dark text-white px-5 py-2 rounded-full text-xs font-bold uppercase hover:bg-brand-pink transition-colors">
               Đăng ký tư vấn

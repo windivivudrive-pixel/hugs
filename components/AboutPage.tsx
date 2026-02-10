@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Users, Target, Heart, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Users, Target, Heart, Zap, ChevronLeft, ChevronRight, MapPin, Lightbulb, ShieldCheck, Layers } from 'lucide-react';
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { Link } from 'react-router-dom';
@@ -51,6 +51,48 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
 );
 
 export const AboutPage: React.FC = () => {
+    const [[page, direction], setPage] = useState([0, 0]);
+
+    const visionImages = [
+        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
+        'https://picsum.photos/1600/900?random=10',
+        'https://picsum.photos/1600/900?random=11',
+        'https://picsum.photos/1600/900?random=12',
+        'https://picsum.photos/1600/900?random=13',
+    ];
+
+    const imageIndex = Math.abs(page % visionImages.length);
+
+    const variants = {
+        enter: (direction: number) => {
+            return {
+                x: direction > 0 ? 1000 : -1000,
+                opacity: 0
+            };
+        },
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1
+        },
+        exit: (direction: number) => {
+            return {
+                zIndex: 0,
+                x: direction < 0 ? 1000 : -1000,
+                opacity: 0
+            };
+        }
+    };
+
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    };
+
+    const paginate = (newDirection: number) => {
+        setPage([page + newDirection, newDirection]);
+    };
+
     const departments = [
         'Chiến lược & nội dung',
         'Sáng tạo & thiết kế',
@@ -140,7 +182,7 @@ export const AboutPage: React.FC = () => {
                     <div className="w-16 h-16 bg-brand-pink/10 flex items-center justify-center text-brand-pink mx-auto mb-8">
                         <ArrowRight size={32} />
                     </div>
-                    <h2 className="text-3xl lg:text-5xl font-black text-gray-900 mb-8">Tầm nhìn</h2>
+                    <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8">Tầm nhìn</h2>
                     <p className="text-2xl lg:text-3xl text-gray-700 leading-relaxed font-light mb-12">
                         HUGs hướng đến việc tạo dựng các hệ truyền thông có <span className="text-brand-pink font-semibold">chiều sâu</span> và <span className="text-brand-pink font-semibold">tính bền vững</span>,
                         giúp thương hiệu duy trì sự hiện diện rõ ràng, nhất quán và có giá trị lâu dài trên các nền tảng số.
@@ -153,12 +195,67 @@ export const AboutPage: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true }}
                 >
-                    <img
-                        src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80"
-                        alt="HUGs Vision"
-                        loading="lazy"
-                        className="w-full aspect-[21/9] object-cover shadow-2xl"
-                    />
+                    <div className="relative overflow-hidden shadow-2xl rounded-2xl group">
+                        <div className="relative w-full aspect-[21/9]">
+                            <AnimatePresence initial={false} custom={direction}>
+                                <motion.img
+                                    key={page}
+                                    src={visionImages[imageIndex]}
+                                    custom={direction}
+                                    variants={variants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{
+                                        x: { type: "spring", stiffness: 300, damping: 30 },
+                                        opacity: { duration: 0.2 }
+                                    }}
+                                    drag="x"
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    dragElastic={1}
+                                    onDragEnd={(e, { offset, velocity }) => {
+                                        const swipe = swipePower(offset.x, velocity.x);
+
+                                        if (swipe < -swipeConfidenceThreshold) {
+                                            paginate(1);
+                                        } else if (swipe > swipeConfidenceThreshold) {
+                                            paginate(-1);
+                                        }
+                                    }}
+                                    alt={`HUGs Vision ${imageIndex + 1}`}
+                                    className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                                />
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Navigation buttons */}
+                        <button
+                            onClick={() => paginate(-1)}
+                            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all hover:scale-110 z-10 opacity-0 group-hover:opacity-100"
+                        >
+                            <ChevronLeft size={24} className="text-gray-800" />
+                        </button>
+                        <button
+                            onClick={() => paginate(1)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-full shadow-lg transition-all hover:scale-110 z-10 opacity-0 group-hover:opacity-100"
+                        >
+                            <ChevronRight size={24} className="text-gray-800" />
+                        </button>
+
+                        {/* Dot indicators */}
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                            {visionImages.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setPage([idx, idx > imageIndex ? 1 : -1])}
+                                    className={`h-2 rounded-full transition-all ${idx === imageIndex
+                                        ? 'bg-brand-pink w-8'
+                                        : 'bg-white/70 hover:bg-white w-2'
+                                        }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 </motion.div>
             </section>
 
@@ -293,6 +390,64 @@ export const AboutPage: React.FC = () => {
                             <div className="w-12 h-1 bg-white mx-auto mt-8" />
                         </blockquote>
                     </motion.div>
+                </div>
+            </section>
+
+            {/* Why Choose HUGs */}
+            <section className="py-24 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-6">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-3xl lg:text-4xl font-black text-brand-pink mb-4">Tại sao chọn HUGs?</h2>
+                        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                            Tư duy chiến lược, kết hợp năng lực thực thi đa kênh giúp thương hiệu tối ưu hiệu quả đầu tư.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                        {[
+                            {
+                                icon: <MapPin size={32} />,
+                                title: 'Local Insight',
+                                desc: 'Thấu hiểu văn hóa và hành vi người tiêu dùng Miền Trung để tạo ra thông điệp chạm đúng điểm chạm.'
+                            },
+                            {
+                                icon: <Lightbulb size={32} />,
+                                title: 'Tư duy thực chiến',
+                                desc: 'Không vẽ vời lý thuyết, chúng tôi tập trung vào giải pháp giải quyết bài toán tăng trưởng thực tế.'
+                            },
+                            {
+                                icon: <ShieldCheck size={32} />,
+                                title: 'Quy trình chuẩn mực',
+                                desc: 'Kiểm soát chất lượng chặt chẽ, cam kết deadline và báo cáo minh bạch từng giai đoạn.'
+                            },
+                            {
+                                icon: <Layers size={32} />,
+                                title: 'Giải pháp toàn diện',
+                                desc: 'Từ chiến lược, content, hình ảnh đến chạy quảng cáo, tất cả được vận hành đồng bộ.'
+                            }
+                        ].map((item, i) => (
+                            <motion.div
+                                key={i}
+                                className="bg-white p-6 lg:p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all border border-gray-100 group hover:-translate-y-1"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: i * 0.1 }}
+                                viewport={{ once: true }}
+                            >
+                                <div className="w-14 h-14 bg-brand-pink/10 rounded-xl flex items-center justify-center text-brand-pink group-hover:bg-brand-pink group-hover:text-white transition-colors mb-6">
+                                    {item.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-brand-pink mb-3">{item.title}</h3>
+                                <p className="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </section>
 

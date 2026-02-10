@@ -1,8 +1,57 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Users, Lightbulb } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, MapPin, Users, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const CultureSection: React.FC = () => {
+    const [[page, direction], setPage] = useState([0, 0]);
+
+    const cultureImages = [
+        '/logo-partner/team.png',
+        'https://picsum.photos/800/600?random=1',
+        'https://picsum.photos/800/600?random=2',
+        'https://picsum.photos/800/600?random=3',
+        'https://picsum.photos/800/600?random=4',
+    ];
+
+    const imageIndex = Math.abs(page % cultureImages.length);
+
+    const variants = {
+        enter: (direction: number) => {
+            return {
+                x: direction > 0 ? 1000 : -1000,
+                opacity: 0
+            };
+        },
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1
+        },
+        exit: (direction: number) => {
+            return {
+                zIndex: 0,
+                x: direction < 0 ? 1000 : -1000,
+                opacity: 0
+            };
+        }
+    };
+
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    };
+
+    const paginate = (newDirection: number) => {
+        setPage([page + newDirection, newDirection]);
+    };
+
+    const prevImage = () => {
+        paginate(-1);
+    };
+
+    const nextImage = () => {
+        paginate(1);
+    };
     return (
         <section className="pt-8 lg:pt-12 pb-0 bg-white relative overflow-hidden">
             {/* Subtle background decorations */}
@@ -138,7 +187,7 @@ export const CultureSection: React.FC = () => {
                 {/* Second Block - Image Left, Text Right (2 sections) */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
 
-                    {/* Left - Image */}
+                    {/* Left - Image Carousel */}
                     <motion.div
                         className="relative lg:-ml-20 lg:scale-110 origin-right"
                         initial={{ opacity: 0, x: -40 }}
@@ -146,11 +195,67 @@ export const CultureSection: React.FC = () => {
                         transition={{ duration: 0.7 }}
                         viewport={{ once: true }}
                     >
-                        <img
-                            src="/logo-partner/team.png"
-                            alt="HUGs Team"
-                            className="w-full h-auto object-cover"
-                        />
+                        <div className="relative overflow-hidden">
+                            <div className="relative w-full aspect-[4/3]">
+                                <AnimatePresence initial={false} custom={direction}>
+                                    <motion.img
+                                        key={page}
+                                        src={cultureImages[imageIndex]}
+                                        custom={direction}
+                                        variants={variants}
+                                        initial="enter"
+                                        animate="center"
+                                        exit="exit"
+                                        transition={{
+                                            x: { type: "spring", stiffness: 300, damping: 30 },
+                                            opacity: { duration: 0.2 }
+                                        }}
+                                        drag="x"
+                                        dragConstraints={{ left: 0, right: 0 }}
+                                        dragElastic={1}
+                                        onDragEnd={(e, { offset, velocity }) => {
+                                            const swipe = swipePower(offset.x, velocity.x);
+
+                                            if (swipe < -swipeConfidenceThreshold) {
+                                                paginate(1);
+                                            } else if (swipe > swipeConfidenceThreshold) {
+                                                paginate(-1);
+                                            }
+                                        }}
+                                        alt={`HUGs Team ${imageIndex + 1}`}
+                                        className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                                    />
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Navigation buttons */}
+                            <button
+                                onClick={() => paginate(-1)}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                            >
+                                <ChevronLeft size={20} className="text-gray-800" />
+                            </button>
+                            <button
+                                onClick={() => paginate(1)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                            >
+                                <ChevronRight size={20} className="text-gray-800" />
+                            </button>
+
+                            {/* Dot indicators */}
+                            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                                {cultureImages.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => setPage([idx, idx > imageIndex ? 1 : -1])}
+                                        className={`w-2 h-2 rounded-full transition-all ${idx === imageIndex
+                                            ? 'bg-brand-pink w-6'
+                                            : 'bg-white/70 hover:bg-white'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* Right - Content (2 text blocks) */}

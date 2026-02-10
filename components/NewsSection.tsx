@@ -60,11 +60,7 @@ export const NewsSection: React.FC = () => {
     return (
         <section className="py-24 bg-white overflow-hidden relative">
             {/* Logo marker - bottom right */}
-            <img
-                src="/logo-hugs-only.png"
-                alt=""
-                className="absolute bottom-8 right-8 w-14 h-14 opacity-10 pointer-events-none"
-            />
+
             <div className="max-w-7xl mx-auto px-6">
                 {/* Section Header */}
                 <motion.div

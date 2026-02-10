@@ -1,6 +1,13 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Facebook } from 'lucide-react';
+
+// TikTok icon component (lucide-react doesn't have TikTok, so we'll use a simple SVG)
+const TikTokIcon = ({ size = 16 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+);
 
 // Social media pages data
 const socialPages = [
@@ -107,22 +114,66 @@ const socialPages = [
 export const SocialSection: React.FC = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [direction, setDirection] = useState<'right' | 'left'>('right');
     const isDown = useRef(false);
     const startX = useRef(0);
     const scrollLeft = useRef(0);
+    const isManualScrolling = useRef(false);
+    const manualScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const scroll = (direction: 'left' | 'right') => {
+    // Auto-scroll effect
+    useEffect(() => {
+        if (isManualScrolling.current || !scrollContainerRef.current) return;
+
+        const container = scrollContainerRef.current;
+        const scrollSpeed = 1; // pixels per frame
+        const interval = setInterval(() => {
+            if (isManualScrolling.current) return; // Skip if manual scroll is active
+
+            if (direction === 'right') {
+                container.scrollLeft += scrollSpeed;
+                // Check if reached the end
+                if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+                    setDirection('left');
+                }
+            } else {
+                container.scrollLeft -= scrollSpeed;
+                // Check if reached the start
+                if (container.scrollLeft <= 0) {
+                    setDirection('right');
+                }
+            }
+        }, 16); // ~60fps
+
+        return () => clearInterval(interval);
+    }, [direction]);
+
+    const scroll = (dir: 'left' | 'right') => {
         if (scrollContainerRef.current) {
-            const scrollAmount = 300;
+            // Pause auto-scroll
+            isManualScrolling.current = true;
+
+            // Clear existing timeout
+            if (manualScrollTimeout.current) {
+                clearTimeout(manualScrollTimeout.current);
+            }
+
+            const scrollAmount = 800; // Increased for faster, more noticeable scroll
             scrollContainerRef.current.scrollBy({
-                left: direction === 'left' ? -scrollAmount : scrollAmount,
+                left: dir === 'left' ? -scrollAmount : scrollAmount,
                 behavior: 'smooth'
             });
+
+            // Resume auto-scroll after 500ms
+            manualScrollTimeout.current = setTimeout(() => {
+                isManualScrolling.current = false;
+            }, 500);
         }
     };
 
     const handleMouseDown = useCallback((e: React.MouseEvent) => {
         if (!scrollContainerRef.current) return;
+        isManualScrolling.current = true; // Pause auto-scroll during drag
         isDown.current = true;
         startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
         scrollLeft.current = scrollContainerRef.current.scrollLeft;
@@ -142,7 +193,10 @@ export const SocialSection: React.FC = () => {
         if (scrollContainerRef.current) {
             scrollContainerRef.current.style.cursor = 'grab';
         }
-        setTimeout(() => setIsDragging(false), 0);
+        setTimeout(() => {
+            setIsDragging(false);
+            isManualScrolling.current = false; // Resume auto-scroll after drag
+        }, 100);
     }, []);
 
     const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -186,22 +240,6 @@ export const SocialSection: React.FC = () => {
                             giúp kết nối thương hiệu với tệp người dùng địa phương thông qua tương tác tự nhiên và lan tỏa nội dung hiệu quả.
 
                         </p>
-
-                        {/* Navigation arrows */}
-                        <div className="flex items-center gap-3">
-                            <button
-                                onClick={() => scroll('left')}
-                                className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
-                            >
-                                <ChevronLeft size={24} />
-                            </button>
-                            <button
-                                onClick={() => scroll('right')}
-                                className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
-                            >
-                                <ChevronRight size={24} />
-                            </button>
-                        </div>
                     </motion.div>
 
                     {/* Right side - Horizontal scrolling cards */}
@@ -227,15 +265,25 @@ export const SocialSection: React.FC = () => {
                                     style={{ pointerEvents: isDragging ? 'none' : 'auto' }}
                                     onClick={() => !isDragging && window.open(page.link, '_blank')}
                                 >
-                                    {/* Logo image */}
-                                    <div className="w-14 h-14 md:w-20 md:h-20 overflow-hidden mb-4 md:mb-6 mx-auto border-2 border-brand-pink">
-                                        <img
-                                            src={page.image}
-                                            alt={page.name}
-                                            loading="lazy"
-                                            className="w-full h-full object-cover"
-                                            draggable={false}
-                                        />
+                                    {/* Logo image - ROUNDED with platform badge */}
+                                    <div className="relative w-14 h-14 md:w-20 md:h-20 mb-4 md:mb-6 mx-auto">
+                                        <div className="w-full h-full rounded-full overflow-hidden border-2 border-brand-pink">
+                                            <img
+                                                src={page.image}
+                                                alt={page.name}
+                                                loading="lazy"
+                                                className="w-full h-full object-cover"
+                                                draggable={false}
+                                            />
+                                        </div>
+                                        {/* Platform badge */}
+                                        <div className={`absolute bottom-0 right-0 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-white ${page.link.includes('tiktok') ? 'bg-black' : 'bg-blue-600'}`}>
+                                            {page.link.includes('tiktok') ? (
+                                                <TikTokIcon size={14} />
+                                            ) : (
+                                                <Facebook size={14} fill="white" />
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Title */}
@@ -265,6 +313,22 @@ export const SocialSection: React.FC = () => {
                             ))}
                         </div>
                     </div>
+                </div>
+
+                {/* Navigation arrows - BOTTOM CENTER */}
+                <div className="flex items-center justify-center gap-3 mt-8">
+                    <button
+                        onClick={() => scroll('left')}
+                        className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+                    <button
+                        onClick={() => scroll('right')}
+                        className="w-12 h-12 rounded-full border-2 border-brand-pink bg-brand-pink flex items-center justify-center text-white shadow-md transition-all duration-200 hover:scale-105 hover:bg-brand-pink/90 active:scale-95"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
                 </div>
             </div>
 

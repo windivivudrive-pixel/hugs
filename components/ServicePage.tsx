@@ -104,38 +104,51 @@ export const ServicePage: React.FC = () => {
                                 : 'grid-cols-1 md:grid-cols-3'
                                 }`}
                         >
-                            {row.map((service, index) => (
-                                <motion.div
-                                    key={service.id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    viewport={{ once: true }}
-                                    onClick={() => handleServiceClick(service.slug)}
-                                    className="group bg-white border border-gray-200 p-8 hover:border-brand-pink hover:shadow-xl transition-all cursor-pointer"
-                                >
-                                    {/* Icon */}
-                                    <div className="text-4xl mb-4">
-                                        {serviceIcons[service.slug] || '📌'}
-                                    </div>
+                            {row.map((service, index) => {
+                                const globalIndex = rowIndex * 3 + index;
+                                const iconIndex = (globalIndex % 9) + 1;
 
-                                    {/* Title */}
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-pink transition-colors">
-                                        {service.name}
-                                    </h3>
+                                return (
+                                    <motion.div
+                                        key={service.id}
+                                        initial={{ opacity: 0, y: 30 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        viewport={{ once: true }}
+                                        onClick={() => handleServiceClick(service.slug)}
+                                        className="group bg-white border border-gray-200 p-8 hover:border-brand-pink hover:shadow-xl transition-all cursor-pointer"
+                                    >
+                                        {/* Icon */}
+                                        <div className="w-16 h-16 mb-6">
+                                            <img
+                                                src={`/icon-service/${iconIndex}.png`}
+                                                alt={service.name}
+                                                className="w-full h-full object-contain"
+                                                onError={(e) => {
+                                                    (e.target as HTMLImageElement).src = '/logo.png'; // Fallback
+                                                    (e.target as HTMLImageElement).classList.add('opacity-50');
+                                                }}
+                                            />
+                                        </div>
 
-                                    {/* Description */}
-                                    <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                                        {service.short_description || 'Giải pháp chuyên nghiệp giúp thương hiệu phát triển bền vững trên nền tảng số.'}
-                                    </p>
+                                        {/* Title */}
+                                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-brand-pink transition-colors">
+                                            {service.name}
+                                        </h3>
 
-                                    {/* CTA */}
-                                    <div className="flex items-center gap-2 text-brand-pink font-semibold text-sm group-hover:gap-3 transition-all">
-                                        Xem dự án
-                                        <ArrowRight size={16} />
-                                    </div>
-                                </motion.div>
-                            ))}
+                                        {/* Description */}
+                                        <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                                            {service.short_description || 'Giải pháp chuyên nghiệp giúp thương hiệu phát triển bền vững trên nền tảng số.'}
+                                        </p>
+
+                                        {/* CTA */}
+                                        <div className="flex items-center gap-2 text-brand-pink font-semibold text-sm group-hover:gap-3 transition-all">
+                                            Xem dự án
+                                            <ArrowRight size={16} />
+                                        </div>
+                                    </motion.div>
+                                )
+                            })}
                         </div>
                     ))}
                 </div>

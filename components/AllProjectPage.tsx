@@ -320,21 +320,21 @@ export const AllProjectPage: React.FC = () => {
                                 >
                                     <Link
                                         to={`/article?id=${project.id}`}
-                                        className="flex bg-white overflow-hidden group shadow-sm hover:shadow-md transition-all border border-gray-100 h-full"
+                                        className="flex flex-col bg-white overflow-hidden group shadow-sm hover:shadow-md transition-all border border-gray-100 h-full"
                                     >
                                         {/* Thumbnail */}
-                                        <div className="w-40 md:w-48 flex-shrink-0 relative overflow-hidden">
+                                        <div className="w-full aspect-video flex-shrink-0 relative overflow-hidden">
                                             <img
-                                                src={project.thumbnail || `https://picsum.photos/200/150?random=${project.id}`}
+                                                src={project.thumbnail || `https://picsum.photos/800/600?random=${project.id}`}
                                                 alt={project.title}
-                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                             />
                                             {project.logo && (
-                                                <div className="absolute top-2 left-2 bg-white p-1 shadow-sm">
+                                                <div className="absolute top-3 left-3 bg-white p-1.5 shadow-sm rounded-lg">
                                                     <img
                                                         src={project.logo}
                                                         alt=""
-                                                        className="w-6 h-6 object-contain"
+                                                        className="w-8 h-8 object-contain"
                                                     />
                                                 </div>
                                             )}

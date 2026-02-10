@@ -10,7 +10,9 @@ type UserRole = 'admin' | 'agent' | 'member';
 interface AdminUser {
     id: string;
     username: string;
+    name: string | null;
     role: UserRole;
+    avatar_url: string | null;
 }
 
 interface ServiceArticle {
@@ -93,7 +95,7 @@ export const AdminPage: React.FC = () => {
                 try {
                     const { data, error } = await supabase
                         .from('admin_users')
-                        .select('id, username, role')
+                        .select('id, username, name, role, avatar_url')
                         .eq('id', savedUser.id)
                         .single();
 
@@ -101,7 +103,9 @@ export const AdminPage: React.FC = () => {
                         const freshUser: AdminUser = {
                             id: data.id,
                             username: data.username,
-                            role: data.role as UserRole
+                            name: data.name || null,
+                            role: data.role as UserRole,
+                            avatar_url: data.avatar_url || null
                         };
                         console.log('Refreshed user from DB:', freshUser);
                         // Update local storage and state if changed
@@ -150,7 +154,7 @@ export const AdminPage: React.FC = () => {
     const fetchAdminUsers = async () => {
         const { data, error } = await supabase
             .from('admin_users')
-            .select('id, username, role')
+            .select('id, username, name, role, avatar_url')
             .order('created_at');
         if (!error && data) setAdminUsers(data as AdminUser[]);
     };
@@ -195,7 +199,7 @@ export const AdminPage: React.FC = () => {
 
         const { data, error } = await supabase
             .from('admin_users')
-            .select('id, username, role')
+            .select('id, username, name, role, avatar_url')
             .eq('username', username)
             .eq('password', password)
             .single();
@@ -205,7 +209,13 @@ export const AdminPage: React.FC = () => {
             return;
         }
 
-        const user: AdminUser = { id: data.id, username: data.username, role: data.role as UserRole };
+        const user: AdminUser = {
+            id: data.id,
+            username: data.username,
+            name: data.name || null,
+            role: data.role as UserRole,
+            avatar_url: data.avatar_url || null
+        };
         localStorage.setItem('admin_user', JSON.stringify(user));
         setCurrentUser(user);
         setIsLoggedIn(true);
@@ -703,6 +713,15 @@ export const AdminPage: React.FC = () => {
                                 }
                             }} className="flex gap-4 items-end flex-wrap">
                                 <div className="flex-1 min-w-[150px]">
+                                    <label className="block text-xs text-gray-500 mb-1">Display Name</label>
+                                    <input
+                                        name="newName"
+                                        type="text"
+                                        placeholder="Tên hiển thị"
+                                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
+                                    />
+                                </div>
+                                <div className="flex-1 min-w-[150px]">
                                     <label className="block text-xs text-gray-500 mb-1">Username</label>
                                     <input
                                         name="newUsername"
@@ -753,10 +772,46 @@ export const AdminPage: React.FC = () => {
                                 {adminUsers.map((user) => (
                                     <tr key={user.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 font-medium text-gray-900">
-                                            {user.username}
-                                            {user.username === 'admin' && (
-                                                <span className="ml-2 text-xs text-gray-400">(Super Admin)</span>
-                                            )}
+                                            <div className="flex items-center gap-3">
+                                                {/* Avatar */}
+                                                <div className="relative group/avatar">
+                                                    {user.avatar_url ? (
+                                                        <img src={user.avatar_url} alt={user.username} className="w-10 h-10 rounded-full object-cover border-2 border-gray-200" />
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-full bg-brand-pink/10 flex items-center justify-center border-2 border-gray-200">
+                                                            <span className="text-sm font-bold text-brand-pink uppercase">{user.username.charAt(0)}</span>
+                                                        </div>
+                                                    )}
+                                                    <label className="absolute inset-0 rounded-full cursor-pointer opacity-0 group-hover/avatar:opacity-100 bg-black/40 flex items-center justify-center transition-opacity">
+                                                        <Upload size={14} className="text-white" />
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            className="hidden"
+                                                            onChange={async (e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (!file) return;
+                                                                const { url, error } = await uploadThumbnail(file, 'avatars');
+                                                                if (url && !error) {
+                                                                    await supabase.from('admin_users').update({ avatar_url: url }).eq('id', user.id);
+                                                                    fetchAdminUsers();
+                                                                } else {
+                                                                    alert('Lỗi upload avatar: ' + (error?.message || 'Unknown'));
+                                                                }
+                                                            }}
+                                                        />
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <div className="font-medium text-gray-900">{user.name || user.username}</div>
+                                                    <div className="text-xs text-gray-500">
+                                                        @{user.username}
+                                                        {user.username === 'admin' && (
+                                                            <span className="ml-1 text-purple-600 font-semibold">(Super Admin)</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase ${user.role === 'admin' ? 'bg-purple-100 text-purple-600' :
@@ -817,9 +872,12 @@ export const AdminPage: React.FC = () => {
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
+                                    required
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-pink outline-none"
                                 />
                             </div>
+
+
 
                             {activeTab === 'news' && (
                                 <>
@@ -884,8 +942,8 @@ export const AdminPage: React.FC = () => {
                                                         <label
                                                             key={cat.id}
                                                             className={`inline-flex items-center gap-2 px-3 py-1.5 rounded border cursor-pointer transition-all text-sm ${isChecked
-                                                                    ? 'bg-brand-pink text-white border-brand-pink'
-                                                                    : 'bg-white text-gray-700 border-gray-300 hover:border-brand-pink'
+                                                                ? 'bg-brand-pink text-white border-brand-pink'
+                                                                : 'bg-white text-gray-700 border-gray-300 hover:border-brand-pink'
                                                                 }`}
                                                         >
                                                             <input

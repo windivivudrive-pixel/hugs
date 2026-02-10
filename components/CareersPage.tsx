@@ -368,6 +368,13 @@ export const CareersPage: React.FC = () => {
                                                     {job.title}
                                                 </h3>
 
+                                                {/* Read-only Toggle Switch */}
+                                                <div className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-default rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-pink focus:ring-offset-2 ${isActive ? 'bg-brand-pink' : 'bg-gray-200'}`}>
+                                                    <span
+                                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isActive ? 'translate-x-5' : 'translate-x-0'}`}
+                                                    />
+                                                </div>
+
                                                 {/* Status Badge */}
                                                 {isActive ? (
                                                     <span className="inline-block px-3 py-1 rounded-full border border-brand-pink text-brand-pink text-xs font-bold leading-none">

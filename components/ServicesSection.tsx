@@ -16,6 +16,7 @@ export const ServicesSection: React.FC = () => {
     const [hoveredServiceSlug, setHoveredServiceSlug] = useState<string | null>(null);
     const [latestArticles, setLatestArticles] = useState<Record<string, ServiceArticle | null>>({});
     const [loading, setLoading] = useState(true);
+    const [hoveredIndex, setHoveredIndex] = useState<number>(0);
 
     // Fetch services from database
     useEffect(() => {
@@ -109,16 +110,23 @@ export const ServicesSection: React.FC = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[500px]">
                             {/* Left - Service List from Database */}
                             <div className="space-y-4 lg:col-span-5">
-                                {services.map((service) => {
+                                {services.map((service, index) => {
                                     const isSelected = displayedServiceSlug === service.slug;
                                     const serviceArticle = latestArticles[service.slug];
+                                    const thumbIndex = (index % 9) + 1; // Cycle 1-9
 
                                     return (
                                         <div key={service.id} className="group">
                                             <motion.div
                                                 className="cursor-pointer"
-                                                onMouseEnter={() => setHoveredServiceSlug(service.slug)}
-                                                onClick={() => setHoveredServiceSlug(service.slug)}
+                                                onMouseEnter={() => {
+                                                    setHoveredServiceSlug(service.slug);
+                                                    setHoveredIndex(services.findIndex(s => s.slug === service.slug));
+                                                }}
+                                                onClick={(e) => {
+                                                    setHoveredServiceSlug(service.slug);
+                                                    setHoveredIndex(services.findIndex(s => s.slug === service.slug));
+                                                }}
                                             >
                                                 <motion.h3
                                                     className={`text-lg md:text-xl lg:text-3xl font-bold transition-colors duration-300 py-1 md:py-2 ${isSelected
@@ -143,7 +151,7 @@ export const ServicesSection: React.FC = () => {
                                                         className="lg:hidden overflow-hidden"
                                                     >
                                                         <Link
-                                                            to={serviceArticle ? `/article?id=${serviceArticle.id}` : `/service?s=${service.slug}`}
+                                                            to={`/projects?service=${service.slug}`}
                                                             className="block relative aspect-video w-full bg-gray-900 overflow-hidden shadow-lg mt-2 mb-6"
                                                         >
                                                             {/* Browser bar */}
@@ -156,18 +164,15 @@ export const ServicesSection: React.FC = () => {
                                                             {/* Image */}
                                                             <div className="pt-6 h-full relative">
                                                                 <img
-                                                                    src={serviceArticle?.thumbnail || `https://picsum.photos/800/600?random=${service.id}`}
+                                                                    src={`/thumb-service/${thumbIndex}.png`}
                                                                     alt={serviceArticle?.title || service.name}
                                                                     className="w-full h-full object-cover"
                                                                     loading="lazy"
+                                                                    onError={(e) => {
+                                                                        (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${service.id}`;
+                                                                    }}
                                                                 />
 
-                                                                {/* Overlay */}
-                                                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-pink/90 via-brand-pink/40 to-transparent p-4">
-                                                                    <h4 className="text-white text-sm font-bold line-clamp-2 drop-shadow-sm">
-                                                                        {serviceArticle?.title || service.name}
-                                                                    </h4>
-                                                                </div>
                                                             </div>
                                                         </Link>
                                                     </motion.div>
@@ -179,21 +184,20 @@ export const ServicesSection: React.FC = () => {
                             </div>
 
                             {/* Right - Article Preview with Browser Frame */}
-                            <div className="relative h-[450px] lg:h-[550px] hidden lg:block lg:col-span-7">
+                            <div className="relative hidden lg:block lg:col-span-7">
                                 <AnimatePresence mode="wait">
                                     {activeService && (
-                                        <motion.div
-                                            key={activeService.slug}
-                                            className="absolute inset-0 flex items-center justify-end"
-                                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.95, y: -20 }}
-                                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                                        <div
+                                            className="flex items-start justify-start"
+                                            style={{
+                                                marginTop: `${hoveredIndex * 40}px`,
+                                                transition: 'margin-top 0.15s ease-out'
+                                            }}
                                         >
-                                            {/* Clickable container */}
+                                            {/* Clickable container - scaled to 2/3 */}
                                             <Link
-                                                to={currentArticle ? `/article?id=${currentArticle.id}` : `/service?s=${activeService.slug}`}
-                                                className="relative w-full h-full bg-gray-900 overflow-hidden shadow-2xl block group"
+                                                to={`/projects?service=${activeService.slug}`}
+                                                className="relative w-2/3 aspect-[4/3] bg-gray-900 overflow-hidden shadow-2xl block group"
                                             >
                                                 {/* Browser-like frame */}
                                                 <div className="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-3 gap-1.5 z-10">
@@ -205,7 +209,7 @@ export const ServicesSection: React.FC = () => {
                                                 {/* Article image */}
                                                 <div className="pt-8 h-full relative">
                                                     <img
-                                                        src={currentArticle?.thumbnail || `https://picsum.photos/800/600?random=${activeService.id}`}
+                                                        src={`/thumb-service/${hoveredIndex + 1}.png`}
                                                         alt={currentArticle?.title || activeService.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                         onError={(e) => {
@@ -213,18 +217,9 @@ export const ServicesSection: React.FC = () => {
                                                         }}
                                                     />
 
-                                                    {/* Pink gradient overlay from bottom */}
-                                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-pink/70 via-brand-pink/30 to-transparent p-6">
-                                                        <h4 className="text-white text-lg lg:text-xl font-bold line-clamp-2 drop-shadow-lg">
-                                                            {currentArticle?.title || activeService.name}
-                                                        </h4>
-                                                        <p className="text-white/90 text-sm mt-2 line-clamp-2 drop-shadow">
-                                                            {currentArticle?.content ? stripHtmlTags(currentArticle.content).slice(0, 100) : activeService.short_description || 'Click để xem thêm thông tin về dịch vụ này'}
-                                                        </p>
-                                                    </div>
                                                 </div>
                                             </Link>
-                                        </motion.div>
+                                        </div>
                                     )}
                                 </AnimatePresence>
                             </div>

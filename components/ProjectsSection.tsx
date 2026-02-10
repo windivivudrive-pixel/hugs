@@ -4,21 +4,6 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { supabase, ServiceArticle } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 
-// Fixed masonry layout for exactly 8 items to match the "bento" style
-// Columns: 4
-// Row Height: 240px (Tall enough for text)
-// Pattern leverages CSS Grid auto-placement to fill holes
-const masonryConfig = [
-    { rowSpan: 1 }, // Item 1: Big (Fills Col 1)
-    { rowSpan: 2 }, // Item 2: Big (Fills Col 2)
-    { rowSpan: 1 }, // Item 3: Small (Fills Col 3 Top)
-    { rowSpan: 2 }, // Item 4: Big (Fills Col 4)
-    { rowSpan: 2 }, // Item 5: Big (Fills Col 3 Bottom - finding the gap)
-    { rowSpan: 2 }, // Item 6: Small (Fills Col 1 Bottom)
-    { rowSpan: 1 }, // Item 7: Small (Fills Col 2 Bottom)
-    { rowSpan: 1 }, // Item 8: Small (Fills Col 4 Bottom)
-];
-
 export const ProjectsSection: React.FC = () => {
     const [projects, setProjects] = useState<ServiceArticle[]>([]);
     const [loading, setLoading] = useState(true);
@@ -43,8 +28,9 @@ export const ProjectsSection: React.FC = () => {
                     .from('service_articles')
                     .select('*')
                     .eq('published', true)
+                    .eq('featured', true)
                     .order('display_order')
-                    .limit(8);
+                    .limit(6);
 
                 if (error) throw error;
                 setProjects(data || []);
@@ -97,9 +83,9 @@ export const ProjectsSection: React.FC = () => {
                         <p className="text-gray-500">Chưa có dự án nào</p>
                     </div>
                 ) : (
-                    /* Masonry Grid Layout - manual 8-item config */
+                    /* Precise Proportional Grid Layout - 20 columns (8-5-7, 5-7-8) with 2.4u Row Height */
                     <motion.div
-                        className="grid grid-cols-1 md:grid-cols-4 md:auto-rows-[240px] gap-4"
+                        className="grid grid-cols-1 md:grid-cols-[repeat(20,minmax(0,1fr))] gap-4"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
@@ -109,9 +95,26 @@ export const ProjectsSection: React.FC = () => {
                         }}
                     >
                         {projects.map((project, index) => {
-                            // Loop the config if more than 8 items, though limit is 8
-                            const config = masonryConfig[index % masonryConfig.length];
                             const isHovered = hoveredId === project.id;
+
+                            // Define precise layout using 20-column grid (where 2 cols = 1 unit)
+                            // Row Height = 2.4 units (4.8 grid cols)
+                            // Item 1 (4u): 4/2.4 = 5/3
+                            // Item 2 (2.5u): 2.5/2.4 = 25/24
+                            // Item 3 (3.5u): 3.5/2.4 = 35/24
+                            const getGridStyle = (idx: number) => {
+                                const styles = [
+                                    { colSpan: 'md:col-span-8', aspect: 'aspect-[5/3]' },     // Item 1: 4.0u
+                                    { colSpan: 'md:col-span-5', aspect: 'aspect-[25/24]' },  // Item 2: 2.5u
+                                    { colSpan: 'md:col-span-7', aspect: 'aspect-[35/24]' },  // Item 3: 3.5u
+                                    { colSpan: 'md:col-span-5', aspect: 'aspect-[25/24]' },  // Item 4: 2.5u
+                                    { colSpan: 'md:col-span-7', aspect: 'aspect-[35/24]' },  // Item 5: 3.5u
+                                    { colSpan: 'md:col-span-8', aspect: 'aspect-[5/3]' },     // Item 6: 4.0u
+                                ];
+                                return styles[idx] || { colSpan: '', aspect: 'aspect-[4/3]' };
+                            };
+
+                            const gridStyle = getGridStyle(index);
 
                             // Logic for mobile tap interaction
                             const handleMobileClick = (e: React.MouseEvent) => {
@@ -127,16 +130,12 @@ export const ProjectsSection: React.FC = () => {
                                     key={project.id}
                                     to={`/article?id=${project.id}`}
                                     onClick={handleMobileClick}
-                                    className={`block relative group overflow-hidden cursor-pointer ${isMobile ? 'aspect-video' : ''}`}
-                                    style={{
-                                        gridColumn: 'span 1', // Always single column width
-                                        gridRow: isMobile ? 'auto' : `span ${config.rowSpan}`,
-                                    }}
+                                    className={`block relative group overflow-hidden cursor-pointer rounded-xl w-full h-full ${gridStyle.colSpan} ${gridStyle.aspect}`}
                                     onMouseEnter={() => !isMobile && setHoveredId(project.id)}
                                     onMouseLeave={() => !isMobile && setHoveredId(null)}
                                 >
                                     <motion.div
-                                        className="w-full h-full"
+                                        className="w-full h-full relative"
                                         variants={{
                                             hidden: { opacity: 0, y: 20 },
                                             visible: { opacity: 1, y: 0 }
@@ -149,7 +148,7 @@ export const ProjectsSection: React.FC = () => {
                                             loading="lazy"
                                             className="absolute inset-0 w-full h-full object-cover"
                                             style={{
-                                                transition: 'transform 0.4s ease-in-out',
+                                                transition: 'transform 0.5s ease-in-out',
                                                 transform: isHovered ? 'scale(1.05)' : 'scale(1)'
                                             }}
                                             onError={(e) => {
@@ -157,48 +156,50 @@ export const ProjectsSection: React.FC = () => {
                                             }}
                                         />
 
-                                        {/* Pink Overlay - 60% opacity by default, fades on hover */}
+                                        {/* Transparent Pink Overlay - visible by default, fades on hover */}
                                         <div
-                                            className="absolute inset-0 bg-brand-pink"
+                                            className="absolute inset-0 bg-brand-pink/35"
                                             style={{
                                                 opacity: isHovered ? 0 : 1,
-                                                transition: 'opacity 0.5s ease-in-out'
+                                                transition: 'opacity 0.4s ease-in-out'
                                             }}
                                         />
 
-                                        {/* Logo - white by default, moves up on hover */}
+                                        {/* Logo - white by default, original color on hover */}
                                         <div
-                                            className="absolute inset-0 flex items-center justify-center z-10"
-                                            style={{
-                                                transform: isHovered ? 'translateY(-30px)' : 'translateY(0)',
-                                                transition: 'transform 0.4s ease-in-out'
-                                            }}
+                                            className="absolute inset-0 flex items-center justify-center z-10 p-4"
                                         >
-                                            <motion.img
+                                            <img
                                                 src={project.logo || '/logo-hugs-only.png'}
                                                 alt={project.title}
-                                                className="w-20 h-20 md:w-24 md:h-24 object-contain drop-shadow-lg"
+                                                className="w-auto h-auto max-w-[8rem] md:max-w-[10rem] max-h-[6rem] md:max-h-[7rem] object-contain drop-shadow-lg"
                                                 style={{
-                                                    filter: 'brightness(0) invert(1)',
-                                                    transition: 'filter 0.4s ease-in-out'
+                                                    filter: isHovered ? 'none' : 'brightness(0) invert(1)',
+                                                    transition: 'all 0.4s ease-in-out',
+                                                    transform: isHovered ? 'scale(1.1) translateY(-15px)' : 'scale(1) translateY(0)'
                                                 }}
-                                                whileHover={{ scale: 1.05 }}
                                             />
                                         </div>
 
                                         {/* Bottom content - visible on hover */}
                                         <div
-                                            className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-center flex flex-col items-center"
+                                            className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-center flex flex-col items-center z-10"
                                             style={{
                                                 opacity: isHovered ? 1 : 0,
                                                 transform: isHovered ? 'translateY(0)' : 'translateY(16px)',
                                                 transition: 'all 0.4s ease-in-out'
                                             }}
                                         >
-                                            <h3 className="text-white font-semibold text-sm md:text-base leading-tight mb-2 line-clamp-2 drop-shadow-lg">
+                                            <h3
+                                                className="text-white font-semibold text-sm md:text-base leading-tight mb-2 line-clamp-2"
+                                                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}
+                                            >
                                                 {project.title}
                                             </h3>
-                                            <span className="px-4 py-2 bg-white/0 text-white font-medium text-xs tracking-wider uppercase flex items-center gap-1.5 hover:underline transition-all">
+                                            <span
+                                                className="px-4 py-2 text-white font-medium text-xs tracking-wider uppercase flex items-center gap-1.5"
+                                                style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                                            >
                                                 Xem chi tiết
                                                 <ArrowRight size={16} />
                                             </span>
@@ -210,6 +211,6 @@ export const ProjectsSection: React.FC = () => {
                     </motion.div>
                 )}
             </div>
-        </section>
+        </section >
     );
 };

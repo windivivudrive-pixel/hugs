@@ -4,6 +4,7 @@ import { Calendar, User, Building2, Share2, Facebook, Linkedin, Link2 } from 'lu
 import { FooterSection } from './FooterSection';
 import { PageNavbar } from './PageNavbar';
 import { supabase, ServiceArticle, NewsArticle } from '../lib/supabase';
+import { recordArticleView } from '../lib/viewTracker';
 import { marked } from 'marked';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +14,7 @@ type DisplayArticle = (ServiceArticle & { category?: string }) | (NewsArticle & 
 export const ArticlePage: React.FC = () => {
     const [article, setArticle] = useState<DisplayArticle | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isNewsArticle, setIsNewsArticle] = useState(false);
 
     useEffect(() => {
         const fetchArticle = async () => {
@@ -28,7 +30,7 @@ export const ArticlePage: React.FC = () => {
                 // First try service_articles table
                 const { data: serviceArticle, error: serviceError } = await supabase
                     .from('service_articles')
-                    .select('*, service:services(*)')
+                    .select('*, service:services!inner(*)')
                     .eq('id', articleId)
                     .single();
 
@@ -40,7 +42,7 @@ export const ArticlePage: React.FC = () => {
                 // If not found, try news_articles table
                 const { data: newsArticle, error: newsError } = await supabase
                     .from('news_articles')
-                    .select('*')
+                    .select('*, author_details:admin_users(name, avatar_url)')
                     .eq('id', articleId)
                     .single();
 
@@ -50,6 +52,7 @@ export const ArticlePage: React.FC = () => {
                         ...newsArticle,
                         service: { name: newsArticle.category }
                     });
+                    setIsNewsArticle(true);
                 }
             } catch (err) {
                 console.error('Error fetching article:', err);
@@ -61,22 +64,29 @@ export const ArticlePage: React.FC = () => {
         fetchArticle();
     }, []);
 
+    // Record view for news articles (with anti-cheat)
+    useEffect(() => {
+        if (isNewsArticle && article?.id) {
+            recordArticleView(article.id);
+        }
+    }, [isNewsArticle, article?.id]);
+
     // Sample article content for demo
     const sampleContent = `
-Một "điểm đau" khi mua sắm của khách hàng mà một doanh nghiệp nên biết đó là sản phẩm thực tế khi nhận được không giống với những gì được giới thiệu trên website hay kỳ vọng của họ. Để tăng trải nghiệm của khách hàng và chiếm ưu thế hơn so với đối thủ cạnh tranh, việc sở hữu một showroom 3D sẽ giúp cho doanh nghiệp bạn nổi bật, tạo điểm khác biệt trong ngành hàng kinh doanh, vừa quảng bá thương hiệu hiệu quả mà vừa đem lại những giá trị riêng cho khách hàng.
+Một "điểm đau" khi mua sắm của khách hàng mà một doanh nghiệp nên biết đó là sản phẩm thực tế khi nhận được không giống với những gì được giới thiệu trên website hay kỳ vọng của họ.Để tăng trải nghiệm của khách hàng và chiếm ưu thế hơn so với đối thủ cạnh tranh, việc sở hữu một showroom 3D sẽ giúp cho doanh nghiệp bạn nổi bật, tạo điểm khác biệt trong ngành hàng kinh doanh, vừa quảng bá thương hiệu hiệu quả mà vừa đem lại những giá trị riêng cho khách hàng.
 
-## Showroom 3D là gì?
+## Showroom 3D là gì ?
 
-Gian hàng 3D (Showroom 3D) là nơi mà doanh nghiệp trưng bày và giới thiệu sản phẩm của mình đến khách hàng. Ở những gian hàng truyền thống, khách hàng phải đến tận nơi mới có thể trực tiếp kiểm tra và trải nghiệm sản phẩm. Nhưng với công nghệ gian hàng 3D, khách hàng có thể nhìn thấy được tổng quan gian hàng cũng như sản phẩm ở nhiều chiều khác nhau, kiểm tra từng chi tiết nhỏ như kích thước, màu sắc và tương tác với dịch vụ bán hàng của doanh nghiệp một cách dễ dàng.
+    Gian hàng 3D(Showroom 3D) là nơi mà doanh nghiệp trưng bày và giới thiệu sản phẩm của mình đến khách hàng.Ở những gian hàng truyền thống, khách hàng phải đến tận nơi mới có thể trực tiếp kiểm tra và trải nghiệm sản phẩm.Nhưng với công nghệ gian hàng 3D, khách hàng có thể nhìn thấy được tổng quan gian hàng cũng như sản phẩm ở nhiều chiều khác nhau, kiểm tra từng chi tiết nhỏ như kích thước, màu sắc và tương tác với dịch vụ bán hàng của doanh nghiệp một cách dễ dàng.
 
 Hãy thử tưởng tượng, giữa một không gian triển lãm với nhiều gian hàng, quầy sản phẩm của bạn nổi bật lên với một concept thú vị và khác biệt: có thể là một khu vườn bi ẩn, xanh mát hoặc một thành phố tương lai rực sáng như phim khoa học viễn tưởng... Làm sao kỳ vị khi ngang qua cũng phải dừng lại để xuýt xoa, trầm trồ.
 
 ## Lợi ích của Showroom 3D
 
-- **Tăng tương tác**: Khách hàng có thể khám phá sản phẩm 360 độ
-- **Tiết kiệm chi phí**: Không cần thuê mặt bằng vật lý
-- **Tiếp cận rộng**: Khách hàng từ mọi nơi đều có thể ghé thăm
-- **Ấn tượng chuyên nghiệp**: Thể hiện sự đầu tư và đẳng cấp thương hiệu
+    - ** Tăng tương tác **: Khách hàng có thể khám phá sản phẩm 360 độ
+        - ** Tiết kiệm chi phí **: Không cần thuê mặt bằng vật lý
+            - ** Tiếp cận rộng **: Khách hàng từ mọi nơi đều có thể ghé thăm
+                - ** Ấn tượng chuyên nghiệp **: Thể hiện sự đầu tư và đẳng cấp thương hiệu
 
 Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những giá trị mong muốn: Nâng cao nhận diện thương hiệu & Thúc đẩy doanh số trực tiếp.
     `;
@@ -142,8 +152,20 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                             <span>15/07/2024</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <User size={16} className="text-brand-pink" />
-                            <span>HUGs Team</span>
+                            {((displayArticle as NewsArticle).author_details?.avatar_url) ? (
+                                <img
+                                    src={(displayArticle as NewsArticle).author_details.avatar_url}
+                                    alt={(displayArticle as NewsArticle).author_details.name || (displayArticle as NewsArticle).author || 'Author'}
+                                    className="w-8 h-8 rounded-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <User size={14} className="text-gray-500" />
+                                </div>
+                            )}
+                            <span className="text-gray-900 font-medium">
+                                {((displayArticle as NewsArticle).author_details?.name) || ((displayArticle as NewsArticle).author) || 'HUGS Agency'}
+                            </span>
                         </div>
                         <div className="flex items-center gap-2 ml-auto">
                             <span className="text-gray-400">Khách hàng:</span>
@@ -271,24 +293,24 @@ Chắc chắn lúc đó, nhãn hàng của bạn sẽ đạt được những gi
                                 <div className="aspect-[16/10] overflow-hidden">
                                     <img
                                         src={`https://picsum.photos/400/250?random=${i + 10}`}
-                                        alt="Related article"
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                </div>
-                                <div className="p-5">
-                                    <span className="text-xs text-brand-pink font-medium">Thiết kế</span>
-                                    <h4 className="text-lg font-bold text-gray-900 mt-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
-                                        Bài viết liên quan #{i}
-                                    </h4>
-                                </div>
-                            </motion.div>
+alt = "Related article"
+className = "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+    />
+                                </div >
+    <div className="p-5">
+        <span className="text-xs text-brand-pink font-medium">Thiết kế</span>
+        <h4 className="text-lg font-bold text-gray-900 mt-2 line-clamp-2 group-hover:text-brand-pink transition-colors">
+            Bài viết liên quan #{i}
+        </h4>
+    </div>
+                            </motion.div >
                         ))}
-                    </div>
-                </div>
-            </div> */}
+                    </div >
+                </div >
+            </div > */}
 
             {/* Footer */}
             <FooterSection />
-        </div>
+        </div >
     );
 };
