@@ -248,7 +248,10 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Footer CTA */}
-            <div className="px-6 py-6 border-t border-gray-100">
+            <div className="px-6 py-6 border-t border-gray-100 space-y-4">
+              <div className="flex justify-center">
+                <LanguageSwitcher />
+              </div>
               <Link
                 to="/advise"
                 onClick={closeMobileMenu}

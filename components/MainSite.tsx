@@ -13,6 +13,7 @@ import { SocialSection } from './SocialSection';
 import { TestimonialsSection } from './TestimonialsSection';
 import { NewsSection } from './NewsSection';
 import { FooterSection } from './FooterSection';
+import { ChatBot } from './ChatBot';
 
 export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -48,6 +49,9 @@ export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false 
         <NewsSection />
         <FooterSection />
       </div>
+
+      {/* AI Chat Bot */}
+      <ChatBot />
 
       {/* Floating Call Button */}
       <motion.div
