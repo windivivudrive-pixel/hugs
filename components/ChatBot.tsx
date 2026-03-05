@@ -7,7 +7,11 @@ interface Message {
     content: string;
 }
 
-export const ChatBot: React.FC = () => {
+interface ChatBotProps {
+    onOpenChange?: (isOpen: boolean) => void;
+}
+
+export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
     const initialMessage: Message = { role: 'model', content: 'Chào Anh/Chị! Em là trợ lý ảo của Huge Agency. Anh/Chị cần tư vấn về dịch vụ quay phim, chụp ảnh, quản lý kênh hay thiết kế?' };
 
     const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +29,12 @@ export const ChatBot: React.FC = () => {
         return [initialMessage];
     });
     const [input, setInput] = useState('');
+    const [sessionId, setSessionId] = useState<string | null>(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('huge_chat_session') || null;
+        }
+        return null;
+    });
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +45,12 @@ export const ChatBot: React.FC = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages, isOpen, isLoading]);
+
+    useEffect(() => {
+        if (onOpenChange) {
+            onOpenChange(isOpen);
+        }
+    }, [isOpen, onOpenChange]);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -65,7 +81,7 @@ export const ChatBot: React.FC = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${supabaseAnonKey}`
                 },
-                body: JSON.stringify({ messages: newMessages })
+                body: JSON.stringify({ messages: newMessages, sessionId: sessionId })
             });
 
             if (!response.ok) {
@@ -76,6 +92,11 @@ export const ChatBot: React.FC = () => {
 
             if (data.error) {
                 throw new Error(data.error);
+            }
+
+            if (data.sessionId) {
+                setSessionId(data.sessionId);
+                localStorage.setItem('huge_chat_session', data.sessionId);
             }
 
             setMessages([...newMessages, { role: 'model', content: data.response }]);
@@ -102,11 +123,17 @@ export const ChatBot: React.FC = () => {
                         {/* Header */}
                         <div className="bg-brand-pink text-white p-4 flex justify-between items-center shrink-0 shadow-sm relative z-10">
                             <div className="flex items-center gap-3">
-                                <div className="bg-white/20 p-2 rounded-full">
-                                    <Bot className="w-5 h-5 md:w-6 md:h-6" />
+                                <div className="bg-white/20 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
+                                    <motion.img
+                                        src="/chatbot icon.png"
+                                        alt="Bot Assistant"
+                                        className="w-full h-full object-contain"
+                                        animate={{ rotate: [-12, 12, -12] }}
+                                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                                    />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold text-base leading-tight">Trợ lý Huge</h3>
+                                    <h3 className="font-semibold text-base leading-tight">Trợ lý Hugs</h3>
                                     <p className="text-white/80 text-xs mt-0.5">Sẵn sàng chốt đơn 24/7</p>
                                 </div>
                             </div>
@@ -115,7 +142,9 @@ export const ChatBot: React.FC = () => {
                                     onClick={() => {
                                         if (window.confirm('Bạn có chắc chắn muốn xóa lịch sử trò chuyện này?')) {
                                             setMessages([initialMessage]);
+                                            setSessionId(null);
                                             localStorage.removeItem('huge_chat_history');
+                                            localStorage.removeItem('huge_chat_session');
                                         }
                                     }}
                                     className="text-white hover:bg-white/20 p-2 rounded-full transition-colors"
@@ -190,7 +219,7 @@ export const ChatBot: React.FC = () => {
             <motion.div className="fixed bottom-[144px] md:bottom-[152px] right-4 md:right-6 z-[90]">
                 <motion.button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative bg-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl shadow-black/20 text-white hover:bg-gray-800 transition-colors border-2 border-white/10"
+                    className="relative w-20 h-20 md:w-24 md:h-24 flex items-center justify-center text-white transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
@@ -202,18 +231,30 @@ export const ChatBot: React.FC = () => {
                                 animate={{ rotate: 0, opacity: 1 }}
                                 exit={{ rotate: 90, opacity: 0 }}
                                 transition={{ duration: 0.15 }}
+                                className="bg-black w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl shadow-black/20 text-white hover:bg-gray-800 border-2 border-white/10"
                             >
                                 <X className="w-5 h-5 md:w-6 md:h-6" />
                             </motion.div>
                         ) : (
                             <motion.div
                                 key="chat"
-                                initial={{ rotate: 90, opacity: 0 }}
-                                animate={{ rotate: 0, opacity: 1 }}
-                                exit={{ rotate: -90, opacity: 0 }}
+                                initial={{ scale: 0.5, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.5, opacity: 0 }}
                                 transition={{ duration: 0.15 }}
+                                className="w-full h-full flex items-center justify-center p-1.5"
                             >
-                                <MessageSquare className="w-5 h-5 md:w-6 md:h-6" />
+                                <motion.img
+                                    src="/chatbot icon.png"
+                                    alt="Chat"
+                                    className="w-full h-full object-contain drop-shadow-lg"
+                                    animate={{ rotate: [-12, 12, -12] }}
+                                    transition={{
+                                        repeat: Infinity,
+                                        duration: 2.5,
+                                        ease: "easeInOut"
+                                    }}
+                                />
                             </motion.div>
                         )}
                     </AnimatePresence>
