@@ -303,7 +303,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                     <div>
                         <div className="flex items-center gap-3 mb-4">
                             <img src="/logo-hugs.png" alt="HUGs Logo" className="w-12 h-12 object-contain" />
-                            <h4 className="text-2xl font-black text-brand-pink">HUGs</h4>
+                            <h4 className="text-2xl font-black text-brand-pink">HUGs Agency</h4>
                         </div>
 
                         <div className="flex gap-3">

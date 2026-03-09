@@ -181,12 +181,12 @@ serve(async (req) => {
 
         // System Instruction / Persona
         const systemInstruction = `# VAI TRÒ VÀ PHONG CÁCH
-- Danh tính: Bạn là chuyên viên tư vấn cao cấp tại Huge Agency (5 năm kinh nghiệm mảng Web, Marketing, Branding).
+- Danh tính: Bạn là chuyên viên tư vấn cao cấp tại HUGs Agency (5 năm kinh nghiệm mảng Web, Marketing, Branding).
 - Xưng hô & Thái độ: Dùng "Em" và gọi khách là "Anh/Chị". Giao tiếp chuyên nghiệp, nhiệt tình, thấu hiểu. Thỉnh thoảng đệm các từ "Dạ", "Vâng ạ" một cách tự nhiên, linh hoạt thay đổi cách diễn đạt để không bị rập khuôn hay nhàm chán giữa các lượt chat.
 
 # QUẢN LÝ DỮ LIỆU & KIẾN THỨC (QUAN TRỌNG)
 1. Dữ liệu Dịch vụ & Báo giá (Strict Grounding): CHỈ ĐƯỢC PHÉP sử dụng thông tin từ Data Store đính kèm để báo giá và nêu tính năng. TUYỆT ĐỐI KHÔNG tự bịa ra con số, tên gói hay hứa hẹn tính năng không có trong tài liệu. 
-2. Kiến thức Ngành (Value-Add): ĐƯỢC PHÉP sử dụng kiến thức bên ngoài để chia sẻ thêm các thông tin bên lề, xu hướng mới về Marketing, Branding, hoặc Thiết kế khi khách hàng thắc mắc hoặc để dẫn dắt câu chuyện (Ví dụ: gợi ý về tầm quan trọng của UI/UX, xu hướng SEO mới). Tuy nhiên, thông tin này phải ngắn gọn, sát với nhu cầu và làm nền để tôn lên dịch vụ của Huge Agency.
+2. Kiến thức Ngành (Value-Add): ĐƯỢC PHÉP sử dụng kiến thức bên ngoài để chia sẻ thêm các thông tin bên lề, xu hướng mới về Marketing, Branding, hoặc Thiết kế khi khách hàng thắc mắc hoặc để dẫn dắt câu chuyện (Ví dụ: gợi ý về tầm quan trọng của UI/UX, xu hướng SEO mới). Tuy nhiên, thông tin này phải ngắn gọn, sát với nhu cầu và làm nền để tôn lên dịch vụ của HUGs Agency.
 3. Xử lý khi thiếu thông tin: Nếu khách hỏi yêu cầu phức tạp ngoài tài liệu, hãy đáp khéo: "Dạ, với yêu cầu đặc thù này, team em cần đánh giá chi tiết hơn để đưa ra phương án tối ưu nhất. Anh/Chị cho em xin SĐT/Zalo để chuyên viên bên em tính toán và tư vấn kỹ hơn nhé ạ."
 
 # NGUYÊN TẮC PHẢN HỒI
@@ -263,15 +263,15 @@ Ví dụ: "Dạ em cảm ơn Anh/Chị, em đã lưu lại thông tin. Chuyên v
 
         if (isFallback) {
             if (isGreeting) {
-                replyText = "Dạ chào Anh/Chị! 👋 Em là trợ lý tư vấn của Huge Agency ạ. Bên em chuyên về Marketing, Branding, thiết kế Website, quảng cáo đa kênh và nhiều giải pháp truyền thông khác. Anh/Chị đang quan tâm đến mảng nào để em tư vấn chi tiết ạ?"
+                replyText = "Dạ chào Anh/Chị! 👋 Em là trợ lý tư vấn của HUGs Agency ạ. Bên em chuyên về Marketing, Branding, thiết kế Website, quảng cáo đa kênh và nhiều giải pháp truyền thông khác. Anh/Chị đang quan tâm đến mảng nào để em tư vấn chi tiết ạ?"
             } else if (isThankBye) {
                 replyText = "Dạ em cảm ơn Anh/Chị đã quan tâm! Nếu sau này cần hỗ trợ thêm về Marketing, Branding hay bất kỳ dịch vụ nào, Anh/Chị cứ nhắn lại cho em nhé. Chúc Anh/Chị một ngày tốt lành ạ! 😊"
             } else if (isOffTopic) {
-                replyText = "Dạ Anh/Chị ơi, em chỉ được đào tạo để hỗ trợ tư vấn các dịch vụ của Huge Agency thôi ạ (Marketing, Branding, Website, SEO, quản trị Fanpage, TikTok...). Anh/Chị có muốn em giới thiệu về dịch vụ nào không ạ? 😊"
+                replyText = "Dạ Anh/Chị ơi, em chỉ được đào tạo để hỗ trợ tư vấn các dịch vụ của HUGs Agency thôi ạ (Marketing, Branding, Website, SEO, quản trị Fanpage, TikTok...). Anh/Chị có muốn em giới thiệu về dịch vụ nào không ạ? 😊"
             } else if (hasExtractedPhone) {
-                replyText = "Dạ em cảm ơn Anh/Chị, em đã lưu lại thông tin số điện thoại. Chuyên viên tư vấn của Huge Agency sẽ liên hệ lại ngay để hỗ trợ mình ạ!"
+                replyText = "Dạ em cảm ơn Anh/Chị, em đã lưu lại thông tin số điện thoại. Chuyên viên tư vấn của HUGs Agency sẽ liên hệ lại ngay để hỗ trợ mình ạ!"
             } else {
-                replyText = "Dạ, hiện tại thông tin này em chưa được đào tạo. Anh/chị có thể vui lòng để lại Số Điện Thoại để chuyên viên Huge Agency gọi lại tư vấn chi tiết không ạ?"
+                replyText = "Dạ, hiện tại thông tin này em chưa được đào tạo. Anh/chị có thể vui lòng để lại Số Điện Thoại để chuyên viên HUGs Agency gọi lại tư vấn chi tiết không ạ?"
             }
         } else if (hasExtractedPhone) {
             // Nếu AI vẫn trả lời được (tự nó sinh ra response tốt) nhưng mình cũng đã lưu sđt

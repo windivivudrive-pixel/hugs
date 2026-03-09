@@ -12,12 +12,12 @@ interface ChatBotProps {
 }
 
 export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
-    const initialMessage: Message = { role: 'model', content: 'Chào Anh/Chị! Em là trợ lý ảo của Huge Agency. Anh/Chị cần tư vấn về dịch vụ quay phim, chụp ảnh, quản lý kênh hay thiết kế?' };
+    const initialMessage: Message = { role: 'model', content: 'Chào Anh/Chị! Em là trợ lý ảo của HUGs Agency. Anh/Chị cần tư vấn về dịch vụ quay phim, chụp ảnh, quản lý kênh hay thiết kế?' };
 
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>(() => {
         if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('huge_chat_history');
+            const saved = localStorage.getItem('hugs_chat_history');
             if (saved) {
                 try {
                     return JSON.parse(saved);
@@ -31,7 +31,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
     const [input, setInput] = useState('');
     const [sessionId, setSessionId] = useState<string | null>(() => {
         if (typeof window !== 'undefined') {
-            return localStorage.getItem('huge_chat_session') || null;
+            return localStorage.getItem('hugs_chat_session') || null;
         }
         return null;
     });
@@ -54,7 +54,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            localStorage.setItem('huge_chat_history', JSON.stringify(messages));
+            localStorage.setItem('hugs_chat_history', JSON.stringify(messages));
         }
     }, [messages]);
 
@@ -96,7 +96,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
 
             if (data.sessionId) {
                 setSessionId(data.sessionId);
-                localStorage.setItem('huge_chat_session', data.sessionId);
+                localStorage.setItem('hugs_chat_session', data.sessionId);
             }
 
             setMessages([...newMessages, { role: 'model', content: data.response }]);
@@ -143,8 +143,8 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
                                         if (window.confirm('Bạn có chắc chắn muốn xóa lịch sử trò chuyện này?')) {
                                             setMessages([initialMessage]);
                                             setSessionId(null);
-                                            localStorage.removeItem('huge_chat_history');
-                                            localStorage.removeItem('huge_chat_session');
+                                            localStorage.removeItem('hugs_chat_history');
+                                            localStorage.removeItem('hugs_chat_session');
                                         }
                                     }}
                                     className="text-white hover:bg-white/20 p-2 rounded-full transition-colors"
