@@ -150,7 +150,7 @@ export const WelcomeCube3D: React.FC = () => {
                     <div className="w-12 h-12 border-4 border-white rounded-full flex items-center justify-center mb-3">
                         <div className="w-6 h-6 bg-white rounded-full"></div>
                     </div>
-                    <h2 className="text-4xl font-black text-white text-center leading-none tracking-tighter">HUGE</h2>
+                    <h2 className="text-4xl font-black text-white text-center leading-none tracking-tighter">HUGs</h2>
                     <p className="text-white text-[10px] mt-1 tracking-[0.3em] font-bold uppercase">Agency</p>
                 </div>
             </motion.div>
