@@ -73,23 +73,30 @@ async function createSSHTunnel(): Promise<number> {
 export async function getDB(): Promise<mysql.Pool> {
     if (pool) return pool;
 
-    const isProduction = process.env.NODE_ENV === 'production';
     const sshHost = process.env.SSH_HOST;
 
-    if (!isProduction && sshHost) {
-        const port = await createSSHTunnel();
-        pool = mysql.createPool({
-            host: '127.0.0.1',
-            port: port,
-            user: process.env.DB_USER || '',
-            password: process.env.DB_PASSWORD || '',
-            database: process.env.DB_NAME || '',
-            waitForConnections: true,
-            connectionLimit: 10,
-            queueLimit: 0,
-        });
+    if (sshHost) {
+        console.log('Establishing database connection via SSH tunnel...');
+        try {
+            const port = await createSSHTunnel();
+            pool = mysql.createPool({
+                host: '127.0.0.1',
+                port: port,
+                user: process.env.DB_USER || '',
+                password: process.env.DB_PASSWORD || '',
+                database: process.env.DB_NAME || '',
+                waitForConnections: true,
+                connectionLimit: 5, // Lower limit for serverless environment
+                queueLimit: 0,
+            });
+            console.log('SSH tunnel and DB pool created successfully.');
+        } catch (error) {
+            console.error('Failed to create SSH tunnel:', error);
+            throw error;
+        }
     } else {
-        // Direct connection (production on same server)
+        // Direct connection
+        console.log('Connecting directly to database...');
         pool = mysql.createPool({
             host: process.env.DB_HOST || '127.0.0.1',
             port: parseInt(process.env.DB_PORT || '3306'),
