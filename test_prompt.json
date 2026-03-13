@@ -1,8 +1,0 @@
-{
-  "query": { "input": "Xin chào" },
-  "summarySpec": {
-    "modelPromptSpec": {
-      "preamble": "Bạn là tư vấn viên WindiFashion."
-    }
-  }
-}
