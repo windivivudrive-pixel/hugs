@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+agency/
+.next/
+*.sql
+*.local
+.claude/
+.DS_Store

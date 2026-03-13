@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+@theme {
+    --color-brand-pink: #eb2166;
+    --color-brand-dark: #1a1a1a;
+    --color-brand-light: #f8f9fa;
+    --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/Manrope-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/Manrope-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/Manrope-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    background-color: #ffffff;
+}
+
+/* Hide scrollbar for immersive sections */
+.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Article content markdown styles */
+.article-content h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.article-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.article-content p {
+    color: #374151;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+    word-break: normal;
+    overflow-wrap: anywhere;
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.article-content ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 1.5rem 0;
+}
+
+.article-content li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.article-content li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #eb2166;
+    border-radius: 50%;
+}
+
+.article-content strong {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.article-content a {
+    color: #eb2166;
+    text-decoration: underline;
+}
+
+.article-content blockquote {
+    border-left: 4px solid #eb2166;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Animation utilities */
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 12s linear infinite;
+}
+
+/* Quill editor styles */
+.ql-container {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+}
+
+.ql-editor {
+    min-height: 200px;
+    padding: 1rem;
+}
+
+.ql-editor.ql-blank::before {
+    color: #9ca3af;
+    font-style: normal;
+}
+
+.ql-toolbar.ql-snow {
+    border-color: #e5e7eb;
+    border-radius: 0.5rem 0.5rem 0 0;
+    background: #f9fafb;
+}
+
+.ql-container.ql-snow {
+    border-color: #e5e7eb;
+    border-radius: 0 0 0.5rem 0.5rem;
+}

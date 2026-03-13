@@ -1,0 +1,1020 @@
+
+> nextjs-app@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/win/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/win/Documents/work/huge-agency/nextjs-app/package-lock.json
+   * /Users/win/Documents/work/huge-agency/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 40 errors:
+./Documents/work/huge-agency/nextjs-app/lib/actions.ts:122:1
+Ecmascript file had an error
+[0m [90m 120 |[39m     }
+ [90m 121 |[39m }
+[31m[1m>[22m[39m[90m 122 |[39m [36mexport[39m [33m*[39m [36mfrom[39m [32m'./types'[39m[33m;[39m
+ [90m     |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 123 |[39m[0m
+
+Only async functions are allowed to be exported in a "use server" file.
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/lib/actions.ts [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/careers/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/lib/actions.ts [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/careers/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/lib/viewTracker.ts:2:1
+Module not found: Can't resolve './supabase'
+[0m [90m 1 |[39m [32m'use client'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { supabase } [36mfrom[39m [32m'./supabase'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m/**[39m
+ [90m 5 |[39m [90m * Record an article view by incrementing view_count directly on the table.[39m[0m
+
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/lib/viewTracker.ts [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/ArticlePageClient.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/ArticlePageClient.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/article/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/lib/viewTracker.ts [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/ArticlePageClient.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/ArticlePageClient.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/article/[slug]/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx:9:1
+Module not found: Can't resolve '@/components/sections/LanguageSwitcher'
+[0m [90m  7 |[39m
+ [90m  8 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { [33mLanguageSwitcher[39m } [36mfrom[39m [32m'@/components/sections/LanguageSwitcher'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 10 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m 11 |[39m
+ [90m 12 |[39m [36mexport[39m [36mconst[39m [33mNavbar[39m[33m:[39m [33mReact[39m[33m.[39m[33mFC[39m [33m=[39m () [33m=>[39m {[0m
+
+Import map: aliased to relative './components/sections/LanguageSwitcher' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:7:1
+Module not found: Can't resolve '@/components/sections/LanguageSwitcher'
+[0m [90m  5 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m { [33mLanguageSwitcher[39m } [36mfrom[39m [32m'@/components/sections/LanguageSwitcher'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  8 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m  9 |[39m
+ [90m 10 |[39m [36minterface[39m [33mPageNavbarProps[39m {[0m
+
+Import map: aliased to relative './components/sections/LanguageSwitcher' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:7:1
+Module not found: Can't resolve '@/components/sections/lib/formUtils'
+[0m [90m  5 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m {
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  8 |[39m     checkRateLimit[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  9 |[39m     recordSubmission[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 10 |[39m     validateHoneypot[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 11 |[39m     submitToGoogleForm[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 12 |[39m     validateFileSize[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 13 |[39m     [33mRECRUITMENT_FORM_CONFIG[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 14 |[39m } [36mfrom[39m [32m'@/components/sections/lib/formUtils'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 15 |[39m [36mimport[39m { uploadCV } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m 16 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/sections/lib/formUtils' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/careers/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/FooterSection.tsx:5:1
+Module not found: Can't resolve '@/components/sections/lib/formUtils'
+[0m [90m  3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m  4 |[39m [36mimport[39m { [33mPhone[39m[33m,[39m [33mMail[39m[33m,[39m [33mMapPin[39m[33m,[39m [33mSend[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mCheckCircle[39m[33m,[39m [33mAlertCircle[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  5 |[39m [36mimport[39m {
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  6 |[39m     checkRateLimit[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  7 |[39m     recordSubmission[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  8 |[39m     validateHoneypot[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  9 |[39m     submitToGoogleForm[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 10 |[39m     [33mCTA_FORM_CONFIG[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 11 |[39m     [33mSERVICE_OPTIONS[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 12 |[39m } [36mfrom[39m [32m'@/components/sections/lib/formUtils'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 13 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 14 |[39m
+ [90m 15 |[39m [90m// Use service options from Google Form[39m[0m
+
+Import map: aliased to relative './components/sections/lib/formUtils' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/FooterSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/FooterSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:6:1
+Module not found: Can't resolve '@/components/sections/lib/slugUtils'
+[0m [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+ [90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m
+ [90m 9 |[39m[0m
+
+Import map: aliased to relative './components/sections/lib/slugUtils' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:11:1
+Module not found: Can't resolve '@/components/sections/lib/staticData'
+[0m [90m  9 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 11 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 12 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m
+ [90m 13 |[39m
+ [90m 14 |[39m [90m// Helper to strip HTML tags and entities for preview[39m[0m
+
+Import map: aliased to relative './components/sections/lib/staticData' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/projects/page.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:8:1
+Module not found: Can't resolve '@/components/sections/lib/staticData'
+[0m [90m  6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  9 |[39m
+ [90m 10 |[39m [36mexport[39m [36mconst[39m [33mServicesSection[39m[33m:[39m [33mReact[39m[33m.[39m[33mFC[39m [33m=[39m () [33m=>[39m {
+ [90m 11 |[39m     [36mconst[39m { t } [33m=[39m useLanguage()[33m;[39m[0m
+
+Import map: aliased to relative './components/sections/lib/staticData' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx:10:1
+Module not found: Can't resolve '@/components/sections/lib/staticData'
+[0m [90m  8 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m  9 |[39m [36mimport[39m { [33mLanguageSwitcher[39m } [36mfrom[39m [32m'@/components/sections/LanguageSwitcher'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 10 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 11 |[39m
+ [90m 12 |[39m [36mexport[39m [36mconst[39m [33mNavbar[39m[33m:[39m [33mReact[39m[33m.[39m[33mFC[39m [33m=[39m () [33m=>[39m {
+ [90m 13 |[39m   [36mconst[39m { t } [33m=[39m useLanguage()[33m;[39m[0m
+
+Import map: aliased to relative './components/sections/lib/staticData' inside of [project]/Documents/work/huge-agency/nextjs-app
+
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export deleteThumbnail doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export deleteThumbnail was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export deleteThumbnail doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export deleteThumbnail was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx:5:1
+Export fetchNewsArticles doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { fetchNewsArticles[33m,[39m [33mNewsArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { useNavigate[33m,[39m [33mLink[39m } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m[0m
+
+The export fetchNewsArticles was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx:5:1
+Export fetchNewsArticles doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { fetchNewsArticles[33m,[39m [33mNewsArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { useNavigate[33m,[39m [33mLink[39m } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m[0m
+
+The export fetchNewsArticles was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export fetchProjectCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export fetchProjectCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export fetchProjectCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export fetchProjectCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1
+Export fetchProjectCategories doesn't exist in target module
+[0m [90m  7 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  8 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 10 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 11 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m 12 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m[0m
+
+The export fetchProjectCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/projects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1
+Export fetchProjectCategories doesn't exist in target module
+[0m [90m  7 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  8 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 10 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 11 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m 12 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m[0m
+
+The export fetchProjectCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/projects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export fetchServiceCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export fetchServiceCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export fetchServiceCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export fetchServiceCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1
+Export fetchServiceCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mArrowRight[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mChevronLeft[39m[33m,[39m [33mChevronRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m[33m,[39m [33mServiceCategory[39m[33m,[39m fetchServiceCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { [33mLink[39m[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m[0m
+
+The export fetchServiceCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1
+Export fetchServiceCategories doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mArrowRight[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mChevronLeft[39m[33m,[39m [33mChevronRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m[33m,[39m [33mServiceCategory[39m[33m,[39m fetchServiceCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { [33mLink[39m[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m[0m
+
+The export fetchServiceCategories was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mArrowRight[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mChevronLeft[39m[33m,[39m [33mChevronRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m[33m,[39m [33mServiceCategory[39m[33m,[39m fetchServiceCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { [33mLink[39m[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mArrowRight[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mChevronLeft[39m[33m,[39m [33mChevronRight[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m[33m,[39m [33mServiceCategory[39m[33m,[39m fetchServiceCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { [33mLink[39m[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1
+Export supabase doesn't exist in target module
+[0m [90m  7 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  8 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 10 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 11 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m 12 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/projects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1
+Export supabase doesn't exist in target module
+[0m [90m  7 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  8 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  9 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 10 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 11 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m
+ [90m 12 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/projects/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx:8:1
+Export supabase doesn't exist in target module
+[0m [90m  6 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  9 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m
+ [90m 11 |[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/service/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx:8:1
+Export supabase doesn't exist in target module
+[0m [90m  6 |[39m [36mimport[39m { [33mFooterSection[39m } [36mfrom[39m [32m'@/components/ui/FooterSection'[39m[33m;[39m
+ [90m  7 |[39m [36mimport[39m { [33mPageNavbar[39m } [36mfrom[39m [32m'@/components/ui/PageNavbar'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  8 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m  9 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 10 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m
+ [90m 11 |[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/service/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mServiceArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mArrowRight[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m[33m,[39m [33mServiceArticle[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { [33mSTATIC_SERVICES[39m } [36mfrom[39m [32m'@/components/sections/lib/staticData'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/sections/MainSite.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mChevronDown[39m[33m,[39m [33mMenu[39m[33m,[39m [33mX[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mLanguageSwitcher[39m } [36mfrom[39m [32m'@/components/sections/LanguageSwitcher'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:5:1
+Export supabase doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion[33m,[39m [33mAnimatePresence[39m } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mChevronDown[39m[33m,[39m [33mMenu[39m[33m,[39m [33mX[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mService[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m { [33mLanguageSwitcher[39m } [36mfrom[39m [32m'@/components/sections/LanguageSwitcher'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m[0m
+
+The export supabase was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component Browser]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Client Component SSR]
+    ./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx [Server Component]
+    ./Documents/work/huge-agency/nextjs-app/app/allprojects/page.tsx [Server Component]
+
+
+./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:15:1
+Export uploadCV doesn't exist in target module
+[0m [90m 13 |[39m     [33mRECRUITMENT_FORM_CONFIG[39m[33m,[39m
+ [90m 14 |[39m } [36mfrom[39m [32m'@/components/sections/lib/formUtils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 15 |[39m [36mimport[39m { uploadCV } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 16 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m
+ [90m 18 |[39m[0m
+
+The export uploadCV was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/careers/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:15:1
+Export uploadCV doesn't exist in target module
+[0m [90m 13 |[39m     [33mRECRUITMENT_FORM_CONFIG[39m[33m,[39m
+ [90m 14 |[39m } [36mfrom[39m [32m'@/components/sections/lib/formUtils'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 15 |[39m [36mimport[39m { uploadCV } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 16 |[39m [36mimport[39m { useLanguage } [36mfrom[39m [32m'@/contexts/LanguageContext'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { useDocumentHead } [36mfrom[39m [32m'@/lib/useDocumentHead'[39m[33m;[39m
+ [90m 18 |[39m[0m
+
+The export uploadCV was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/careers/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export uploadThumbnail doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export uploadThumbnail was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-client] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1
+Export uploadThumbnail doesn't exist in target module
+[0m [90m 3 |[39m [36mimport[39m { motion } [36mfrom[39m [32m'framer-motion'[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m { [33mLogOut[39m[33m,[39m [33mNewspaper[39m[33m,[39m [33mFileText[39m[33m,[39m [33mPlus[39m[33m,[39m [33mEdit[39m[33m,[39m [33mTrash2[39m[33m,[39m [33mSave[39m[33m,[39m [33mX[39m[33m,[39m [33mEye[39m[33m,[39m [33mEyeOff[39m[33m,[39m [33mUsers[39m[33m,[39m [33mUpload[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mStar[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 5 |[39m [36mimport[39m { supabase[33m,[39m [33mNewsArticle[39m[33m,[39m uploadThumbnail[33m,[39m deleteThumbnail[33m,[39m [33mProjectCategory[39m[33m,[39m fetchProjectCategories[33m,[39m fetchServiceCategories[33m,[39m [33mServiceCategory[39m } [36mfrom[39m [32m'@/lib/actions'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 6 |[39m [36mimport[39m { generateSlug } [36mfrom[39m [32m'@/components/sections/lib/slugUtils'[39m[33m;[39m
+ [90m 7 |[39m [36mimport[39m [33mReactQuill[39m [36mfrom[39m [32m'react-quill-new'[39m[33m;[39m
+ [90m 8 |[39m [36mimport[39m [32m'react-quill-new/dist/quill.snow.css'[39m[33m;[39m[0m
+
+The export uploadThumbnail was not found in module [project]/Documents/work/huge-agency/nextjs-app/lib/actions.ts [app-ssr] (ecmascript).
+The module has no exports at all.
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx
+    ./Documents/work/huge-agency/nextjs-app/app/admin/page.tsx
+
+
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/lib/actions.ts:122:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/lib/viewTracker.ts:2:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx:9:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:7:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:7:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/FooterSection.tsx:5:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:6:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:11:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/Navbar.tsx:10:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/NewsSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AllProjectPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ProjectsPage.tsx:9:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx:8:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ServicePage.tsx:8:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/ProjectsSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/sections/ServicesSection.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/ui/PageNavbar.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:15:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/CareersPage.tsx:15:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
+    at <unknown> (./Documents/work/huge-agency/nextjs-app/components/AdminPage.tsx:5:1)
