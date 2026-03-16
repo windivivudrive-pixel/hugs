@@ -369,7 +369,7 @@ export const NewsPageClient: React.FC<{
                                         {/* Category Sections */}
                                         {categorySections.map((section) => {
                                             const sectionArticles = getArticlesByCategory(section.id);
-                                            if (sectionArticles.length === 0) return null;
+                                            if (sectionArticles.length === 0 && !loadingMore) return null;
 
                                             const isExpanded = expandedSections.has(section.id);
                                             const displayedArticles = isExpanded ? sectionArticles : sectionArticles.slice(0, INITIAL_ITEMS_PER_SECTION);
@@ -394,34 +394,43 @@ export const NewsPageClient: React.FC<{
                                                     </div>
 
                                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                        {displayedArticles.map((article, index) => (
-                                                            <motion.article
-                                                                key={article.id}
-                                                                className="cursor-pointer group"
-                                                                initial={{ opacity: 0, y: 20 }}
-                                                                whileInView={{ opacity: 1, y: 0 }}
-                                                                transition={{ duration: 0.4, delay: index * 0.05 }}
-                                                                viewport={{ once: true }}
-                                                                onClick={() => handleArticleClick(article)}
-                                                            >
-                                                                <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
-                                                                    <img
-                                                                        src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
-                                                                        alt={article.title}
-                                                                        loading="lazy"
-                                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                                    />
-                                                                </div>
-                                                                <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-brand-pink transition-colors">
-                                                                    {article.title}
-                                                                </h3>
-                                                                <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
-                                                                    <span className="font-medium">{article.author_details?.name || article.author || t('news.author')}</span>
-                                                                    <span>•</span>
-                                                                    <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
-                                                                </div>
-                                                            </motion.article>
-                                                        ))}
+                                                        {displayedArticles.length > 0 ? (
+                                                            displayedArticles.map((article, index) => (
+                                                                <motion.article
+                                                                    key={article.id}
+                                                                    className="cursor-pointer group"
+                                                                    initial={{ opacity: 0, y: 20 }}
+                                                                    whileInView={{ opacity: 1, y: 0 }}
+                                                                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                                                                    viewport={{ once: true }}
+                                                                    onClick={() => handleArticleClick(article)}
+                                                                >
+                                                                    <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
+                                                                        <img
+                                                                            src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
+                                                                            alt={article.title}
+                                                                            loading="lazy"
+                                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                                        />
+                                                                    </div>
+                                                                    <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-brand-pink transition-colors">
+                                                                        {article.title}
+                                                                    </h3>
+                                                                    <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
+                                                                        <span className="font-medium">{article.author_details?.name || article.author || t('news.author')}</span>
+                                                                        <span>•</span>
+                                                                        <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
+                                                                    </div>
+                                                                </motion.article>
+                                                            ))
+                                                        ) : (
+                                                            /* Show skeletons while background loading if no articles found yet */
+                                                            <>
+                                                                <ArticleSkeleton />
+                                                                <ArticleSkeleton />
+                                                                <ArticleSkeleton />
+                                                            </>
+                                                        )}
                                                     </div>
                                                 </div>
                                             );

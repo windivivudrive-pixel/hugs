@@ -145,7 +145,7 @@ export async function getPostBySlug(slug: string): Promise<NewsArticle | null> {
              WHERE tr.object_id = p.ID LIMIT 1) AS cat_slug
      FROM wp_posts p
      WHERE p.post_name = ? 
-       AND p.post_type = 'post'
+       AND p.post_type IN ('post', 'project')
        AND p.post_status = 'publish'
      LIMIT 1`,
         [slug]
