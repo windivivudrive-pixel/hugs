@@ -71,8 +71,8 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
         try {
             // Gọi lên Edge Function của Supabase 
             // Hàm này đã bao gồm model AI và tự động trigger function save_customer_info nếu khách gửi Tên và SĐT
-            const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || '';
-            const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || '';
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+            const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
             const functionUrl = `${supabaseUrl}/functions/v1/vertex-chat`;
 
