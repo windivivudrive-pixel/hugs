@@ -14,7 +14,7 @@ const BATCH_SIZE = 30;
 // Skeleton component for loading states
 const ArticleSkeleton: React.FC<{ featured?: boolean }> = ({ featured }) => (
     <div className={`animate-pulse ${featured ? 'h-full min-h-[300px] md:min-h-[400px]' : ''}`}>
-        <div className={`bg-gray-200 mb-3 ${featured ? 'h-full min-h-[300px] md:min-h-[400px]' : 'aspect-video'}`} />
+        <div className={`bg-gray-200 mb-3 ${featured ? 'aspect-[900/598]' : 'aspect-[900/598]'}`} />
         {!featured && (
             <>
                 <div className="h-3 bg-gray-200 rounded w-20 mb-2" />
@@ -256,7 +256,7 @@ export const NewsPageClient: React.FC<{
                                                     animate={{ opacity: 1, y: 0 }}
                                                     onClick={() => handleArticleClick(featuredArticles[0])}
                                                 >
-                                                    <div className="relative h-full min-h-[300px] md:min-h-[400px] overflow-hidden bg-gray-100">
+                                                    <div className="relative aspect-[900/598] overflow-hidden bg-gray-100">
                                                         <img
                                                             src={featuredArticles[0].thumbnail || 'https://picsum.photos/800/600?random=1'}
                                                             alt={featuredArticles[0].title}
@@ -294,7 +294,7 @@ export const NewsPageClient: React.FC<{
                                                         transition={{ delay: 0.1 }}
                                                         onClick={() => handleArticleClick(featuredArticles[1])}
                                                     >
-                                                        <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
+                                                        <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
                                                             <img
                                                                 src={featuredArticles[1].thumbnail || 'https://picsum.photos/600/400?random=2'}
                                                                 alt={featuredArticles[1].title}
@@ -335,7 +335,7 @@ export const NewsPageClient: React.FC<{
                                                     transition={{ delay: 0.2 + index * 0.1 }}
                                                     onClick={() => handleArticleClick(article)}
                                                 >
-                                                    <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
+                                                    <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
                                                         <img
                                                             src={article.thumbnail || `https://picsum.photos/400/300?random=${index + 3}`}
                                                             alt={article.title}
@@ -405,7 +405,7 @@ export const NewsPageClient: React.FC<{
                                                                     viewport={{ once: true }}
                                                                     onClick={() => handleArticleClick(article)}
                                                                 >
-                                                                    <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
+                                                                    <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
                                                                         <img
                                                                             src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
                                                                             alt={article.title}
@@ -466,7 +466,7 @@ export const NewsPageClient: React.FC<{
                                                         viewport={{ once: true }}
                                                         onClick={() => handleArticleClick(article)}
                                                     >
-                                                        <div className="aspect-video overflow-hidden bg-gray-100 mb-3">
+                                                        <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
                                                             <img
                                                                 src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
                                                                 alt={article.title}

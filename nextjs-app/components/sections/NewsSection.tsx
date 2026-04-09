@@ -45,7 +45,7 @@ export const NewsSection: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[1, 2, 3, 4].map((i) => (
                             <div key={i} className="animate-pulse">
-                                <div className="aspect-[4/3] bg-gray-200 mb-4"></div>
+                                <div className="aspect-[900/598] bg-gray-200 mb-4"></div>
                                 <div className="h-3 bg-gray-200 rounded w-24 mb-2"></div>
                                 <div className="h-4 bg-gray-200 rounded w-full mb-1"></div>
                                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>
@@ -95,7 +95,7 @@ export const NewsSection: React.FC = () => {
                             onClick={() => handleArticleClick(article)}
                         >
                             {/* Image Container */}
-                            <div className="aspect-[4/3] overflow-hidden mb-4">
+                            <div className="aspect-[900/598] overflow-hidden mb-4">
                                 <img
                                     src={article.thumbnail || `https://picsum.photos/600/400?random=${index}`}
                                     alt={article.title}

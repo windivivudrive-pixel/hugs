@@ -37,7 +37,7 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
         </div>
         <div className={`${reverse ? 'lg:order-1' : ''}`}>
             <motion.div
-                className="relative overflow-hidden shadow-2xl"
+                className="relative overflow-hidden"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
             >
@@ -45,9 +45,8 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
                     src={image}
                     alt={title}
                     loading="lazy"
-                    className="w-full aspect-[4/3] object-cover"
+                    className="w-full aspect-[4/3] object-contain bg-white"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </motion.div>
         </div>
     </motion.div>
@@ -64,11 +63,11 @@ export const AboutPage: React.FC = () => {
     });
 
     const visionImages = [
-        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80',
-        'https://picsum.photos/1600/900?random=10',
-        'https://picsum.photos/1600/900?random=11',
-        'https://picsum.photos/1600/900?random=12',
-        'https://picsum.photos/1600/900?random=13',
+        '/team-all2.png',
+        '/team-girl.png',
+        '/team-editor.png',
+        '/team-man1.png',
+        '/team-girl2.png',
     ];
 
     const imageIndex = Math.abs(page % visionImages.length);
@@ -117,68 +116,8 @@ export const AboutPage: React.FC = () => {
             {/* Navbar */}
             <PageNavbar activePage="about" />
 
-            {/* Hero Section */}
-            <section className="pt-32 pb-16 bg-white">
-                <div className="max-w-7xl mx-auto px-6 text-center">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <span className="inline-block px-4 py-2 bg-brand-pink/10 text-brand-pink rounded-full text-sm font-semibold mb-6">
-                            {t('about.badge')}
-                        </span>
-                        <h1 className="text-4xl md:text-6xl font-black mb-6">
-                            <span className="block mb-4">{t('about.title')}</span>
-                            <span className="text-brand-pink">{t('about.titleHighlight')}</span>
-                        </h1>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            {t('about.description')}
-                        </p>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Story Sections */}
-            <div className="max-w-7xl mx-auto px-6">
-                {/* About HUGs */}
-                <StorySection
-                    title={t('about.whoTitle')}
-                    icon={<Zap size={28} />}
-                    image="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
-                    content={
-                        <>
-                            <p>
-                                {t('about.whoContent')}
-                            </p>
-                        </>
-                    }
-                />
-
-                {/* How we work */}
-                <StorySection
-                    title={t('about.howTitle')}
-                    icon={<Target size={28} />}
-                    image="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80"
-                    reverse
-                    content={
-                        <>
-                            <p>
-                                {t('about.howContent1')}
-                            </p>
-                            <p>
-                                {t('about.howContent2')}
-                            </p>
-                            <p className="text-brand-pink font-semibold">
-                                {t('about.howContentHighlight')}
-                            </p>
-                        </>
-                    }
-                />
-            </div>
-
             {/* Vision - Full Width Centered Quote Style */}
-            <section className="py-24 bg-gray-50">
+            <section className="pt-32 pb-24 bg-gray-50">
                 <motion.div
                     className="max-w-5xl mx-auto px-6 text-center"
                     initial={{ opacity: 0, y: 40 }}
@@ -201,8 +140,8 @@ export const AboutPage: React.FC = () => {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true }}
                 >
-                    <div className="relative overflow-hidden shadow-2xl rounded-2xl group">
-                        <div className="relative w-full aspect-[21/9]">
+                    <div className="relative overflow-hidden rounded-2xl group">
+                        <div className="relative w-full aspect-[16/9]">
                             <AnimatePresence initial={false} custom={direction}>
                                 <motion.img
                                     key={page}
@@ -229,7 +168,7 @@ export const AboutPage: React.FC = () => {
                                         }
                                     }}
                                     alt={`HUGs Vision ${imageIndex + 1}`}
-                                    className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                                    className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white"
                                 />
                             </AnimatePresence>
                         </div>
@@ -264,6 +203,68 @@ export const AboutPage: React.FC = () => {
                     </div>
                 </motion.div>
             </section>
+
+            {/* Hero Section */}
+            <section className="py-16 bg-white">
+                <div className="max-w-7xl mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <span className="inline-block px-4 py-2 bg-brand-pink/10 text-brand-pink rounded-full text-sm font-semibold mb-6">
+                            {t('about.badge')}
+                        </span>
+                        <h1 className="text-4xl md:text-6xl font-black mb-6">
+                            <span className="block mb-4">{t('about.title')}</span>
+                            <span className="text-brand-pink">{t('about.titleHighlight')}</span>
+                        </h1>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            {t('about.description')}
+                        </p>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Story Sections */}
+            <div className="max-w-7xl mx-auto px-6">
+                {/* About HUGs */}
+                <StorySection
+                    title={t('about.whoTitle')}
+                    icon={<Zap size={28} />}
+                    image="/team-hugs.png"
+                    content={
+                        <>
+                            <p>
+                                {t('about.whoContent')}
+                            </p>
+                        </>
+                    }
+                />
+
+                {/* How we work */}
+                <StorySection
+                    title={t('about.howTitle')}
+                    icon={<Target size={28} />}
+                    image="/team-editor.png"
+                    reverse
+                    content={
+                        <>
+                            <p>
+                                {t('about.howContent1')}
+                            </p>
+                            <p>
+                                {t('about.howContent2')}
+                            </p>
+                            <p className="text-brand-pink font-semibold">
+                                {t('about.howContentHighlight')}
+                            </p>
+                        </>
+                    }
+                />
+            </div>
+
+
 
             {/* Team - Stats + Grid Layout */}
             <section className="py-24 bg-white">

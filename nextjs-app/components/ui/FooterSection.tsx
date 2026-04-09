@@ -11,6 +11,7 @@ import {
     SERVICE_OPTIONS,
 } from '@/lib/formUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import Link from 'next/link';
 
 // Use service options from Google Form
 const INTEREST_TAGS = SERVICE_OPTIONS;
@@ -299,7 +300,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                 )}
 
                 {/* Footer Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
                     {/* About */}
                     <div>
                         <div className="flex items-center gap-3 mb-4">
@@ -324,27 +325,25 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ hideCTA = false })
                         </div>
                     </div>
 
-                    {/* Services */}
-                    <div>
-                        <h4 className="font-bold mb-4 text-gray-900">{t('footer.services')}</h4>
-                        <ul className="space-y-3 text-sm text-gray-600">
-                            {[0, 1, 2, 3, 4].map((i) => (
-                                <li key={i}>
-                                    <a href="#" className="hover:text-brand-pink transition-colors">{t(`footer.servicesList.${i}`)}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
                     {/* Links */}
                     <div>
                         <h4 className="font-bold mb-4 text-gray-900">{t('footer.links')}</h4>
                         <ul className="space-y-3 text-sm text-gray-600">
-                            {[t('footer.linkItems.about'), t('footer.linkItems.projects'), t('footer.linkItems.blog'), t('footer.linkItems.careers'), t('footer.linkItems.contact')].map((item, i) => (
-                                <li key={i}>
-                                    <a href="#" className="hover:text-brand-pink transition-colors">{item}</a>
-                                </li>
-                            ))}
+                            <li>
+                                <Link href="/about" className="hover:text-brand-pink transition-colors">{t('nav.about')}</Link>
+                            </li>
+                            <li>
+                                <Link href="/service" className="hover:text-brand-pink transition-colors">{t('nav.service')}</Link>
+                            </li>
+                            <li>
+                                <Link href="/allprojects" className="hover:text-brand-pink transition-colors">{t('nav.projects')}</Link>
+                            </li>
+                            <li>
+                                <Link href="/news" className="hover:text-brand-pink transition-colors">{t('nav.news')}</Link>
+                            </li>
+                            <li>
+                                <Link href="/careers" className="hover:text-brand-pink transition-colors">{t('nav.careers')}</Link>
+                            </li>
                         </ul>
                     </div>
 

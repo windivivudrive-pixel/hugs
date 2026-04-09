@@ -1,4 +1,5 @@
 import { query } from './db';
+import { cache } from 'react';
 import { WPPost, WPTerm, NewsArticle, Category, getCategoryColor } from './types';
 
 // Lightweight post type for listing (no content)
@@ -130,9 +131,9 @@ export async function getPublishedPostsLite(
 }
 
 /**
- * Get a single post by slug
+ * Get a single post by slug (cached per request)
  */
-export async function getPostBySlug(slug: string): Promise<NewsArticle | null> {
+export const getPostBySlug = cache(async (slug: string): Promise<NewsArticle | null> => {
     const posts = await query<WPPost & { cat_name?: string; cat_slug?: string }>(
         `SELECT p.*, 
             (SELECT t.name FROM wp_term_relationships tr
@@ -154,7 +155,7 @@ export async function getPostBySlug(slug: string): Promise<NewsArticle | null> {
     if (!posts.length) return null;
     const post = posts[0];
     return transformPost(post, post.cat_name || 'Tin tức', post.cat_slug || 'tin-tuc');
-}
+});
 
 /**
  * Get posts by category slug

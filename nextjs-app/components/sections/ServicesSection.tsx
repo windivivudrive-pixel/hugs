@@ -5,50 +5,19 @@ import { ArrowRight, Loader2 } from 'lucide-react';
 import { fetchServices, fetchArticlesByService } from '@/lib/actions-client';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { STATIC_SERVICES } from '@/lib/staticData';
 
 export const ServicesSection: React.FC = () => {
     const { t } = useLanguage();
-    const [services, setServices] = useState<any[]>([]);
+    // Use the 9 static services instead of fetching from DB
+    const services = STATIC_SERVICES;
 
     const [hoveredServiceSlug, setHoveredServiceSlug] = useState<string | null>(null);
-    const [latestArticles, setLatestArticles] = useState<Record<string, any | null>>({});
-    const [loading, setLoading] = useState(true);
     const [hoveredIndex, setHoveredIndex] = useState<number>(0);
-
-    // Fetch services + latest article for each service
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const srvData = await fetchServices();
-                setServices(srvData || []);
-
-                const articlesMap: Record<string, any | null> = {};
-                for (const service of (srvData || [])) {
-                    try {
-                        const articles = await fetchArticlesByService(service.slug);
-                        articlesMap[service.slug] = articles && articles.length > 0 ? articles[0] : null;
-                    } catch (err) {
-                        console.error(`Error fetching article for ${service.slug}:`, err);
-                    }
-                }
-                setLatestArticles(articlesMap);
-            } catch (err) {
-                console.error('Error fetching services:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
 
     // Default to first service (no auto-cycling)
     const displayedServiceSlug = hoveredServiceSlug !== null ? hoveredServiceSlug : services[0]?.slug;
-    const activeService = services.find(s => s.slug === displayedServiceSlug);
-
-    // Get current article for displayed service
-    const currentArticle = activeService ? latestArticles[activeService.slug] : null;
+    const activeService = services.find((s: { slug: string }) => s.slug === displayedServiceSlug);
 
     return (
         <section className="py-24 bg-white overflow-x-clip">
@@ -70,20 +39,14 @@ export const ServicesSection: React.FC = () => {
                     </h2>
                 </motion.div>
 
-                {loading ? (
-                    <div className="flex items-center justify-center min-h-[400px]">
-                        <Loader2 className="animate-spin text-brand-pink" size={40} />
-                    </div>
-                ) : (
-                    <>
-                        {/* Two Column Layout */}
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[500px]">
-                            {/* Left - Service List from Static Data */}
-                            <div className="space-y-4 lg:col-span-6">
-                                {services.map((service, index) => {
-                                    const isSelected = displayedServiceSlug === service.slug;
-                                    const serviceArticle = latestArticles[service.slug];
-                                    const thumbIndex = (index % 9) + 1; // Cycle 1-9
+                <>
+                    {/* Two Column Layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start min-h-[500px]">
+                        {/* Left - Service List from Static Data */}
+                        <div className="space-y-4 lg:col-span-6">
+                            {services.map((service, index) => {
+                                const isSelected = displayedServiceSlug === service.slug;
+                                const thumbIndex = (index % 9) + 1; // Cycle 1-9
 
                                     return (
                                         <div key={service.id} className="group">
@@ -135,7 +98,7 @@ export const ServicesSection: React.FC = () => {
                                                             <div className="pt-6 h-full relative">
                                                                 <img
                                                                     src={`/thumb-service/${thumbIndex}.png`}
-                                                                    alt={serviceArticle?.title || service.name}
+                                                                    alt={service.name}
                                                                     className="w-full h-full object-cover"
                                                                     loading="lazy"
                                                                     onError={(e) => {
@@ -179,7 +142,7 @@ export const ServicesSection: React.FC = () => {
                                                 <div className="pt-8 h-full relative">
                                                     <img
                                                         src={`/thumb-service/${hoveredIndex + 1}.png`}
-                                                        alt={currentArticle?.title || activeService.name}
+                                                        alt={activeService.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                         onError={(e) => {
                                                             (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${activeService.id}`;
@@ -214,7 +177,6 @@ export const ServicesSection: React.FC = () => {
                             </Link>
                         </motion.div>
                     </>
-                )}
             </div>
         </section >
     );

@@ -203,7 +203,7 @@ export const AllProjectPage: React.FC = () => {
                                         <Link
                                             key={project.id}
                                             href={`/${project.slug}`}
-                                            className="w-full flex-shrink-0 relative aspect-[16/7] group"
+                                            className="w-full flex-shrink-0 relative aspect-[900/598] group"
                                         >
                                             <img
                                                 src={project.thumbnail || `https://picsum.photos/1200/500?random=${index}`}
@@ -325,7 +325,7 @@ export const AllProjectPage: React.FC = () => {
                                         className="flex flex-col bg-white overflow-hidden group shadow-sm hover:shadow-md transition-all border border-gray-100 h-full"
                                     >
                                         {/* Thumbnail */}
-                                        <div className="w-full aspect-video flex-shrink-0 relative overflow-hidden">
+                                        <div className="w-full aspect-[900/598] flex-shrink-0 relative overflow-hidden">
                                             <img
                                                 src={project.thumbnail || `https://picsum.photos/800/600?random=${project.id}`}
                                                 alt={project.title}
