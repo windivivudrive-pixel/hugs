@@ -1,6 +1,6 @@
 import { getPublishedPostsLite, getCategories, getPostCount } from "@/lib/wordpress";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 import { NewsPageClient } from "@/components/NewsPageClient";
 import type { Metadata } from "next";
 

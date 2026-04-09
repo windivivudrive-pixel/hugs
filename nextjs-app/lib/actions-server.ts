@@ -14,7 +14,7 @@ export const fetchServiceCategories = async (): Promise<any[]> => {
 
 export const fetchProjectCategories = async (): Promise<any[]> => {
     try {
-        const revalidate = process.env.NODE_ENV === 'development' ? 0 : 60;
+        const revalidate = 120;
         const res = await fetch(`${API_URL}/project_category?per_page=100`, { next: { revalidate } });
         const categories = await res.json();
         return categories.map((c: any) => ({
@@ -37,7 +37,7 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<any[]
 
 export const fetchAllArticles = async (): Promise<any[]> => {
     try {
-        const revalidate = process.env.NODE_ENV === 'development' ? 0 : 60;
+        const revalidate = 120;
         const res = await fetch(`https://hugs.agency/api-projects.php`, { next: { revalidate } });
         if (!res.ok) throw new Error(`Failed to fetch custom endpoint: ${res.statusText}`);
         const data = await res.json();

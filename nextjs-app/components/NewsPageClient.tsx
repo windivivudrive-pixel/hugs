@@ -77,46 +77,35 @@ export const NewsPageClient: React.FC<{
     }, []);
 
     // Load remaining articles in background after initial render
-    useEffect(() => {
-        if (!hasMore || initialArticles.length === 0) return;
+    const loadMoreArticles = async () => {
+        if (!hasMore || loadingMore) return;
 
-        const loadRemaining = async () => {
-            try {
-                setLoadingMore(true);
-                let offset = articles.length;
-                let allLoaded = false;
+        try {
+            setLoadingMore(true);
+            const offset = articles.length;
 
-                while (!allLoaded) {
-                    const res = await fetch(`/api/news?limit=${BATCH_SIZE}&offset=${offset}`);
-                    const data = await res.json();
+            const res = await fetch(`/api/news?limit=${BATCH_SIZE}&offset=${offset}`);
+            const data = await res.json();
 
-                    if (data.articles.length > 0) {
-                        setArticles(prev => {
-                            // Deduplicate by ID
-                            const existingIds = new Set(prev.map((a: NewsArticle) => a.id));
-                            const newArticles = data.articles.filter((a: NewsArticle) => !existingIds.has(a.id));
-                            return [...prev, ...newArticles];
-                        });
-                        offset += data.articles.length;
-                    }
-
-                    if (!data.hasMore || data.articles.length === 0) {
-                        allLoaded = true;
-                        setHasMore(false);
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading more articles:', error);
-            } finally {
-                setLoadingMore(false);
+            if (data.articles && data.articles.length > 0) {
+                setArticles(prev => {
+                    // Deduplicate by ID
+                    const existingIds = new Set(prev.map((a: NewsArticle) => a.id));
+                    const newArticles = data.articles.filter((a: NewsArticle) => !existingIds.has(a.id));
+                    return [...prev, ...newArticles];
+                });
             }
-        };
 
-        // Start loading remaining after a short delay to let the UI render first
-        const timer = setTimeout(loadRemaining, 500);
-        return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            if (!data.hasMore || !data.articles || data.articles.length === 0) {
+                setHasMore(false);
+            }
+        } catch (error) {
+            console.error('Error loading more articles:', error);
+        } finally {
+            setLoadingMore(false);
+        }
+    };
+
 
     // Get featured articles for hero grid
     const featuredArticles = useMemo(() => {
@@ -436,7 +425,17 @@ export const NewsPageClient: React.FC<{
                                             );
                                         })}
 
-                                        {/* Background loading indicator */}
+                                        {/* Load More Indicator/Button */}
+                                        {hasMore && !loadingMore && (
+                                            <div className="flex justify-center py-8">
+                                                <button
+                                                    onClick={loadMoreArticles}
+                                                    className="px-6 py-2 border-2 border-brand-pink rounded-full text-brand-pink font-semibold hover:bg-brand-pink hover:text-white transition-all hover:shadow-md"
+                                                >
+                                                    Tải thêm tin tức
+                                                </button>
+                                            </div>
+                                        )}
                                         {loadingMore && (
                                             <div className="flex items-center justify-center gap-3 py-8 text-gray-500">
                                                 <Loader2 className="animate-spin text-brand-pink" size={20} />
@@ -486,6 +485,16 @@ export const NewsPageClient: React.FC<{
                                                 ))}
                                         </div>
 
+                                        {hasMore && !loadingMore && (
+                                            <div className="flex justify-center py-8">
+                                                <button
+                                                    onClick={loadMoreArticles}
+                                                    className="px-6 py-2 border-2 border-brand-pink rounded-full text-brand-pink font-semibold hover:bg-brand-pink hover:text-white transition-all hover:shadow-md"
+                                                >
+                                                    Tải thêm tin tức
+                                                </button>
+                                            </div>
+                                        )}
                                         {loadingMore && (
                                             <div className="flex items-center justify-center gap-3 py-8 text-gray-500">
                                                 <Loader2 className="animate-spin text-brand-pink" size={20} />

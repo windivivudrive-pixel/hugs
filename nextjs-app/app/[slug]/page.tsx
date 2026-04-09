@@ -1,7 +1,7 @@
 import { getPostBySlug } from "@/lib/wordpress";
 import { fetchAllArticles } from "@/lib/actions-server";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 import { ArticlePageClient } from "@/components/ArticlePageClient";
 import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
