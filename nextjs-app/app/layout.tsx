@@ -1,6 +1,38 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
+
+const helveticaNeue = localFont({
+  src: [
+    {
+      path: "../public/SVN-Helvetica Neue Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/SVN-Helvetica Neue Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/SVN-Helvetica Neue Light.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/SVN-Helvetica Neue Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/SVN-Helvetica Neue Bold Italic.ttf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-helvetica-neue",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -48,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="vi" className={helveticaNeue.variable}>
       <head>
         <script
           type="application/ld+json"
@@ -68,22 +100,22 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`font-sans antialiased`}>
+      <body className={`${helveticaNeue.variable} font-sans antialiased`} suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-             __html: JSON.stringify({
-               "@context": "https://schema.org",
-               "@type": "Organization",
-               "name": "HUGs Agency",
-               "url": "https://hugs.agency",
-               "logo": "https://hugs.agency/logo-hugs.png",
-               "contactPoint": {
-                 "@type": "ContactPoint",
-                 "telephone": "+84 934 68 86 52",
-                 "contactType": "customer service"
-               }
-             })
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "HUGs Agency",
+              "url": "https://hugs.agency",
+              "logo": "https://hugs.agency/logo-hugs.png",
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+84 934 68 86 52",
+                "contactType": "customer service"
+              }
+            })
           }}
         />
         <Providers>{children}</Providers>

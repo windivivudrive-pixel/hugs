@@ -11,7 +11,7 @@ import { ServicesSection } from './ServicesSection';
 import { PartnersSection } from './PartnersSection';
 import { ProjectsSection } from './ProjectsSection';
 import { SocialSection } from './SocialSection';
-import { TestimonialsSection } from './TestimonialsSection';
+// import { TestimonialsSection } from './TestimonialsSection';
 import { NewsSection } from './NewsSection';
 import { FooterSection } from '@/components/ui/FooterSection';
 import { ChatBot } from '@/components/ui/ChatBot';
@@ -61,7 +61,7 @@ export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false 
         <ServicesSection />
         <ProjectsSection />
         <SocialSection />
-        <TestimonialsSection />
+        {/* <TestimonialsSection /> */}
         <NewsSection />
         <FooterSection />
       </div>

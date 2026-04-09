@@ -1,6 +1,6 @@
 import { MainSite } from "@/components/sections/MainSite";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 export default function Home() {
   return <MainSite />;

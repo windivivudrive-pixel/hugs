@@ -42,11 +42,11 @@ export const CultureSection: React.FC = () => {
     const [[page, direction], setPage] = useState([0, 0]);
 
     const cultureImages = [
-        '/logo-partner/team.png',
-        'https://picsum.photos/800/600?random=1',
-        'https://picsum.photos/800/600?random=2',
-        'https://picsum.photos/800/600?random=3',
-        'https://picsum.photos/800/600?random=4',
+        '/team-all.png',
+        '/team-man1.png',
+        '/team-girl.png',
+        '/team-editor.png',
+        '/team-girl3.png',
     ];
 
     const imageIndex = Math.abs(page % cultureImages.length);
@@ -121,13 +121,13 @@ export const CultureSection: React.FC = () => {
                             </div>
 
                             {/* Title */}
-                            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 mb-8 leading-tight">
+                            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 leading-tight">
                                 {t('cultureSection.aboutTitle')}
                             </h2>
 
                             {/* Description */}
                             <div className="space-y-6 text-gray-900 leading-relaxed">
-                                <p className="text-xl">
+                                <p className="text-lg">
                                     {t('cultureSection.aboutDesc')}
                                 </p>
                             </div>
@@ -150,7 +150,7 @@ export const CultureSection: React.FC = () => {
 
                             {/* Description */}
                             <div className="space-y-6 text-gray-900 leading-relaxed">
-                                <p className="text-xl">
+                                <p className="text-lg">
                                     {t('cultureSection.mindsetDesc')}
                                 </p>
                             </div>
@@ -186,7 +186,7 @@ export const CultureSection: React.FC = () => {
 
                     {/* Right - Visual with floating badges */}
                     <motion.div
-                        className="order-1 lg:order-2 relative lg:-mr-20 lg:scale-125 origin-left"
+                        className="order-1 lg:order-2 relative"
                         initial={{ opacity: 0, x: 60, scale: 0.95 }}
                         whileInView={{ opacity: 1, x: 0, scale: 1 }}
                         transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -198,7 +198,7 @@ export const CultureSection: React.FC = () => {
                                 src="/culture2.png"
                                 alt="HUGs Agency Culture"
                                 loading="lazy"
-                                className="w-full h-auto object-cover"
+                                className="w-full h-auto object-contain"
                             />
 
                             {/* Stats badge - top right (refined size) */}
@@ -274,7 +274,7 @@ export const CultureSection: React.FC = () => {
                                             }
                                         }}
                                         alt={`HUGs Team ${imageIndex + 1}`}
-                                        className="absolute inset-0 w-full h-full object-cover cursor-grab active:cursor-grabbing"
+                                        className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white px-2"
                                     />
                                 </AnimatePresence>
                             </div>
@@ -333,7 +333,7 @@ export const CultureSection: React.FC = () => {
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
-                                <p className="text-xl">
+                                <p className="text-lg">
                                     {t('cultureSection.implementationDesc')}
                                 </p>
                             </div>
@@ -356,7 +356,7 @@ export const CultureSection: React.FC = () => {
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
-                                <p className="text-xl">
+                                <p className="text-lg">
                                     {t('cultureSection.valueDesc')}
                                 </p>
                             </div>

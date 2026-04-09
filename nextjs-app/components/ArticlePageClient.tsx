@@ -58,7 +58,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
 
             {/* Hero Section with white background */}
             <div className="pt-20 bg-white">
-                <div className="max-w-4xl mx-auto px-6 py-16">
+                <div className="max-w-4xl mx-auto px-6">
                     {/* Back button */}
 
 
@@ -147,28 +147,10 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
                 </div>
             </div>
 
-            {/* Featured Image */}
-            <motion.div
-                className="max-w-5xl mx-auto px-6 -mt-4"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 }}
-            >
-                <div className="overflow-hidden shadow-2xl border-4 border-white">
-                    <img
-                        src={displayArticle.thumbnail || '/projects/design-project.jpg'}
-                        alt={displayArticle.title}
-                        loading="lazy"
-                        className="w-full aspect-video object-cover"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://picsum.photos/1200/600?random=1';
-                        }}
-                    />
-                </div>
-            </motion.div>
+
 
             {/* Article Content */}
-            <div className="max-w-4xl mx-auto px-6 py-16">
+            <div className="max-w-4xl mx-auto px-6">
                 <motion.article
                     className="prose prose-lg prose-pink max-w-none"
                     initial={{ opacity: 0, y: 20 }}
@@ -177,7 +159,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
                 >
                     {/* Render content - supports both HTML (from Quill) and markdown */}
                     <div
-                        className="article-content text-gray-700"
+                        className="article-content text-gray-700 whitespace-pre-wrap"
                         dangerouslySetInnerHTML={{
                             __html: (() => {
                                 const content = displayArticle.content || (displayArticle as any).excerpt || '';
@@ -240,7 +222,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
                                 className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer group"
                                 whileHover={{ y: -5 }}
                             >
-                                <div className="aspect-[16/10] overflow-hidden">
+                                <div className="aspect-[900/598] overflow-hidden">
                                     <img
                                         src={`https://picsum.photos/400/250?random=${i + 10}`}
 alt = "Related article"
