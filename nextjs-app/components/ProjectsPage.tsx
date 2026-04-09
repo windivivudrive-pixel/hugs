@@ -87,7 +87,7 @@ export const ProjectsPage: React.FC = () => {
                 // Fetch categories for this service
                 const service = services.find(s => s.slug === selectedService);
                 if (service) {
-                    const cats = await fetchProjectCategories(service.id);
+                    const cats = await fetchProjectCategories();
                     setCategories(cats);
                 } else {
                     setCategories([]);

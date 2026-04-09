@@ -72,7 +72,7 @@ export const AllProjectPage: React.FC = () => {
                 }
 
                 // Fetch categories
-                const cats = await fetchProjectCategories('');
+                const cats = await fetchProjectCategories();
                 setCategories(cats);
 
             } catch (err) {
