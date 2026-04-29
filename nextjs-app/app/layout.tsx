@@ -2,36 +2,27 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "./providers";
+import { FloatingActionButtons } from "@/components/ui/FloatingActionButtons";
+import { GlobalWelcomeCube } from "@/components/ui/GlobalWelcomeCube";
 
-const helveticaNeue = localFont({
-  src: [
-    {
-      path: "../public/SVN-Helvetica Neue Regular.ttf",
+const manrope = localFont({
+  src: [    {
+      path: "../public/Manrope-Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/SVN-Helvetica Neue Bold.ttf",
+      path: "../public/Manrope-Bold.ttf",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../public/SVN-Helvetica Neue Light.ttf",
+      path: "../public/Manrope-Light.ttf",
       weight: "300",
       style: "normal",
     },
-    {
-      path: "../public/SVN-Helvetica Neue Italic.ttf",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../public/SVN-Helvetica Neue Bold Italic.ttf",
-      weight: "700",
-      style: "italic",
-    },
   ],
-  variable: "--font-helvetica-neue",
+  variable: "--font-manrope",
 });
 
 export const metadata: Metadata = {
@@ -80,7 +71,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={helveticaNeue.variable}>
+    <html lang="vi" className={manrope.variable}>
       <head>
         <script
           type="application/ld+json"
@@ -100,7 +91,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${helveticaNeue.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -118,7 +109,11 @@ export default function RootLayout({
             })
           }}
         />
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <FloatingActionButtons />
+          <GlobalWelcomeCube />
+        </Providers>
       </body>
     </html>
   );

@@ -18,7 +18,7 @@ interface SectionProps {
 
 const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, icon }) => (
     <motion.div
-        className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-16 lg:py-24 ${reverse ? 'lg:flex-row-reverse' : ''}`}
+        className={`grid grid-cols-1 lg:grid-cols-2 gap-8 items-center py-[15px] ${reverse ? 'lg:flex-row-reverse' : ''}`}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -246,7 +246,7 @@ export const AboutPage: React.FC = () => {
                 <StorySection
                     title={t('about.howTitle')}
                     icon={<Target size={28} />}
-                    image="/team-editor.png"
+                    image="/team-hugs2.png"
                     reverse
                     content={
                         <>

@@ -13,8 +13,8 @@ export const translations = {
             loading: 'Đang gửi...'
         },
         hero: {
-            title: 'HUGs Agency',
-            subtitle: 'Chúng tôi đang mở ra không gian của chiến lược và sáng tạo…',
+            title: 'Am hiểu miền Trung – Sáng tạo từ bản sắc.',
+            subtitle: 'Từ insight địa phương đến giải pháp Digital Marketing & Product toàn diện.',
             scroll: 'Cuộn để khám phá'
         },
         footer: {
@@ -511,8 +511,8 @@ export const translations = {
             loading: 'Sending...'
         },
         hero: {
-            title: 'HUGs Agency',
-            subtitle: 'We open up spaces for strategy and creativity…',
+            title: 'Deep Central Insight – Identity-Driven Creativity.',
+            subtitle: 'From local insights to comprehensive Digital Marketing & Product solutions.',
             scroll: 'Scroll to explore'
         },
         footer: {

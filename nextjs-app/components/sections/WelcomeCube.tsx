@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -55,16 +55,15 @@ export const WelcomeCube: React.FC = () => {
   // Refs for animation state
   const introStateRef = useRef({ startTime: 0, completed: false, started: false });
   const scrollStateRef = useRef({ rotProgress: 0, sidebarProgress: 0, isInSidebar: false });
+  const idleFramesRef = useRef(0);
+  const isRunningRef = useRef(false);
+  const lastRotationRef = useRef({ x: 0, y: 0 });
 
-  // Start Timer and Animation loop
-  useEffect(() => {
-    // Timer to start intro at 2300ms
-    const timer = setTimeout(() => {
-      if (!introStateRef.current.started) {
-        introStateRef.current.started = true;
-        introStateRef.current.startTime = performance.now();
-      }
-    }, 2000);
+  // Function to start/resume the animation loop
+  const startLoop = useCallback(() => {
+    if (isRunningRef.current) return;
+    isRunningRef.current = true;
+    idleFramesRef.current = 0;
 
     const animate = () => {
       const now = performance.now();
@@ -75,7 +74,7 @@ export const WelcomeCube: React.FC = () => {
       if (introStateRef.current.started) {
         if (!introStateRef.current.completed) {
           const elapsed = now - introStateRef.current.startTime;
-          const duration = 4500; // Duration 3.5s
+          const duration = 4500;
           const progress = Math.min(elapsed / duration, 1);
           const ease = 1 - Math.pow(1 - progress, 3);
           introAngle = 0 + (540 - 0) * ease;
@@ -103,25 +102,61 @@ export const WelcomeCube: React.FC = () => {
       currentRef.current.x = lerp(currentRef.current.x, targetX, lerpFactor);
       currentRef.current.y = lerp(currentRef.current.y, targetY, lerpFactor);
 
-      setRotation({
-        x: currentRef.current.x,
-        y: currentRef.current.y,
-      });
+      // Only call setRotation when value changed meaningfully (> 0.05 degree)
+      const dx = Math.abs(currentRef.current.x - lastRotationRef.current.x);
+      const dy = Math.abs(currentRef.current.y - lastRotationRef.current.y);
+
+      if (dx > 0.05 || dy > 0.05) {
+        lastRotationRef.current = { x: currentRef.current.x, y: currentRef.current.y };
+        setRotation({
+          x: currentRef.current.x,
+          y: currentRef.current.y,
+        });
+        idleFramesRef.current = 0;
+      } else {
+        idleFramesRef.current++;
+      }
+
+      // If idle for 30+ frames (~0.5s) AND intro is done, pause the loop
+      if (idleFramesRef.current > 30 && introStateRef.current.completed) {
+        isRunningRef.current = false;
+        rafRef.current = undefined;
+        return; // Stop loop
+      }
 
       rafRef.current = requestAnimationFrame(animate);
     };
 
     rafRef.current = requestAnimationFrame(animate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Start Timer and Animation loop
+  useEffect(() => {
+    // Timer to start intro at 2000ms
+    const timer = setTimeout(() => {
+      if (!introStateRef.current.started) {
+        introStateRef.current.started = true;
+        introStateRef.current.startTime = performance.now();
+      }
+      startLoop();
+    }, 2000);
+
+    startLoop();
 
     return () => {
       clearTimeout(timer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      isRunningRef.current = false;
     };
-  }, []);
+  }, [startLoop]);
 
   // Update Scroll State
   useEffect(() => {
     const handleScroll = () => {
+      // Resume animation loop if it was paused due to idle
+      startLoop();
+
       const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const rotationEnd = windowHeight * 0.75;
@@ -168,7 +203,7 @@ export const WelcomeCube: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [startLoop]);
 
   const currentCubeSize = baseCubeSize * cubeScale;
   const currentTranslateZ = currentCubeSize / 2;
@@ -279,19 +314,19 @@ export const WelcomeCube: React.FC = () => {
               // Front logic:
               const frontImg = isPostIntro
                 ? '/cube4.png'
-                : (effectiveRot > 135 && effectiveRot < 540 ? '/logo-partner/partner4.png' : '/cube3.png');
+                : (effectiveRot > 135 && effectiveRot < 540 ? '/cube6.jpg' : '/cube3.png');
 
               // Back logic:
               // Must handle isPostIntro to prevent reverting to partner8 when effectiveRot wraps (e.g. 90)
               const backImg = isPostIntro
                 ? '/cube3.png'
-                : (effectiveRot > 315 ? '/cube3.png' : '/logo-partner/partner8.png');
+                : (effectiveRot > 315 ? '/cube3.png' : '/cube7.jpg');
 
               // Right logic:
-              const rightImg = isPostIntro ? '/cube2.png' : '/logo-partner/partner9.png';
+              const rightImg = isPostIntro ? '/cube2.png' : '/cube1.jpg';
 
               // Left logic:
-              const leftImg = isPostIntro ? '/cube1.png' : '/logo-partner/partner3.png';
+              const leftImg = isPostIntro ? '/cube1.jpg' : '/team-all.png';
 
               return (
                 <>

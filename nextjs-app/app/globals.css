@@ -4,7 +4,7 @@
     --color-brand-pink: #eb2166;
     --color-brand-dark: #1a1a1a;
     --color-brand-light: #f8f9fa;
-    --font-sans: var(--font-helvetica-neue), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-sans: var(--font-manrope), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {

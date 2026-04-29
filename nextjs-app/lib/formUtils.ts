@@ -119,26 +119,26 @@ export const isAllowedFileType = (
 
 // ========== FORM CONFIGS ==========
 export const CTA_FORM_CONFIG: GoogleFormConfig = {
-    formActionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSf-ayfr6necV38Q5yvhCy4LFRyQVhPxDUww10ycFIi3fVKESQ/formResponse',
+    formActionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLScJ0MjTnvMqiP5AzebUSl91e9F4EUHWysWI2MqxvI6_d3bXvA/formResponse',
     entries: {
-        fullName: 'entry.598121209',
-        email: 'entry.192294861',
-        phone: 'entry.253522908',
-        description: 'entry.663226597',
-        interests: 'entry.1121049197',
+        fullName: 'entry.1616672139',
+        email: 'entry.1753862004',
+        phone: 'entry.1672126724',
+        description: 'entry.545582493',
+        interests: 'entry.870735333',
     },
 };
 
 export const RECRUITMENT_FORM_CONFIG: GoogleFormConfig = {
-    formActionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeRFBFO8WrL7JiuYYY1WA_B_vk5S8OtCCqmKENYiX1qjFZehQ/formResponse',
+    formActionUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeJ4zr6t1F969h_39qhCmOyUBr2E8twg4hnQi8wB1fBf9LUvQ/formResponse',
     entries: {
-        fullName: 'entry.836330583',
-        position: 'entry.1555290481',
-        email: 'entry.1783821993',
-        phone: 'entry.68746479',
-        portfolio: 'entry.1556646817',
-        cvUrl: 'entry.421962903',
-        message: 'entry.987937138',
+        fullName: 'entry.710144661',
+        position: 'entry.1944854056',
+        email: 'entry.590199691',
+        phone: 'entry.567262759',
+        portfolio: 'entry.185350774',
+        cvUrl: 'entry.207479750',
+        message: 'entry.1880019901',
     },
 };
 

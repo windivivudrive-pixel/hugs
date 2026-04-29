@@ -1,6 +1,7 @@
 import { query } from './db';
 import { cache } from 'react';
 import { WPPost, WPTerm, NewsArticle, Category, getCategoryColor } from './types';
+import { decodeHTMLEntities } from './utils';
 
 // Lightweight post type for listing (no content)
 type WPPostLite = Omit<WPPost, 'post_content'> & { post_content?: string; featured_image?: string };
@@ -32,12 +33,12 @@ function transformPost(
     const content = post.post_content || '';
     return {
         id: post.ID,
-        title: post.post_title,
+        title: decodeHTMLEntities(post.post_title),
         slug: post.post_name,
-        excerpt: post.post_excerpt || createExcerpt(content),
+        excerpt: decodeHTMLEntities(post.post_excerpt || createExcerpt(content)),
         content: content,
         thumbnail: (post as WPPostLite).featured_image || extractThumbnail(content) || null,
-        category: categoryName,
+        category: decodeHTMLEntities(categoryName),
         category_slug: categorySlug,
         category_color: getCategoryColor(categorySlug),
         author: 'Admin',
@@ -134,27 +135,32 @@ export async function getPublishedPostsLite(
  * Get a single post by slug (cached per request)
  */
 export const getPostBySlug = cache(async (slug: string): Promise<NewsArticle | null> => {
-    const posts = await query<WPPost & { cat_name?: string; cat_slug?: string }>(
-        `SELECT p.*, 
-            (SELECT t.name FROM wp_term_relationships tr
-             INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'category'
-             INNER JOIN wp_terms t ON tt.term_id = t.term_id
-             WHERE tr.object_id = p.ID LIMIT 1) AS cat_name,
-            (SELECT t.slug FROM wp_term_relationships tr
-             INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'category'
-             INNER JOIN wp_terms t ON tt.term_id = t.term_id
-             WHERE tr.object_id = p.ID LIMIT 1) AS cat_slug
-     FROM wp_posts p
-     WHERE p.post_name = ? 
-       AND p.post_type IN ('post', 'project')
-       AND p.post_status = 'publish'
-     LIMIT 1`,
-        [slug]
-    );
+    try {
+        const posts = await query<WPPost & { cat_name?: string; cat_slug?: string }>(
+            `SELECT p.*, 
+                (SELECT t.name FROM wp_term_relationships tr
+                 INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'category'
+                 INNER JOIN wp_terms t ON tt.term_id = t.term_id
+                 WHERE tr.object_id = p.ID LIMIT 1) AS cat_name,
+                (SELECT t.slug FROM wp_term_relationships tr
+                 INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'category'
+                 INNER JOIN wp_terms t ON tt.term_id = t.term_id
+                 WHERE tr.object_id = p.ID LIMIT 1) AS cat_slug
+         FROM wp_posts p
+         WHERE p.post_name = ? 
+           AND p.post_type IN ('post', 'project')
+           AND p.post_status = 'publish'
+         LIMIT 1`,
+            [slug]
+        );
 
-    if (!posts.length) return null;
-    const post = posts[0];
-    return transformPost(post, post.cat_name || 'Tin tức', post.cat_slug || 'tin-tuc');
+        if (!posts.length) return null;
+        const post = posts[0];
+        return transformPost(post, post.cat_name || 'Tin tức', post.cat_slug || 'tin-tuc');
+    } catch (error) {
+        console.error(`Error fetching post by slug (${slug}):`, error);
+        return null;
+    }
 });
 
 /**
@@ -231,7 +237,7 @@ export async function getCategories(): Promise<Category[]> {
 
     return cats.map((cat) => ({
         id: cat.term_id,
-        name: cat.name,
+        name: decodeHTMLEntities(cat.name),
         slug: cat.slug,
         count: cat.count,
         color: getCategoryColor(cat.slug),
