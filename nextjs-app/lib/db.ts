@@ -63,6 +63,7 @@ async function createSSHTunnel(): Promise<number> {
             port: parseInt(process.env.SSH_PORT || '22'),
             username: process.env.SSH_USER || 'root',
             password: sshPassword,
+            readyTimeout: 10000, // 10s timeout
         });
     });
 }
@@ -86,8 +87,9 @@ export async function getDB(): Promise<mysql.Pool> {
                 password: process.env.DB_PASSWORD || '',
                 database: process.env.DB_NAME || '',
                 waitForConnections: true,
-                connectionLimit: 5, // Lower limit for serverless environment
+                connectionLimit: 5,
                 queueLimit: 0,
+                connectTimeout: 10000, // 10s timeout
             });
             console.log('SSH tunnel and DB pool created successfully.');
         } catch (error) {
@@ -106,6 +108,7 @@ export async function getDB(): Promise<mysql.Pool> {
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0,
+            connectTimeout: 10000, // 10s timeout
         });
     }
 
