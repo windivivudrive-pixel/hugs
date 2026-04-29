@@ -125,12 +125,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
                         <div className="bg-brand-pink text-white p-4 flex justify-between items-center shrink-0 shadow-sm relative z-10">
                             <div className="flex items-center gap-3">
                                 <div className="bg-white/20 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center p-1.5 shrink-0 overflow-hidden">
-                                    <motion.img
+                                    <img
                                         src="/chatbot icon.png"
                                         alt="Bot Assistant"
-                                        className="w-full h-full object-contain"
-                                        animate={{ rotate: [-12, 12, -12] }}
-                                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                                        className="w-full h-full object-contain chatbot-wobble"
                                     />
                                 </div>
                                 <div>
@@ -245,16 +243,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
                                 transition={{ duration: 0.15 }}
                                 className="w-full h-full flex items-center justify-center p-1.5"
                             >
-                                <motion.img
+                                <img
                                     src="/chatbot icon.png"
                                     alt="Chat"
-                                    className="w-full h-full object-contain drop-shadow-lg"
-                                    animate={{ rotate: [-12, 12, -12] }}
-                                    transition={{
-                                        repeat: Infinity,
-                                        duration: 2.5,
-                                        ease: "easeInOut"
-                                    }}
+                                    className="w-full h-full object-contain drop-shadow-lg chatbot-wobble"
                                 />
                             </motion.div>
                         )}
@@ -266,6 +258,18 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onOpenChange }) => {
                     )}
                 </motion.button>
             </motion.div>
+
+            {/* CSS wobble animation - GPU accelerated, zero JS overhead */}
+            <style>{`
+                @keyframes chatbot-wobble {
+                    0%, 100% { transform: rotate(-12deg); }
+                    50% { transform: rotate(12deg); }
+                }
+                .chatbot-wobble {
+                    animation: chatbot-wobble 2.5s ease-in-out infinite;
+                    will-change: transform;
+                }
+            `}</style>
         </>
     );
 };

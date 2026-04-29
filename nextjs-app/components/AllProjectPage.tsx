@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { fetchServices, fetchAllArticles, fetchProjectCategories } from '@/lib/actions-client';
+import { fetchServices, fetchAllArticles, fetchProjectCategories, fetchIndustries } from '@/lib/actions-client';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { PageNavbar } from '@/components/ui/PageNavbar';
@@ -25,10 +25,13 @@ export const AllProjectPage: React.FC = () => {
     const [featuredProjects, setFeaturedProjects] = useState<any[]>([]);
     const [allProjects, setAllProjects] = useState<any[]>([]);
     const [categories, setCategories] = useState<any[]>([]);
+    const [industries, setIndustries] = useState<any[]>([]);
     const [services, setServices] = useState<any[]>([]); // To look up service by slug
     const [loading, setLoading] = useState(true);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedIndustryId, setSelectedIndustryId] = useState<number | null>(null);
+
     const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
     const [visibleCount, setVisibleCount] = useState(8);
 
@@ -75,6 +78,10 @@ export const AllProjectPage: React.FC = () => {
                 const cats = await fetchProjectCategories();
                 setCategories(cats);
 
+                // Fetch industries
+                const inds = await fetchIndustries();
+                setIndustries(inds);
+
             } catch (err) {
                 console.error('Error fetching projects:', err);
             } finally {
@@ -92,6 +99,7 @@ export const AllProjectPage: React.FC = () => {
             if (s) {
                 setSelectedServiceId(s.id);
                 setSelectedCategory(null); // Clear category filter if service is selected
+                setSelectedIndustryId(null);
             }
         } else if (!serviceSlug) {
             setSelectedServiceId(null);
@@ -130,6 +138,9 @@ export const AllProjectPage: React.FC = () => {
             // For now, if we match against category, we just check if categories intersect
             // In the legacy system, it was p.service_category_id
             return p.service_category_id === selectedCategory;
+        }
+        if (selectedIndustryId) {
+            return p.project_industry_ids?.includes(selectedIndustryId);
         }
         return true;
     });
@@ -268,25 +279,13 @@ export const AllProjectPage: React.FC = () => {
 
                         {/* Category Filter */}
                         <div className="flex flex-wrap gap-2">
-                            <button
-                                onClick={() => {
-                                    setSelectedCategory(null);
-                                    setSelectedServiceId(null);
-                                    window.history.pushState({}, '', '/projects');
-                                }}
-                                className={`px-4 py-2 text-sm font-medium transition-colors ${!selectedCategory && !selectedServiceId
-                                    ? 'bg-brand-pink text-white'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`}
-                            >
-                                {t('projectPage.all')}
-                            </button>
                             {categories.slice(0, 5).map(cat => (
                                 <button
                                     key={cat.id}
                                     onClick={() => {
                                         setSelectedCategory(cat.id);
                                         setSelectedServiceId(null);
+                                        setSelectedIndustryId(null);
                                         window.history.pushState({}, '', '/projects');
                                     }}
                                     className={`px-4 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
@@ -298,6 +297,42 @@ export const AllProjectPage: React.FC = () => {
                                 </button>
                             ))}
                         </div>
+                    </div>
+
+                    {/* Industry Filter (Hashtags) */}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                        <button
+                            onClick={() => {
+                                setSelectedCategory(null);
+                                setSelectedServiceId(null);
+                                setSelectedIndustryId(null);
+                                window.history.pushState({}, '', '/projects');
+                            }}
+                            className={`px-4 py-2 text-xs font-medium transition-all duration-300 border ${
+                                !selectedCategory && !selectedServiceId && !selectedIndustryId
+                                ? 'bg-brand-pink text-white border-brand-pink shadow-md scale-105' 
+                                : 'bg-white text-gray-600 border-gray-200 hover:border-brand-pink hover:text-brand-pink'
+                            }`}
+                        >
+                            {t('projectPage.all')}
+                        </button>
+                        {industries.map(ind => (
+                            <button
+                                key={ind.id}
+                                onClick={() => {
+                                    setSelectedIndustryId(selectedIndustryId === ind.id ? null : ind.id);
+                                    setSelectedCategory(null);
+                                    setSelectedServiceId(null);
+                                }}
+                                className={`px-4 py-2 text-xs font-medium transition-all duration-300 border ${
+                                    selectedIndustryId === ind.id 
+                                    ? 'bg-brand-pink text-white border-brand-pink shadow-md scale-105' 
+                                    : 'bg-white text-gray-600 border-gray-200 hover:border-brand-pink hover:text-brand-pink'
+                                }`}
+                            >
+                                {ind.name}
+                            </button>
+                        ))}
                     </div>
 
                     {/* Projects Grid - Horizontal Cards */}
@@ -344,9 +379,19 @@ export const AllProjectPage: React.FC = () => {
 
                                         {/* Content */}
                                         <div className="flex-1 p-5 flex flex-col justify-center">
-                                            <span className="text-brand-pink text-xs font-bold uppercase tracking-wide mb-2">
-                                                {(project as any).service?.name || project.category || t('nav.projects').toUpperCase()}
-                                            </span>
+                                            <div className="flex items-center justify-start flex-wrap gap-x-2 gap-y-1 mb-2">
+                                                <span className="text-brand-pink text-xs font-bold uppercase tracking-wide">
+                                                    {(project as any).service?.name || project.category || t('nav.projects').toUpperCase()}
+                                                </span>
+                                                {project.project_industry_ids && project.project_industry_ids.length > 0 && industries.find(i => i.id === project.project_industry_ids[0]) && (
+                                                    <>
+                                                        <span className="text-gray-300 hidden md:inline">&bull;</span>
+                                                        <span className="text-brand-pink text-[10px] font-medium px-2 py-0.5 bg-brand-pink/5 border border-brand-pink/20">
+                                                            {industries.find(i => i.id === project.project_industry_ids[0]).name}
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
                                             <h3 className="text-gray-900 font-bold text-base md:text-lg line-clamp-2 mb-3 group-hover:text-brand-pink transition-colors">
                                                 {project.title}
                                             </h3>

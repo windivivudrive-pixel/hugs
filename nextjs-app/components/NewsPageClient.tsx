@@ -74,7 +74,63 @@ export const NewsPageClient: React.FC<{
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+
+        let mounted = true;
+
+        const autoLoadAll = async () => {
+            setLoadingMore(true);
+            let currentOffset = initialArticles.length;
+            let keepFetching = true;
+            const fetchLimit = 30; // Reduced to avoid overwhelming WP
+
+            while (keepFetching && mounted) {
+                try {
+                    const res = await fetch(`/api/news?limit=${fetchLimit}&offset=${currentOffset}`);
+                    const data = await res.json();
+
+                    if (data.articles && data.articles.length > 0) {
+                        setArticles(prev => {
+                            const existingIds = new Set(prev.map((a: NewsArticle) => a.id));
+                            const newArticles = data.articles.filter((a: NewsArticle) => !existingIds.has(a.id));
+                            return [...prev, ...newArticles];
+                        });
+                        currentOffset += data.articles.length;
+                    }
+
+                    if (!data.hasMore || !data.articles || data.articles.length === 0) {
+                        keepFetching = false;
+                        if (mounted) setHasMore(false);
+                    } else {
+                        // Add a delay to avoid overwhelming the server
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                } catch (error) {
+                    console.error('Error auto-loading articles:', error);
+                    keepFetching = false;
+                }
+            }
+
+            if (mounted) {
+                setLoadingMore(false);
+            }
+        };
+
+        // Start auto-loading if there are more articles to fetch
+        if (initialArticles.length > 0 && initialArticles.length < totalCount) {
+            const timer = setTimeout(() => {
+                autoLoadAll();
+            }, 1000); // 1s delay to prioritize initial page render
+
+            return () => {
+                mounted = false;
+                clearTimeout(timer);
+            };
+        }
+
+        return () => {
+            mounted = false;
+        };
+    }, [initialArticles.length, totalCount]);
 
     // Load remaining articles in background after initial render
     const loadMoreArticles = async () => {

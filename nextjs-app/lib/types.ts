@@ -75,9 +75,12 @@ export interface ServiceArticle {
   service_id: string;
   logo?: string;
   project_category_id?: string;
+  project_category_ids?: number[];
+  project_industry_ids?: number[];
   service_category_id?: string;
   category?: string;
   project_category?: ProjectCategory;
+  industry?: { id: string; name: string };
   created_at?: string;
   views?: number;
 }

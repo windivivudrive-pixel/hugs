@@ -92,9 +92,10 @@ export const SocialSection: React.FC = () => {
     const isManualScrolling = useRef(false);
     const manualScrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    // Auto-scroll effect using requestAnimationFrame for reliability
+    // Auto-scroll effect - only runs when section is visible (IntersectionObserver)
     const directionRef = useRef<'right' | 'left'>('right');
     directionRef.current = direction;
+    const isVisibleRef = useRef(false);
 
     useEffect(() => {
         const container = scrollContainerRef.current;
@@ -104,7 +105,7 @@ export const SocialSection: React.FC = () => {
         const scrollSpeed = 0.8; // pixels per frame
 
         const step = () => {
-            if (!isManualScrolling.current) {
+            if (!isManualScrolling.current && isVisibleRef.current) {
                 if (directionRef.current === 'right') {
                     container.scrollLeft += scrollSpeed;
                     if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 1) {
@@ -117,11 +118,30 @@ export const SocialSection: React.FC = () => {
                     }
                 }
             }
-            animationId = requestAnimationFrame(step);
+            // Only continue loop if visible
+            if (isVisibleRef.current) {
+                animationId = requestAnimationFrame(step);
+            }
         };
 
-        animationId = requestAnimationFrame(step);
-        return () => cancelAnimationFrame(animationId);
+        // IntersectionObserver: start/stop loop based on visibility
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisibleRef.current = entry.isIntersecting;
+                if (entry.isIntersecting) {
+                    // Resume loop
+                    animationId = requestAnimationFrame(step);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observer.observe(container);
+
+        return () => {
+            cancelAnimationFrame(animationId);
+            observer.disconnect();
+        };
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

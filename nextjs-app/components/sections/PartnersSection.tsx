@@ -76,19 +76,10 @@ export const PartnersSection: React.FC = () => {
                     <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
                     <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-                    {/* First row - scrolling left */}
+                    {/* First row - scrolling left (CSS animation) */}
                     <div className="flex overflow-hidden mb-4 md:mb-6 pb-4">
-                        <motion.div
-                            className="flex gap-4 md:gap-8 items-center"
-                            animate={{ x: ['0%', '-50%'] }}
-                            transition={{
-                                x: {
-                                    repeat: Infinity,
-                                    repeatType: 'loop',
-                                    duration: 60,
-                                    ease: 'linear',
-                                },
-                            }}
+                        <div
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-left"
                         >
                             {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                                 <div
@@ -103,22 +94,13 @@ export const PartnersSection: React.FC = () => {
                                     />
                                 </div>
                             ))}
-                        </motion.div>
+                        </div>
                     </div>
 
-                    {/* Second row - scrolling right */}
+                    {/* Second row - scrolling right (CSS animation) */}
                     <div className="flex overflow-hidden pb-4">
-                        <motion.div
-                            className="flex gap-4 md:gap-8 items-center"
-                            animate={{ x: ['-50%', '0%'] }}
-                            transition={{
-                                x: {
-                                    repeat: Infinity,
-                                    repeatType: 'loop',
-                                    duration: 70,
-                                    ease: 'linear',
-                                },
-                            }}
+                        <div
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-right"
                         >
                             {[...partnerLogos.slice().reverse(), ...partnerLogos.slice().reverse()].map((partner, index) => (
                                 <div
@@ -133,10 +115,29 @@ export const PartnersSection: React.FC = () => {
                                     />
                                 </div>
                             ))}
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
 
+                {/* CSS Marquee Animations - GPU accelerated, zero JS overhead */}
+                <style>{`
+                    @keyframes partners-scroll-left {
+                        from { transform: translateX(0%); }
+                        to { transform: translateX(-50%); }
+                    }
+                    @keyframes partners-scroll-right {
+                        from { transform: translateX(-50%); }
+                        to { transform: translateX(0%); }
+                    }
+                    .partners-marquee-left {
+                        animation: partners-scroll-left 60s linear infinite;
+                        will-change: transform;
+                    }
+                    .partners-marquee-right {
+                        animation: partners-scroll-right 70s linear infinite;
+                        will-change: transform;
+                    }
+                `}</style>
 
             </div>
         </section>

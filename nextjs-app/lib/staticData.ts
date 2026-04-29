@@ -45,3 +45,18 @@ export const STATIC_SERVICES = [
         slug: "seeding"
     }
 ];
+
+export const STATIC_INDUSTRIES = [
+    { id: 'bat-dong-san', name: 'Bất động sản' },
+    { id: 'nha-hang-khach-san', name: 'Nhà hàng khách sạn' },
+    { id: 'fnb', name: 'F&B' },
+    { id: 'xay-dung', name: 'Xây dựng' },
+    { id: 'thoi-trang', name: 'Thời trang' },
+    { id: 'giao-duc', name: 'Giáo dục' },
+    { id: 'y-te', name: 'Y tế' },
+    { id: 'khac', name: 'Khác' },
+];
+
+export const PROJECT_INDUSTRY_MAP: Record<string, string> = {
+    // Example: "19210": "bat-dong-san"
+};

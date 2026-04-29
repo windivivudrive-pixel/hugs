@@ -43,10 +43,11 @@ export const CultureSection: React.FC = () => {
 
     const cultureImages = [
         '/team-all.png',
-        '/team-man1.png',
-        '/team-girl.png',
-        '/team-editor.png',
-        '/team-girl3.png',
+        '/team-man1 1.png',
+        '/team-girl 1.png',
+        '/team-editor 1.png',
+        '/team-girl3 1.png',
+        '/team-development.png',
     ];
 
     const imageIndex = Math.abs(page % cultureImages.length);
@@ -108,17 +109,15 @@ export const CultureSection: React.FC = () => {
                         {/* Block 1: Về chúng tôi */}
                         <motion.div className="mb-12" variants={fadeUpChild}>
                             {/* Section label */}
-                            <div className="flex items-center gap-2 mb-6">
-                                <motion.div
-                                    className="w-8 h-[2px] bg-brand-pink"
-                                    initial={{ scaleX: 0 }}
-                                    whileInView={{ scaleX: 1 }}
-                                    transition={{ duration: 0.7, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    style={{ originX: 0 }}
-                                />
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.aboutLabel')}</span>
-                            </div>
+                            <motion.div
+                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                {t('cultureSection.aboutLabel')}
+                            </motion.div>
 
                             {/* Title */}
                             <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-8 leading-tight">
@@ -136,17 +135,15 @@ export const CultureSection: React.FC = () => {
                         {/* Block 2: Tư Duy */}
                         <motion.div className="mb-10" variants={fadeUpChild}>
                             {/* Section label */}
-                            <div className="flex items-center gap-2 mb-6">
-                                <motion.div
-                                    className="w-8 h-[2px] bg-brand-pink"
-                                    initial={{ scaleX: 0 }}
-                                    whileInView={{ scaleX: 1 }}
-                                    transition={{ duration: 0.7, delay: 0.4 }}
-                                    viewport={{ once: true }}
-                                    style={{ originX: 0 }}
-                                />
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.mindsetLabel')}</span>
-                            </div>
+                            <motion.div
+                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                                viewport={{ once: true }}
+                            >
+                                {t('cultureSection.mindsetLabel')}
+                            </motion.div>
 
                             {/* Description */}
                             <div className="space-y-6 text-gray-900 leading-relaxed">
@@ -156,32 +153,21 @@ export const CultureSection: React.FC = () => {
                             </div>
                         </motion.div>
 
-                        {/* Core values - icons with pop-in */}
                         <motion.div className="flex flex-wrap gap-4 mb-10" variants={fadeUpChild}>
-                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
+                            <motion.div className="flex items-center gap-2 bg-white border border-brand-pink/30 px-4 py-2 rounded-full shadow-sm" variants={popIn}>
                                 <Lightbulb size={18} className="text-brand-pink" />
                                 <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.innovative')}</span>
                             </motion.div>
-                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
+                            <motion.div className="flex items-center gap-2 bg-white border border-brand-pink/30 px-4 py-2 rounded-full shadow-sm" variants={popIn}>
                                 <MapPin size={18} className="text-brand-pink" />
                                 <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.local')}</span>
                             </motion.div>
-                            <motion.div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full" variants={popIn}>
+                            <motion.div className="flex items-center gap-2 bg-white border border-brand-pink/30 px-4 py-2 rounded-full shadow-sm" variants={popIn}>
                                 <Users size={18} className="text-brand-pink" />
                                 <span className="text-sm font-medium text-gray-700">{t('cultureSection.values.personnel')}</span>
                             </motion.div>
                         </motion.div>
 
-                        {/* CTA */}
-                        <motion.button
-                            className="group flex items-center gap-3 bg-brand-pink text-white px-8 py-4 rounded-full text-sm font-bold shadow-lg shadow-brand-pink/25 hover:shadow-xl hover:shadow-brand-pink/30 transition-all"
-                            variants={fadeUpChild}
-                            whileHover={{ scale: 1.02, x: 5 }}
-                            whileTap={{ scale: 0.98 }}
-                        >
-                            {t('cultureSection.ctaButton')}
-                            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                        </motion.button>
                     </motion.div>
 
                     {/* Right - Visual with floating badges */}
@@ -274,7 +260,7 @@ export const CultureSection: React.FC = () => {
                                             }
                                         }}
                                         alt={`HUGs Team ${imageIndex + 1}`}
-                                        className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white px-2"
+                                        className={`absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white px-2 ${cultureImages[imageIndex] === '/team-development.png' ? 'scale-90' : ''}`}
                                     />
                                 </AnimatePresence>
                             </div>
@@ -282,13 +268,13 @@ export const CultureSection: React.FC = () => {
                             {/* Navigation buttons */}
                             <button
                                 onClick={() => paginate(-1)}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border border-brand-pink/30"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border-2 border-brand-pink"
                             >
                                 <ChevronLeft size={20} className="text-brand-pink" />
                             </button>
                             <button
                                 onClick={() => paginate(1)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border border-brand-pink/30"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border-2 border-brand-pink"
                             >
                                 <ChevronRight size={20} className="text-brand-pink" />
                             </button>
@@ -319,17 +305,15 @@ export const CultureSection: React.FC = () => {
                         {/* Block 1: Triển khai */}
                         <motion.div className="mb-12" variants={fadeUpChild}>
                             {/* Section label */}
-                            <div className="flex items-center gap-2 mb-6">
-                                <motion.div
-                                    className="w-8 h-[2px] bg-brand-pink"
-                                    initial={{ scaleX: 0 }}
-                                    whileInView={{ scaleX: 1 }}
-                                    transition={{ duration: 0.7, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    style={{ originX: 0 }}
-                                />
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.implementationLabel')}</span>
-                            </div>
+                            <motion.div
+                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                {t('cultureSection.implementationLabel')}
+                            </motion.div>
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
@@ -342,17 +326,15 @@ export const CultureSection: React.FC = () => {
                         {/* Block 2: Giá trị */}
                         <motion.div variants={fadeUpChild}>
                             {/* Section label */}
-                            <div className="flex items-center gap-2 mb-6">
-                                <motion.div
-                                    className="w-8 h-[2px] bg-brand-pink"
-                                    initial={{ scaleX: 0 }}
-                                    whileInView={{ scaleX: 1 }}
-                                    transition={{ duration: 0.7, delay: 0.4 }}
-                                    viewport={{ once: true }}
-                                    style={{ originX: 0 }}
-                                />
-                                <span className="text-brand-pink font-semibold text-base uppercase tracking-wider">{t('cultureSection.valueLabel')}</span>
-                            </div>
+                            <motion.div
+                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                                viewport={{ once: true }}
+                            >
+                                {t('cultureSection.valueLabel')}
+                            </motion.div>
 
                             {/* Description */}
                             <div className="space-y-4 text-gray-900 leading-relaxed">
