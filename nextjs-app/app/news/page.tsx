@@ -1,4 +1,4 @@
-import { getPublishedPostsLite, getCategories, getPostCount } from "@/lib/wordpress";
+import { fetchNewsArticles, fetchCategories, fetchPostCount } from "@/lib/actions-server";
 
 export const revalidate = 120;
 import { NewsPageClient } from "@/components/NewsPageClient";
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 export default async function NewsRoute() {
   // Fetch only first batch (30 posts) for fast initial load
   const [initialArticles, categories, totalCount] = await Promise.all([
-    getPublishedPostsLite(30, 0),
-    getCategories(),
-    getPostCount(),
+    fetchNewsArticles(30, 0),
+    fetchCategories(),
+    fetchPostCount(),
   ]);
   
   return (

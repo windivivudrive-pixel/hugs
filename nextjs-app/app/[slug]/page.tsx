@@ -1,5 +1,5 @@
 import { getPostBySlug } from "@/lib/wordpress";
-import { fetchAllArticles } from "@/lib/actions-server";
+import { fetchAllArticles, fetchArticleBySlug } from "@/lib/actions-server";
 
 export const revalidate = 120;
 import { ArticlePageClient } from "@/components/ArticlePageClient";
@@ -28,8 +28,8 @@ async function getArticleData(slug: string) {
     };
   }
 
-  // Fallback to MySQL DB for news
-  return await getPostBySlug(slug);
+  // Fallback to REST API for news posts
+  return await fetchArticleBySlug(slug);
 }
 
 export async function generateMetadata(

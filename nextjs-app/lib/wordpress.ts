@@ -33,8 +33,8 @@ function transformPost(
     let content = post.post_content || '';
 
     // Replace backend domain with frontend domain for internal links
-    content = content.replaceAll('https://admin.everliving.app', 'https://hugs.agency');
-    content = content.replaceAll('http://admin.everliving.app', 'https://hugs.agency');
+    content = content.replaceAll('https://admin.hugs.agency', 'https://hugs.agency');
+    content = content.replaceAll('http://admin.hugs.agency', 'https://hugs.agency');
 
     return {
         id: post.ID,

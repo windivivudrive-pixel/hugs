@@ -58,7 +58,7 @@ array_map(function ($file) use ($sage_error) {
     if (!locate_template($file, true, true)) {
         $sage_error(sprintf(__('Error locating <code>%s</code> for inclusion.', 'sage'), $file), 'File not found');
     }
-}, ['helpers', 'setup', 'filters', 'admin', 'resize', 'functionPlus', 'post-types/fields']);
+}, ['helpers', 'setup', 'filters', 'admin', 'resize', 'functionPlus', 'post-types/fields', 'post-types/projects', 'post-types/recruitments']);
 add_filter( 'big_image_size_threshold', '__return_false' );
 /**
  * Here's what's happening with these hooks:
