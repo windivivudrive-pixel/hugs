@@ -56,6 +56,7 @@ export const fetchAllArticles = async (): Promise<any[]> => {
             ...item,
             title: decodeHTMLEntities(item.title),
             category: decodeHTMLEntities(item.category),
+            content: (item.content || '').replaceAll('https://admin.hugs.agency', 'https://hugs.agency').replaceAll('http://admin.hugs.agency', 'https://hugs.agency'),
         }));
     } catch (e) {
         console.error("fetchAllArticles error:", e);
@@ -101,7 +102,7 @@ export const fetchArticleBySlug = async (slug: string): Promise<any | null> => {
             title: decodeHTMLEntities(stripHtml(post.title.rendered)),
             slug: post.slug,
             excerpt: decodeHTMLEntities(stripHtml(post.excerpt.rendered)),
-            content: post.content.rendered,
+            content: post.content.rendered.replaceAll('https://admin.hugs.agency', 'https://hugs.agency').replaceAll('http://admin.hugs.agency', 'https://hugs.agency'),
             thumbnail: media?.source_url || null,
             category: decodeHTMLEntities(category?.name || 'Tin tức'),
             category_slug: category?.slug || 'tin-tuc',
@@ -167,7 +168,7 @@ export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<any[]> 
                 title: decodeHTMLEntities(stripHtml(post.title.rendered)),
                 slug: post.slug,
                 excerpt: decodeHTMLEntities(stripHtml(post.excerpt.rendered)),
-                content: post.content.rendered,
+                content: post.content.rendered.replaceAll('https://admin.hugs.agency', 'https://hugs.agency').replaceAll('http://admin.hugs.agency', 'https://hugs.agency'),
                 thumbnail: media?.source_url || null,
                 category: decodeHTMLEntities(category?.name || 'Tin tức'),
                 category_slug: category?.slug || 'tin-tuc',
