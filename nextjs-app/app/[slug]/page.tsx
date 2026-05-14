@@ -1,4 +1,4 @@
-import { getPostBySlug } from "@/lib/wordpress";
+
 import { fetchAllArticles, fetchArticleBySlug } from "@/lib/actions-server";
 
 export const revalidate = 120;

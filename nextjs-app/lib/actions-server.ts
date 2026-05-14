@@ -35,7 +35,7 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<any[]
     return all.filter(a => a.service?.slug === serviceSlug);
 };
 
-import { getProjectsLite } from './wordpress';
+
 
 export const fetchAllArticles = async (): Promise<any[]> => {
     try {

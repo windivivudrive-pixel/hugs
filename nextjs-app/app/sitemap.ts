@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { getPublishedPosts, getCategories } from '@/lib/wordpress';
+import { fetchNewsArticles } from '@/lib/actions-server';
 
 export const revalidate = 120;
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // Dynamic article routes
-    const posts = await getPublishedPosts(100, 0); // Get latest 100 for sitemap
+    const posts = await fetchNewsArticles(100, 0); // Get latest 100 for sitemap
     
     const articleRoutes = posts.map((post) => ({
       url: `${baseUrl}/${post.slug}`,
