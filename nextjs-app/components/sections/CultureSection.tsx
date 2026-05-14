@@ -172,7 +172,7 @@ export const CultureSection: React.FC = () => {
 
                     {/* Right - Visual with floating badges */}
                     <motion.div
-                        className="order-1 lg:order-2 relative"
+                        className="order-1 lg:order-2 relative lg:translate-x-10"
                         initial={{ opacity: 0, x: 60, scale: 0.95 }}
                         whileInView={{ opacity: 1, x: 0, scale: 1 }}
                         transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
@@ -180,40 +180,44 @@ export const CultureSection: React.FC = () => {
                     >
                         {/* Main image */}
                         <div className="relative">
-                            <img
-                                src="/culture2.png"
-                                alt="HUGs Agency Culture"
-                                loading="lazy"
-                                className="w-full h-auto object-contain"
-                            />
+                            <div className="relative rounded-xl overflow-hidden ">
+                                <video
+                                    src="/laptop.mov"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="w-full h-auto object-cover scale-[1.15]"
+                                />
+                            </div>
 
                             {/* Stats badge - top right (refined size) */}
                             <motion.div
-                                className="absolute -top-3 -right-2 bg-brand-pink text-white shadow-lg px-4 py-2 z-20"
+                                className="absolute -top-3 right-[22px] bg-brand-pink text-white shadow-lg px-3 py-1 md:px-4 md:py-2 z-20"
                                 initial={{ opacity: 0, scale: 0.6, y: -15 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 transition={{ type: "spring" as const, stiffness: 180, damping: 22, delay: 0.8 }}
                                 viewport={{ once: true }}
                             >
-                                <div className="text-xl font-black">2021</div>
-                                <div className="text-[10px] opacity-90 uppercase tracking-wider">{t('cultureSection.stats.established')}</div>
+                                <div className="text-lg md:text-xl font-black">2021</div>
+                                <div className="text-[8px] md:text-[10px] opacity-90 uppercase tracking-wider">{t('cultureSection.stats.established')}</div>
                             </motion.div>
 
                             {/* Location badge - bottom left (refined size) */}
                             <motion.div
-                                className="absolute -bottom-3 -left-3 bg-white shadow-xl p-4 z-20 border border-gray-100"
+                                className="absolute -bottom-3 -left-3 bg-white shadow-xl p-2 md:p-4 z-20 border border-gray-100"
                                 initial={{ opacity: 0, scale: 0.6, y: 15 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 transition={{ type: "spring" as const, stiffness: 180, damping: 22, delay: 0.7 }}
                                 viewport={{ once: true }}
                             >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-brand-pink/10 flex items-center justify-center rounded-lg">
-                                        <MapPin className="text-brand-pink" size={20} />
+                                <div className="flex items-center gap-2 md:gap-3">
+                                    <div className="w-8 h-8 md:w-10 md:h-10 bg-brand-pink/10 flex items-center justify-center rounded-lg">
+                                        <MapPin className="text-brand-pink" size={16} />
                                     </div>
                                     <div>
-                                        <div className="text-base font-black text-gray-900 leading-tight">{t('cultureSection.stats.location')}</div>
-                                        <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mt-1">{t('cultureSection.stats.region')}</div>
+                                        <div className="text-sm md:text-base font-black text-gray-900 leading-tight">{t('cultureSection.stats.location')}</div>
+                                        <div className="text-[8px] md:text-[10px] font-medium text-gray-500 uppercase tracking-wide mt-0.5 md:mt-1">{t('cultureSection.stats.region')}</div>
                                     </div>
                                 </div>
                             </motion.div>

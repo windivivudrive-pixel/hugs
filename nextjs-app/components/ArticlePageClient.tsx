@@ -159,7 +159,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
                 >
                     {/* Render content - supports both HTML (from Quill) and markdown */}
                     <div
-                        className="article-content text-gray-700 whitespace-pre-wrap"
+                        className="article-content text-gray-700"
                         dangerouslySetInnerHTML={{
                             __html: (() => {
                                 const content = displayArticle.content || (displayArticle as any).excerpt || '';

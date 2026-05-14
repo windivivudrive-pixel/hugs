@@ -30,7 +30,12 @@ function transformPost(
     categoryName = 'Tin tức',
     categorySlug = 'tin-tuc'
 ): NewsArticle {
-    const content = post.post_content || '';
+    let content = post.post_content || '';
+
+    // Replace backend domain with frontend domain for internal links
+    content = content.replaceAll('https://admin.everliving.app', 'https://hugs.agency');
+    content = content.replaceAll('http://admin.everliving.app', 'https://hugs.agency');
+
     return {
         id: post.ID,
         title: decodeHTMLEntities(post.post_title),
@@ -125,10 +130,13 @@ export async function getPublishedPostsLite(
             // Build thumbnail URL from attachment file path if available
             let thumbnail: string | null = null;
             if (post.featured_image) {
-                // If it's a full URL, use as-is; otherwise construct WordPress upload URL
+                // If it's a full URL, use as-is; otherwise construct R2/WordPress upload URL
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const uploadPath = post.featured_image.startsWith('/') ? post.featured_image : `/uploads/${post.featured_image}`;
+                
                 thumbnail = post.featured_image.startsWith('http')
                     ? post.featured_image
-                    : `https://hugs.agency/wp-content/uploads/${post.featured_image}`;
+                    : `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
             }
             return {
                 ...transformPost(post, post.cat_name || 'Tin tức', post.cat_slug || 'tin-tuc'),
@@ -316,4 +324,57 @@ export async function searchPosts(
     return posts.map((post) =>
         transformPost(post, post.cat_name || 'Tin tức', post.cat_slug || 'tin-tuc')
     );
+}
+
+/**
+ * Fetch all projects efficiently
+ */
+export async function getProjectsLite(): Promise<any[]> {
+    try {
+        const projects = await query<any>(
+            `SELECT p.ID as id, p.post_name as slug, p.post_title as title,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_thumbnail_url' LIMIT 1) as thumbnail_url,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_logo' LIMIT 1) as logo,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_yoast_wpseo_primary_industry' LIMIT 1) as industry_id,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_service_id' LIMIT 1) as service_id,
+                (SELECT t.name FROM wp_term_relationships tr
+                 INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'project_category'
+                 INNER JOIN wp_terms t ON tt.term_id = t.term_id
+                 WHERE tr.object_id = p.ID LIMIT 1) as category_name
+         FROM wp_posts p
+         WHERE p.post_type = 'projects' 
+           AND p.post_status = 'publish'
+         ORDER BY p.post_date DESC
+         LIMIT 1000`
+        );
+
+        return projects.map((p) => {
+            let thumbnail = p.thumbnail_url;
+            if (thumbnail && !thumbnail.startsWith('http')) {
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const uploadPath = thumbnail.startsWith('/') ? thumbnail : `/uploads/${thumbnail}`;
+                thumbnail = `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
+            }
+            let logo = p.logo;
+            if (logo && !logo.startsWith('http')) {
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const uploadPath = logo.startsWith('/') ? logo : `/uploads/${logo}`;
+                logo = `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
+            }
+
+            return {
+                id: p.id,
+                slug: p.slug,
+                title: decodeHTMLEntities(p.title),
+                thumbnail: thumbnail || null,
+                logo: logo || null,
+                category: decodeHTMLEntities(p.category_name || 'Tất cả'),
+                project_industry_ids: p.industry_id ? [parseInt(p.industry_id)] : [],
+                service: { name: 'Dịch vụ' } // Mocking service name or it would require another join
+            };
+        });
+    } catch (error) {
+        console.error("getProjectsLite error:", error);
+        return [];
+    }
 }

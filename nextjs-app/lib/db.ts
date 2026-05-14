@@ -1,6 +1,8 @@
 import mysql from 'mysql2/promise';
 import { Client } from 'ssh2';
 import net from 'net';
+import fs from 'fs';
+import path from 'path';
 
 let pool: mysql.Pool | null = null;
 let tunnelReady = false;
@@ -14,8 +16,10 @@ async function createSSHTunnel(): Promise<number> {
 
     const sshHost = process.env.SSH_HOST;
     const sshPassword = process.env.SSH_PASSWORD;
+    const sshPrivateKeyPath = process.env.SSH_PRIVATE_KEY_PATH;
+    const sshPassphrase = process.env.SSH_PASSPHRASE;
 
-    if (!sshHost || !sshPassword) {
+    if (!sshHost || (!sshPassword && !sshPrivateKeyPath)) {
         return parseInt(process.env.DB_PORT || '3306');
     }
 
@@ -58,13 +62,37 @@ async function createSSHTunnel(): Promise<number> {
 
         ssh.on('error', reject);
 
-        ssh.connect({
+        const connectConfig: any = {
             host: sshHost,
             port: parseInt(process.env.SSH_PORT || '22'),
             username: process.env.SSH_USER || 'root',
-            password: sshPassword,
-            readyTimeout: 10000, // 10s timeout
-        });
+            readyTimeout: 15000,
+        };
+
+        if (sshPrivateKeyPath) {
+            try {
+                // Handle both absolute and relative paths
+                const absolutePath = path.isAbsolute(sshPrivateKeyPath) 
+                    ? sshPrivateKeyPath 
+                    : path.resolve(process.cwd(), sshPrivateKeyPath);
+                connectConfig.privateKey = fs.readFileSync(absolutePath);
+                if (sshPassphrase) {
+                    connectConfig.passphrase = sshPassphrase;
+                }
+            } catch (err) {
+                console.error(`Error reading SSH Private Key at ${sshPrivateKeyPath}:`, err);
+                if (!sshPassword) {
+                    reject(new Error(`Failed to read SSH Private Key and no password provided: ${err}`));
+                    return;
+                }
+            }
+        }
+
+        if (sshPassword) {
+            connectConfig.password = sshPassword;
+        }
+
+        ssh.connect(connectConfig);
     });
 }
 

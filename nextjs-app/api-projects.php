@@ -19,7 +19,7 @@ $query = "
            MAX(CASE WHEN pm.meta_key = '_hugs_logo' THEN pm.meta_value END) as logo
     FROM {$wpdb->posts} p
     LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-    WHERE p.post_type = 'project' AND p.post_status = 'publish'
+    WHERE p.post_type = 'projects' AND p.post_status = 'publish'
     GROUP BY p.ID
     ORDER BY CAST(MAX(CASE WHEN pm.meta_key = '_hugs_display_order' THEN pm.meta_value END) AS UNSIGNED) ASC, p.post_date DESC
     LIMIT 200
