@@ -1,4 +1,4 @@
-import { getPublishedPostsLite } from "@/lib/wordpress";
+import { fetchNewsArticles } from "@/lib/actions-server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0');
 
     try {
-        const articles = await getPublishedPostsLite(limit, offset);
+        const articles = await fetchNewsArticles(limit, offset);
         return NextResponse.json({ articles, hasMore: articles.length === limit });
     } catch (error) {
         console.error('Error fetching news:', error);
