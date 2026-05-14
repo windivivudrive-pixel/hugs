@@ -50,7 +50,7 @@ export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false 
       <WelcomeCube />
 
       {/* Hero Section - appears after WelcomeCube scroll */}
-      <div className="min-h-screen overflow-hidden relative z-10">
+      <div className="md:min-h-screen relative z-10">
         <HeroSection />
       </div>
 

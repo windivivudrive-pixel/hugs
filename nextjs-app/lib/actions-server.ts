@@ -3,7 +3,7 @@ import { decodeHTMLEntities } from './utils';
 
 
 // Define cache tags for revalidation if needed
-const API_URL = 'https://hugs.agency/wp-json/wp/v2';
+const API_URL = 'https://admin.everliving.app/wp-json/wp/v2';
 import { STATIC_SERVICES } from './staticData';export const fetchServices = async (): Promise<any[]> => {
     return STATIC_SERVICES;
 };
@@ -35,13 +35,15 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<any[]
     return all.filter(a => a.service?.slug === serviceSlug);
 };
 
+import { getProjectsLite } from './wordpress';
+
 export const fetchAllArticles = async (): Promise<any[]> => {
     try {
         const revalidate = 120;
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
         
-        const res = await fetch(`https://hugs.agency/api-projects.php`, { 
+        const res = await fetch(`https://admin.everliving.app/api-projects.php`, { 
             next: { revalidate },
             signal: controller.signal
         });

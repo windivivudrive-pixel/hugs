@@ -31,6 +31,6 @@ function register_project_industry_taxonomy() {
         'show_in_rest'      => true, // Expose to Gutenberg and REST API
     );
 
-    register_taxonomy( 'industry', array( 'project' ), $args );
+    register_taxonomy( 'industry', array( 'projects' ), $args );
 }
 add_action( 'init', 'register_project_industry_taxonomy', 0 );
