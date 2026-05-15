@@ -2,9 +2,10 @@ import { fetchInitialFeeds, fetchCategories } from "@/lib/actions-server";
 import { NewsPageClient } from "@/components/NewsPageClient";
 import type { Metadata } from "next";
 
-// Force dynamic rendering — the news page queries the DB via SSH tunnel
-// which is not available during the static build phase on Vercel.
-export const dynamic = 'force-dynamic';
+// ISR: pre-render at build time, revalidate every 5 minutes in background.
+// Initial data comes from WP REST API (works at build & runtime).
+// SSH/DB is only used for "load more" cursor pagination (client-side API calls).
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Tin tức & Góc nhìn | HUGs Agency",
@@ -16,8 +17,6 @@ export const metadata: Metadata = {
 };
 
 export default async function NewsRoute() {
-  // Fetch top 10 posts per category in one query — every section guaranteed content.
-  // If DB is unavailable, fetchInitialFeeds returns empty feeds gracefully.
   const [initialFeeds, categories] = await Promise.all([
     fetchInitialFeeds(10),
     fetchCategories(),

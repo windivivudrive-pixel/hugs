@@ -300,24 +300,41 @@ function isFeedsEmpty(feeds: Record<string, CategoryFeedResult>): boolean {
 }
 
 /**
- * Fetch initial feeds: top 10 posts per category in one query.
- * Primary: SSH tunnel → MariaDB (ROW_NUMBER window function).
- * Fallback: WP REST API per-category (when DB unavailable on Vercel).
+ * Fetch initial feeds: top N posts per category.
+ *
+ * Strategy (ISR-compatible):
+ *  1. PRIMARY — WP REST API (works at build time, Next.js caches each fetch).
+ *     Always used so Vercel can pre-render the page at deploy time.
+ *  2. OPTIONAL — MariaDB via SSH tunnel (richer data, real-time counts).
+ *     Only attempted at RUNTIME when SSH_PRIVATE_KEY is explicitly set.
+ *     If DB returns richer results they replace the REST API results.
+ *
+ * This lets /news use `revalidate = 300` (ISR) instead of force-dynamic:
+ * - First visitor → pre-rendered HTML from CDN, 0ms wait
+ * - Googlebot/LLM crawlers → full HTML, no JS required → perfect SEO/GEO
+ * - Background revalidation every 5 min → always fresh content
  */
 export const fetchInitialFeeds = async (
     perCategory: number = 10
 ): Promise<Record<string, CategoryFeedResult>> => {
-    try {
-        const feeds = await getTopPostsPerCategory(NEWS_CATEGORY_SLUGS, perCategory);
-        // If DB returned results, use them
-        if (!isFeedsEmpty(feeds)) return feeds;
-        // DB connected but no posts found — try REST API
-        console.log('fetchInitialFeeds: DB returned empty, falling back to REST API');
-        return await fetchFeedsFromRestAPI(perCategory);
-    } catch (e) {
-        console.error('fetchInitialFeeds DB error, falling back to REST API:', e);
-        return await fetchFeedsFromRestAPI(perCategory);
+    // Step 1: Always fetch from WP REST API first (works at build + runtime)
+    const restFeeds = await fetchFeedsFromRestAPI(perCategory);
+
+    // Step 2: If SSH_PRIVATE_KEY is set, we're at runtime on Vercel with DB access.
+    // Try DB for richer data (ROW_NUMBER, exact hasMore count, etc.)
+    const hasSshKey = !!process.env.SSH_PRIVATE_KEY || !!process.env.SSH_PRIVATE_KEY_PATH;
+    if (hasSshKey) {
+        try {
+            const dbFeeds = await getTopPostsPerCategory(NEWS_CATEGORY_SLUGS, perCategory);
+            if (!isFeedsEmpty(dbFeeds)) {
+                return dbFeeds; // DB data is richer, prefer it
+            }
+        } catch {
+            // DB unavailable — REST API result is already ready
+        }
     }
+
+    return restFeeds;
 };
 
 /**
