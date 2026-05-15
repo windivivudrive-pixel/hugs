@@ -115,44 +115,45 @@ export const ServicesSection: React.FC = () => {
                                 })}
                             </div>
 
-                            {/* Right - Article Preview with Browser Frame */}
+                            {/* Right - All images pre-rendered, shown via opacity */}
                             <div className="relative hidden lg:block lg:col-span-6">
-                                <AnimatePresence mode="wait">
-                                    {activeService && (
-                                        <div
-                                            className="flex items-start justify-center pr-8"
-                                            style={{
-                                                transform: `translateY(${hoveredIndex * 40}px)`,
-                                                transition: 'transform 0.15s ease-out'
-                                            }}
-                                        >
-                                            {/* Clickable container */}
-                                            <Link href={`/projects?service=${activeService.slug}`}
-                                                className="relative w-full max-w-xl aspect-[4/3] bg-gray-900 overflow-hidden shadow-2xl block group rounded-lg"
-                                            >
-                                                {/* Browser-like frame */}
-                                                <div className="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-3 gap-1.5 z-10">
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
-                                                </div>
-
-                                                {/* Article image */}
-                                                <div className="pt-8 h-full relative">
-                                                    <Image
-                                                        src={`/thumb-service/${hoveredIndex + 1}.png`}
-                                                        alt={activeService.name}
-                                                        fill
-                                                        priority
-                                                        sizes="50vw"
-                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                                    />
-
-                                                </div>
-                                            </Link>
+                                <div
+                                    className="flex items-start justify-center pr-8"
+                                    style={{
+                                        transform: `translateY(${hoveredIndex * 40}px)`,
+                                        transition: 'transform 0.15s ease-out'
+                                    }}
+                                >
+                                    {/* Outer frame always visible */}
+                                    <Link href={`/projects?service=${activeService?.slug || ''}`}
+                                        className="relative w-full max-w-xl aspect-[4/3] bg-gray-900 overflow-hidden shadow-2xl block group rounded-lg"
+                                    >
+                                        {/* Browser-like frame */}
+                                        <div className="absolute top-0 left-0 right-0 h-8 bg-gray-800 flex items-center px-3 gap-1.5 z-10">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                                            <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                                         </div>
-                                    )}
-                                </AnimatePresence>
+
+                                        {/* All images stacked — only active is visible */}
+                                        <div className="pt-8 h-full relative">
+                                            {services.map((_, idx) => (
+                                                <Image
+                                                    key={idx}
+                                                    src={`/thumb-service/${idx + 1}.png`}
+                                                    alt={services[idx]?.name || ''}
+                                                    fill
+                                                    priority={idx === 0}
+                                                    sizes="50vw"
+                                                    className={`object-cover transition-opacity duration-200 ${
+                                                        idx === hoveredIndex ? 'opacity-100' : 'opacity-0'
+                                                    }`}
+                                                    style={{ transitionProperty: 'opacity' }}
+                                                />
+                                            ))}
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
 
