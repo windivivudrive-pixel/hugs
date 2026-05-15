@@ -1,5 +1,6 @@
 
 import { fetchAllArticles, fetchArticleBySlug } from "@/lib/actions-server";
+import { type ServiceArticle } from "@/lib/types";
 
 export const revalidate = 120;
 import { ArticlePageClient } from "@/components/ArticlePageClient";
@@ -14,7 +15,7 @@ type Props = {
 async function getArticleData(slug: string) {
   // First, check if it's a project via fast REST endpoint
   const projects = await fetchAllArticles();
-  const project = projects.find((p: any) => p.slug === slug);
+  const project = projects.find((p: ServiceArticle) => p.slug === slug);
   
   if (project) {
     // Map project shape to expected NewsArticle shape

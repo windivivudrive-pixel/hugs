@@ -1,13 +1,13 @@
 'use server';
 import { decodeHTMLEntities, stripHtml } from './utils';
-import { type ServiceArticle, type NewsArticle, type Category, type ProjectCategory } from './types';
+import { type ServiceArticle, type NewsArticle, type Category, type ProjectCategory, type ServiceItem, type ServiceCategory } from './types';
 import { STATIC_SERVICES } from './staticData';
 
 // Define cache tags for revalidation if needed
 const API_URL = 'https://admin.hugs.agency/wp-json/wp/v2';
 
-export const fetchServices = async (): Promise<ServiceArticle[]> => {
-    return STATIC_SERVICES as ServiceArticle[];
+export const fetchServices = async (): Promise<ServiceItem[]> => {
+    return STATIC_SERVICES as ServiceItem[];
 };
 
 export const fetchServiceCategories = async (): Promise<ServiceCategory[]> => {
@@ -158,7 +158,7 @@ export const fetchPostCount = async (): Promise<number> => {
     }
 };
 
-export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<Partial<NewsArticle>[]> => {
+export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<NewsArticle[]> => {
     try {
         const revalidate = 120;
         const res = await fetch(`${API_URL}/posts?per_page=${limit}&offset=${offset}&_embed`, { next: { revalidate } });
@@ -176,7 +176,7 @@ export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<Partial
                 'wp:term'?: { name: string; slug: string }[][];
                 'wp:featuredmedia'?: { source_url: string }[];
             }
-        }) => {
+        }): NewsArticle => {
             const embedded = post._embedded;
             const category = embedded?.['wp:term']?.[0]?.[0];
             const media = embedded?.['wp:featuredmedia']?.[0];
@@ -190,6 +190,8 @@ export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<Partial
                 thumbnail: media?.source_url || null,
                 category: decodeHTMLEntities(category?.name || 'Tin tức'),
                 category_slug: category?.slug || 'tin-tuc',
+                author: 'Admin',
+                views: 0,
                 created_at: post.date,
                 updated_at: post.modified,
             };
