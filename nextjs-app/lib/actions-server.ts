@@ -217,22 +217,106 @@ const NEWS_CATEGORY_SLUGS = [
     'tin-hugs-agency',
 ];
 
+const WP_API = 'https://admin.hugs.agency/wp-json/wp/v2';
+
+/**
+ * Fetch per-category feeds via WP REST API.
+ * Used as fallback when DB/SSH is unavailable (e.g. Vercel cold start).
+ */
+async function fetchFeedsFromRestAPI(
+    perCategory: number
+): Promise<Record<string, CategoryFeedResult>> {
+    const result: Record<string, CategoryFeedResult> = {};
+    for (const slug of NEWS_CATEGORY_SLUGS) {
+        result[slug] = { articles: [], cursor: null, hasMore: false };
+    }
+
+    try {
+        // 1. Fetch all WP categories in one call
+        const catRes = await fetch(`${WP_API}/categories?per_page=100&slug=${NEWS_CATEGORY_SLUGS.join(',')}`, {
+            next: { revalidate: 300 },
+        });
+        if (!catRes.ok) return result;
+        const cats: { id: number; name: string; slug: string; count: number }[] = await catRes.json();
+
+        // 2. For each category, fetch latest posts
+        await Promise.all(
+            cats.map(async (cat) => {
+                try {
+                    const postsRes = await fetch(
+                        `${WP_API}/posts?categories=${cat.id}&per_page=${perCategory}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia`,
+                        { next: { revalidate: 120 } }
+                    );
+                    if (!postsRes.ok) return;
+
+                    const total = parseInt(postsRes.headers.get('x-wp-total') || '0', 10);
+                    const posts: {
+                        id: number;
+                        title: { rendered: string };
+                        slug: string;
+                        excerpt: { rendered: string };
+                        date: string;
+                        modified: string;
+                        _embedded?: { 'wp:featuredmedia'?: { source_url: string }[] };
+                    }[] = await postsRes.json();
+
+                    const articles: NewsArticle[] = posts.map((p) => ({
+                        id: p.id,
+                        title: decodeHTMLEntities(stripHtml(p.title.rendered)),
+                        slug: p.slug,
+                        excerpt: decodeHTMLEntities(stripHtml(p.excerpt.rendered)),
+                        content: '',
+                        thumbnail: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+                        category: decodeHTMLEntities(cat.name),
+                        category_slug: cat.slug,
+                        author: 'Admin',
+                        views: 0,
+                        created_at: p.date,
+                        updated_at: p.modified,
+                    }));
+
+                    result[cat.slug] = {
+                        articles,
+                        cursor: articles.length > 0 ? `${articles[articles.length - 1].created_at}__${articles[articles.length - 1].id}` : null,
+                        hasMore: total > perCategory,
+                    };
+                } catch {
+                    // leave this category empty
+                }
+            })
+        );
+    } catch (e) {
+        console.error('fetchFeedsFromRestAPI error:', e);
+    }
+
+    return result;
+}
+
+/**
+ * Check if all feed values are empty (DB returned no results).
+ */
+function isFeedsEmpty(feeds: Record<string, CategoryFeedResult>): boolean {
+    return Object.values(feeds).every(f => f.articles.length === 0);
+}
+
 /**
  * Fetch initial feeds: top 10 posts per category in one query.
- * Used by the news page SSR.
+ * Primary: SSH tunnel → MariaDB (ROW_NUMBER window function).
+ * Fallback: WP REST API per-category (when DB unavailable on Vercel).
  */
 export const fetchInitialFeeds = async (
     perCategory: number = 10
 ): Promise<Record<string, CategoryFeedResult>> => {
     try {
-        return await getTopPostsPerCategory(NEWS_CATEGORY_SLUGS, perCategory);
+        const feeds = await getTopPostsPerCategory(NEWS_CATEGORY_SLUGS, perCategory);
+        // If DB returned results, use them
+        if (!isFeedsEmpty(feeds)) return feeds;
+        // DB connected but no posts found — try REST API
+        console.log('fetchInitialFeeds: DB returned empty, falling back to REST API');
+        return await fetchFeedsFromRestAPI(perCategory);
     } catch (e) {
-        console.error('fetchInitialFeeds error:', e);
-        const empty: Record<string, CategoryFeedResult> = {};
-        for (const slug of NEWS_CATEGORY_SLUGS) {
-            empty[slug] = { articles: [], cursor: null, hasMore: false };
-        }
-        return empty;
+        console.error('fetchInitialFeeds DB error, falling back to REST API:', e);
+        return await fetchFeedsFromRestAPI(perCategory);
     }
 };
 
