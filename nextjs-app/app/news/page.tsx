@@ -1,4 +1,4 @@
-import { fetchNewsArticles, fetchCategories, fetchPostCount } from "@/lib/actions-server";
+import { fetchInitialFeeds, fetchCategories } from "@/lib/actions-server";
 
 export const revalidate = 120;
 import { NewsPageClient } from "@/components/NewsPageClient";
@@ -14,18 +14,16 @@ export const metadata: Metadata = {
 };
 
 export default async function NewsRoute() {
-  // Fetch only first batch (30 posts) for fast initial load
-  const [initialArticles, categories, totalCount] = await Promise.all([
-    fetchNewsArticles(30, 0),
+  // Fetch top 10 posts per category in one query — every section guaranteed content
+  const [initialFeeds, categories] = await Promise.all([
+    fetchInitialFeeds(10),
     fetchCategories(),
-    fetchPostCount(),
   ]);
   
   return (
     <NewsPageClient 
-      initialArticles={initialArticles} 
+      initialFeeds={initialFeeds}
       categories={categories}
-      totalCount={totalCount}
     />
   );
 }

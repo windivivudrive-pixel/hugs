@@ -182,3 +182,54 @@ export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<any[]> 
     }
 };
 
+// ============================================================
+// PER-CATEGORY FEED (production-ready)
+// ============================================================
+
+import { getTopPostsPerCategory, getPostsByCategoryCursor, type CategoryFeedResult } from './wordpress';
+
+/** Category slugs used on the news page */
+const NEWS_CATEGORY_SLUGS = [
+    'tin-marketing',
+    'xu-huong',
+    'gioi-tre',
+    'su-kien',
+    'tin-hugs-agency',
+];
+
+/**
+ * Fetch initial feeds: top 10 posts per category in one query.
+ * Used by the news page SSR.
+ */
+export const fetchInitialFeeds = async (
+    perCategory: number = 10
+): Promise<Record<string, CategoryFeedResult>> => {
+    try {
+        return await getTopPostsPerCategory(NEWS_CATEGORY_SLUGS, perCategory);
+    } catch (e) {
+        console.error('fetchInitialFeeds error:', e);
+        const empty: Record<string, CategoryFeedResult> = {};
+        for (const slug of NEWS_CATEGORY_SLUGS) {
+            empty[slug] = { articles: [], cursor: null, hasMore: false };
+        }
+        return empty;
+    }
+};
+
+/**
+ * Fetch next page for a specific category using keyset cursor.
+ * Used by the load-more API route.
+ */
+export const fetchCategoryPage = async (
+    categorySlug: string,
+    cursor: string | null,
+    limit: number = 10
+): Promise<CategoryFeedResult> => {
+    try {
+        return await getPostsByCategoryCursor(categorySlug, cursor, limit);
+    } catch (e) {
+        console.error('fetchCategoryPage error:', e);
+        return { articles: [], cursor: null, hasMore: false };
+    }
+};
+
