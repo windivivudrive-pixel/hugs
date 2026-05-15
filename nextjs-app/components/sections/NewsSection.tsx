@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { fetchNewsArticles, NewsArticle } from '@/lib/actions';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';;
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -95,15 +96,13 @@ export const NewsSection: React.FC = () => {
                             onClick={() => handleArticleClick(article)}
                         >
                             {/* Image Container */}
-                            <div className="aspect-[900/598] overflow-hidden mb-4">
-                                <img
+                            <div className="aspect-[900/598] overflow-hidden mb-4 relative">
+                                <Image
                                     src={article.thumbnail || `https://picsum.photos/600/400?random=${index}`}
                                     alt={article.title}
-                                    loading="lazy"
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = `https://picsum.photos/600/400?random=${index}`;
-                                    }}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                             </div>
 

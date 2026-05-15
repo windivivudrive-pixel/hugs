@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, MapPin, Users, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Stagger container variant
@@ -182,7 +183,7 @@ export const CultureSection: React.FC = () => {
                         <div className="relative">
                             <div className="relative rounded-xl overflow-hidden ">
                                 <video
-                                    src="/laptop.mov"
+                                    src="/laptop.mp4"
                                     autoPlay
                                     loop
                                     muted
@@ -239,9 +240,8 @@ export const CultureSection: React.FC = () => {
                         <div className="relative overflow-hidden">
                             <div className="relative w-full aspect-[4/3]">
                                 <AnimatePresence initial={false} custom={direction}>
-                                    <motion.img
+                                    <motion.div
                                         key={page}
-                                        src={cultureImages[imageIndex]}
                                         custom={direction}
                                         variants={variants}
                                         initial="enter"
@@ -263,9 +263,18 @@ export const CultureSection: React.FC = () => {
                                                 paginate(-1);
                                             }
                                         }}
-                                        alt={`HUGs Team ${imageIndex + 1}`}
-                                        className={`absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white px-2 ${cultureImages[imageIndex] === '/team-development.png' ? 'scale-90' : ''}`}
-                                    />
+                                        className="absolute inset-0 w-full h-full"
+                                    >
+                                        <Image
+                                            src={cultureImages[imageIndex]}
+                                            alt={`HUGs Team ${imageIndex + 1}`}
+                                            fill
+                                            priority={imageIndex === 0}
+                                            sizes="(max-width: 768px) 100vw, 50vw"
+                                            className={`object-contain cursor-grab active:cursor-grabbing bg-white px-2 ${cultureImages[imageIndex] === '/team-development.png' ? 'scale-90' : ''}`}
+                                            draggable={false}
+                                        />
+                                    </motion.div>
                                 </AnimatePresence>
                             </div>
 

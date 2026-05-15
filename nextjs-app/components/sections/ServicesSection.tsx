@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { fetchServices, fetchArticlesByService } from '@/lib/actions-client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { STATIC_SERVICES } from '@/lib/staticData';
 
@@ -96,14 +97,12 @@ export const ServicesSection: React.FC = () => {
 
                                                             {/* Image */}
                                                             <div className="pt-6 h-full relative">
-                                                                <img
+                                                                <Image
                                                                     src={`/thumb-service/${thumbIndex}.png`}
                                                                     alt={service.name}
-                                                                    className="w-full h-full object-cover"
-                                                                    loading="lazy"
-                                                                    onError={(e) => {
-                                                                        (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${service.id}`;
-                                                                    }}
+                                                                    fill
+                                                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                                                    className="object-cover"
                                                                 />
 
                                                             </div>
@@ -140,13 +139,13 @@ export const ServicesSection: React.FC = () => {
 
                                                 {/* Article image */}
                                                 <div className="pt-8 h-full relative">
-                                                    <img
+                                                    <Image
                                                         src={`/thumb-service/${hoveredIndex + 1}.png`}
                                                         alt={activeService.name}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                                        onError={(e) => {
-                                                            (e.target as HTMLImageElement).src = `https://picsum.photos/800/600?random=${activeService.id}`;
-                                                        }}
+                                                        fill
+                                                        priority
+                                                        sizes="50vw"
+                                                        className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                     />
 
                                                 </div>
