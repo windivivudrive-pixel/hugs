@@ -81,6 +81,8 @@ export interface ServiceArticle {
   category?: string;
   project_category?: ProjectCategory;
   industry?: { id: string; name: string };
+  service?: { id?: string; name: string; slug: string };
+  featured?: boolean;
   created_at?: string;
   views?: number;
 }

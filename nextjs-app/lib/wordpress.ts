@@ -326,12 +326,250 @@ export async function searchPosts(
     );
 }
 
+// ============================================================
+// PER-CATEGORY FEED QUERIES
+// ============================================================
+
+/**
+ * Cursor object for keyset pagination — encodes (post_date, ID)
+ */
+export interface FeedCursor {
+    d: string;  // post_date ISO string
+    id: number; // post ID
+}
+
+export interface CategoryFeedResult {
+    articles: NewsArticle[];
+    cursor: string | null;  // base64-encoded FeedCursor
+    hasMore: boolean;
+}
+
+function encodeCursor(date: string, id: number): string {
+    return Buffer.from(JSON.stringify({ d: date, id })).toString('base64url');
+}
+
+function decodeCursor(cursor: string): FeedCursor {
+    return JSON.parse(Buffer.from(cursor, 'base64url').toString());
+}
+
+/**
+ * Top-N-per-group: Fetch the latest N posts for each category in a single query.
+ * Uses ROW_NUMBER() window function (MariaDB 10.2+ / MySQL 8.0+).
+ */
+export async function getTopPostsPerCategory(
+    categorySlugs: string[],
+    perCategory: number = 10
+): Promise<Record<string, CategoryFeedResult>> {
+    if (categorySlugs.length === 0) return {};
+
+    try {
+        // Build placeholders for IN clause
+        const placeholders = categorySlugs.map(() => '?').join(',');
+
+        const rows = await query<WPPostLite & {
+            cat_name: string;
+            cat_slug: string;
+            rn: number;
+            cat_total: number;
+        }>(
+            `SELECT sub.*, cat_counts.cat_total
+             FROM (
+               SELECT
+                 p.ID, p.post_title, p.post_name, p.post_excerpt,
+                 p.post_date, p.post_modified, p.post_status,
+                 t.name   AS cat_name,
+                 t.slug   AS cat_slug,
+                 COALESCE(
+                   (SELECT pm2.meta_value FROM wp_postmeta pm
+                    INNER JOIN wp_posts p2 ON pm.meta_value = p2.ID
+                    INNER JOIN wp_postmeta pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_wp_attached_file'
+                    WHERE pm.post_id = p.ID AND pm.meta_key = '_thumbnail_id' LIMIT 1),
+                   NULL
+                 ) AS featured_image,
+                 ROW_NUMBER() OVER (
+                   PARTITION BY t.slug
+                   ORDER BY p.post_date DESC, p.ID DESC
+                 ) AS rn
+               FROM wp_posts p
+               INNER JOIN wp_term_relationships tr ON p.ID = tr.object_id
+               INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                 AND tt.taxonomy = 'category'
+               INNER JOIN wp_terms t ON tt.term_id = t.term_id
+               WHERE p.post_type = 'post'
+                 AND p.post_status = 'publish'
+                 AND t.slug IN (${placeholders})
+             ) sub
+             LEFT JOIN (
+               SELECT t.slug AS cat_slug, COUNT(DISTINCT p.ID) AS cat_total
+               FROM wp_posts p
+               INNER JOIN wp_term_relationships tr ON p.ID = tr.object_id
+               INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                 AND tt.taxonomy = 'category'
+               INNER JOIN wp_terms t ON tt.term_id = t.term_id
+               WHERE p.post_type = 'post'
+                 AND p.post_status = 'publish'
+                 AND t.slug IN (${placeholders})
+               GROUP BY t.slug
+             ) cat_counts ON sub.cat_slug = cat_counts.cat_slug
+             WHERE sub.rn <= ?
+             ORDER BY sub.cat_slug, sub.post_date DESC, sub.ID DESC`,
+            [...categorySlugs, ...categorySlugs, perCategory]
+        );
+
+        // Group results by category slug
+        const result: Record<string, CategoryFeedResult> = {};
+
+        // Initialize all categories
+        for (const slug of categorySlugs) {
+            result[slug] = { articles: [], cursor: null, hasMore: false };
+        }
+
+        for (const row of rows) {
+            const slug = row.cat_slug;
+            if (!result[slug]) continue;
+
+            // Build thumbnail URL
+            let thumbnail: string | null = null;
+            if (row.featured_image) {
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const uploadPath = row.featured_image.startsWith('/') ? row.featured_image : `/uploads/${row.featured_image}`;
+                thumbnail = row.featured_image.startsWith('http')
+                    ? row.featured_image
+                    : `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
+            }
+
+            const article = {
+                ...transformPost(row, row.cat_name, row.cat_slug),
+                thumbnail,
+            };
+
+            result[slug].articles.push(article);
+            result[slug].hasMore = (row.cat_total || 0) > perCategory;
+        }
+
+        // Set cursor to last article in each category
+        for (const slug of Object.keys(result)) {
+            const arts = result[slug].articles;
+            if (arts.length > 0) {
+                const last = arts[arts.length - 1];
+                result[slug].cursor = encodeCursor(last.created_at, last.id);
+            }
+        }
+
+        return result;
+    } catch (error) {
+        console.error('getTopPostsPerCategory error:', error);
+        // Return empty feeds for all categories
+        const result: Record<string, CategoryFeedResult> = {};
+        for (const slug of categorySlugs) {
+            result[slug] = { articles: [], cursor: null, hasMore: false };
+        }
+        return result;
+    }
+}
+
+/**
+ * Keyset (cursor-based) pagination for a single category.
+ * Uses (post_date, ID) composite cursor for stable, fast pagination.
+ */
+export async function getPostsByCategoryCursor(
+    categorySlug: string,
+    cursor: string | null,
+    limit: number = 10
+): Promise<CategoryFeedResult> {
+    try {
+        let posts: (WPPostLite & { cat_name: string; cat_slug: string })[];
+
+        const baseSelect = `
+            SELECT
+              p.ID, p.post_title, p.post_name, p.post_excerpt,
+              p.post_date, p.post_modified, p.post_status,
+              t.name AS cat_name, t.slug AS cat_slug,
+              COALESCE(
+                (SELECT pm2.meta_value FROM wp_postmeta pm
+                 INNER JOIN wp_posts p2 ON pm.meta_value = p2.ID
+                 INNER JOIN wp_postmeta pm2 ON p2.ID = pm2.post_id AND pm2.meta_key = '_wp_attached_file'
+                 WHERE pm.post_id = p.ID AND pm.meta_key = '_thumbnail_id' LIMIT 1),
+                NULL
+              ) AS featured_image
+            FROM wp_posts p
+            INNER JOIN wp_term_relationships tr ON p.ID = tr.object_id
+            INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+              AND tt.taxonomy = 'category'
+            INNER JOIN wp_terms t ON tt.term_id = t.term_id
+            WHERE t.slug = ?
+              AND p.post_type = 'post'
+              AND p.post_status = 'publish'`;
+
+        if (cursor) {
+            const { d: cursorDate, id: cursorId } = decodeCursor(cursor);
+            posts = await query(
+                `${baseSelect}
+                  AND (p.post_date < ? OR (p.post_date = ? AND p.ID < ?))
+                ORDER BY p.post_date DESC, p.ID DESC
+                LIMIT ?`,
+                [categorySlug, cursorDate, cursorDate, cursorId, limit + 1]
+            );
+        } else {
+            posts = await query(
+                `${baseSelect}
+                ORDER BY p.post_date DESC, p.ID DESC
+                LIMIT ?`,
+                [categorySlug, limit + 1]
+            );
+        }
+
+        // Fetch limit+1 to check hasMore
+        const hasMore = posts.length > limit;
+        if (hasMore) posts = posts.slice(0, limit);
+
+        const articles: NewsArticle[] = posts.map((row) => {
+            let thumbnail: string | null = null;
+            if (row.featured_image) {
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const uploadPath = row.featured_image.startsWith('/') ? row.featured_image : `/uploads/${row.featured_image}`;
+                thumbnail = row.featured_image.startsWith('http')
+                    ? row.featured_image
+                    : `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
+            }
+            return {
+                ...transformPost(row, row.cat_name, row.cat_slug),
+                thumbnail,
+            };
+        });
+
+        let nextCursor: string | null = null;
+        if (hasMore && articles.length > 0) {
+            const last = articles[articles.length - 1];
+            nextCursor = encodeCursor(last.created_at, last.id);
+        }
+
+        return { articles, cursor: nextCursor, hasMore };
+    } catch (error) {
+        console.error('getPostsByCategoryCursor error:', error);
+        return { articles: [], cursor: null, hasMore: false };
+    }
+}
+
 /**
  * Fetch all projects efficiently
  */
-export async function getProjectsLite(): Promise<any[]> {
+import { type ServiceArticle } from './types';
+
+export async function getProjectsLite(): Promise<ServiceArticle[]> {
     try {
-        const projects = await query<any>(
+        interface ProjectRow {
+            id: number;
+            slug: string;
+            title: string;
+            thumbnail_url: string | null;
+            logo: string | null;
+            industry_id: string | null;
+            service_id: string | null;
+            category_name: string | null;
+        }
+
+        const projects = await query<ProjectRow>(
             `SELECT p.ID as id, p.post_name as slug, p.post_title as title,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_thumbnail_url' LIMIT 1) as thumbnail_url,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_logo' LIMIT 1) as logo,
@@ -348,7 +586,7 @@ export async function getProjectsLite(): Promise<any[]> {
          LIMIT 1000`
         );
 
-        return projects.map((p) => {
+        return projects.map((p): ServiceArticle => {
             let thumbnail = p.thumbnail_url;
             if (thumbnail && !thumbnail.startsWith('http')) {
                 const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
@@ -363,14 +601,14 @@ export async function getProjectsLite(): Promise<any[]> {
             }
 
             return {
-                id: p.id,
+                id: String(p.id),
                 slug: p.slug,
                 title: decodeHTMLEntities(p.title),
-                thumbnail: thumbnail || null,
-                logo: logo || null,
+                thumbnail: thumbnail || '',
+                logo: logo || undefined,
                 category: decodeHTMLEntities(p.category_name || 'Tất cả'),
                 project_industry_ids: p.industry_id ? [parseInt(p.industry_id)] : [],
-                service: { name: 'Dịch vụ' } // Mocking service name or it would require another join
+                service_id: p.service_id || '',
             };
         });
     } catch (error) {
