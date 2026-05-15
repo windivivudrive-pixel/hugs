@@ -554,9 +554,22 @@ export async function getPostsByCategoryCursor(
 /**
  * Fetch all projects efficiently
  */
-export async function getProjectsLite(): Promise<any[]> {
+import { type ServiceArticle } from './types';
+
+export async function getProjectsLite(): Promise<ServiceArticle[]> {
     try {
-        const projects = await query<any>(
+        interface ProjectRow {
+            id: number;
+            slug: string;
+            title: string;
+            thumbnail_url: string | null;
+            logo: string | null;
+            industry_id: string | null;
+            service_id: string | null;
+            category_name: string | null;
+        }
+
+        const projects = await query<ProjectRow>(
             `SELECT p.ID as id, p.post_name as slug, p.post_title as title,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_thumbnail_url' LIMIT 1) as thumbnail_url,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_logo' LIMIT 1) as logo,
@@ -573,7 +586,7 @@ export async function getProjectsLite(): Promise<any[]> {
          LIMIT 1000`
         );
 
-        return projects.map((p) => {
+        return projects.map((p): ServiceArticle => {
             let thumbnail = p.thumbnail_url;
             if (thumbnail && !thumbnail.startsWith('http')) {
                 const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
@@ -588,14 +601,14 @@ export async function getProjectsLite(): Promise<any[]> {
             }
 
             return {
-                id: p.id,
+                id: String(p.id),
                 slug: p.slug,
                 title: decodeHTMLEntities(p.title),
-                thumbnail: thumbnail || null,
-                logo: logo || null,
+                thumbnail: thumbnail || '',
+                logo: logo || undefined,
                 category: decodeHTMLEntities(p.category_name || 'Tất cả'),
                 project_industry_ids: p.industry_id ? [parseInt(p.industry_id)] : [],
-                service: { name: 'Dịch vụ' } // Mocking service name or it would require another join
+                service_id: p.service_id || '',
             };
         });
     } catch (error) {

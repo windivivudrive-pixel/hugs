@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, ChevronRight, TrendingUp, Clock, Flame, Headphones } from 'lucide-react';
-import { NewsArticle } from '@/lib/types';
+import { NewsArticle, Category } from '@/lib/types';
 import { PageNavbar } from '@/components/ui/PageNavbar';
 import { FooterSection } from '@/components/ui/FooterSection';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -62,8 +62,8 @@ export const NewsPageClient: React.FC<{
         cursor: string | null;
         hasMore: boolean;
     }>;
-    categories: any[];
-}> = ({ initialFeeds, categories }) => {
+    categories: Category[];
+}> = ({ initialFeeds }) => {
     const { t } = useLanguage();
 
     // ─── Per-category feed state ───

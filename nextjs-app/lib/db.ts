@@ -6,7 +6,7 @@ import path from 'path';
 
 let pool: mysql.Pool | null = null;
 let tunnelReady = false;
-let localProxyPort = 3307;
+const localProxyPort = 3307;
 
 /**
  * Create TCP server proxy over SSH tunnel
@@ -17,9 +17,10 @@ async function createSSHTunnel(): Promise<number> {
     const sshHost = process.env.SSH_HOST;
     const sshPassword = process.env.SSH_PASSWORD;
     const sshPrivateKeyPath = process.env.SSH_PRIVATE_KEY_PATH;
+    const sshPrivateKeyContent = process.env.SSH_PRIVATE_KEY;
     const sshPassphrase = process.env.SSH_PASSPHRASE;
 
-    if (!sshHost || (!sshPassword && !sshPrivateKeyPath)) {
+    if (!sshHost || (!sshPassword && !sshPrivateKeyPath && !sshPrivateKeyContent)) {
         return parseInt(process.env.DB_PORT || '3306');
     }
 
@@ -43,7 +44,7 @@ async function createSSHTunnel(): Promise<number> {
                 );
             });
 
-            server.on('error', (err: any) => {
+            server.on('error', (err: { code?: string }) => {
                 if (err.code === 'EADDRINUSE') {
                     // Port already in use — another module already created the tunnel
                     tunnelReady = true;
@@ -62,33 +63,49 @@ async function createSSHTunnel(): Promise<number> {
 
         ssh.on('error', reject);
 
-        const connectConfig: any = {
+        interface SSHConnectConfig {
+            host: string;
+            port: number;
+            username: string;
+            readyTimeout: number;
+            privateKey?: string | Buffer;
+            passphrase?: string;
+            password?: string;
+        }
+
+        const connectConfig: SSHConnectConfig = {
             host: sshHost,
             port: parseInt(process.env.SSH_PORT || '22'),
             username: process.env.SSH_USER || 'root',
-            readyTimeout: 15000,
+            readyTimeout: 30000, // Increased timeout for slow connections
         };
 
-        if (sshPrivateKeyPath) {
+        if (sshPrivateKeyContent) {
+            connectConfig.privateKey = sshPrivateKeyContent;
+            if (sshPassphrase) {
+                connectConfig.passphrase = sshPassphrase;
+            }
+        } else if (sshPrivateKeyPath) {
             try {
                 // Handle both absolute and relative paths
                 const absolutePath = path.isAbsolute(sshPrivateKeyPath) 
                     ? sshPrivateKeyPath 
                     : path.resolve(process.cwd(), sshPrivateKeyPath);
-                connectConfig.privateKey = fs.readFileSync(absolutePath);
-                if (sshPassphrase) {
-                    connectConfig.passphrase = sshPassphrase;
+                
+                if (fs.existsSync(absolutePath)) {
+                    connectConfig.privateKey = fs.readFileSync(absolutePath);
+                    if (sshPassphrase) {
+                        connectConfig.passphrase = sshPassphrase;
+                    }
+                } else {
+                    console.warn(`SSH Private Key not found at ${absolutePath}. Falling back to other auth methods.`);
                 }
             } catch (err) {
                 console.error(`Error reading SSH Private Key at ${sshPrivateKeyPath}:`, err);
-                if (!sshPassword) {
-                    reject(new Error(`Failed to read SSH Private Key and no password provided: ${err}`));
-                    return;
-                }
             }
         }
 
-        if (sshPassword) {
+        if (sshPassword && !connectConfig.privateKey) {
             connectConfig.password = sshPassword;
         }
 
