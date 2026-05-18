@@ -72,7 +72,7 @@ export function FloatingActionButtons() {
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.2 }}
                     >
-                        <a href="tel:0934688652" className="relative block group">
+                        <a href="tel:0778970999" className="relative block group">
                             {/* Ripple Effects using CSS Keyframes */}
                             <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" />
                             <div className="absolute w-11 h-11 md:w-14 md:h-14 rounded-full bg-brand-pink animate-ripple" style={{ animationDelay: '1s' }} />
