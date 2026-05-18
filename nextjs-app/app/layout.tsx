@@ -27,11 +27,11 @@ const manrope = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "HUGs Agency | Digital Marketing Agency tại Việt Nam",
+    default: "HUGs Agency | Digital Marketing Agency tại Đà Nẵng & Miền Trung",
     template: "%s | HUGs Agency",
   },
   description:
-    "HUGs Agency - Agency Marketing tổng thể tại Việt Nam. Cung cấp dịch vụ quản trị fanpage, quảng cáo đa nền tảng, sản xuất video, thiết kế, SEO và tổ chức sự kiện.",
+    "HUGs Agency - Agency Marketing tổng thể tại Đà Nẵng & Miền Trung. Cung cấp dịch vụ quản trị fanpage, quảng cáo đa nền tảng, sản xuất video, thiết kế, SEO và tổ chức sự kiện.",
   keywords: [
     "marketing agency",
     "digital marketing",
@@ -40,6 +40,10 @@ export const metadata: Metadata = {
     "SEO",
     "social media",
     "HUGs Agency",
+    "agency đà nẵng",
+    "digital marketing đà nẵng",
+    "marketing agency đà nẵng",
+    "seo đà nẵng",
     "agency việt nam",
   ],
   authors: [{ name: "HUGs Agency" }],
@@ -49,16 +53,16 @@ export const metadata: Metadata = {
     locale: "vi_VN",
     url: "https://hugs.agency/",
     siteName: "HUGs Agency",
-    title: "HUGs Agency | Digital Marketing Agency tại Việt Nam",
+    title: "HUGs Agency | Digital Marketing Agency tại Đà Nẵng & Miền Trung",
     description:
-      "HUGs Agency - Agency Marketing tổng thể tại Việt Nam. Cung cấp dịch vụ quản trị fanpage, quảng cáo đa nền tảng, sản xuất video, thiết kế, SEO và tổ chức sự kiện.",
+      "HUGs Agency - Agency Marketing tổng thể tại Đà Nẵng & Miền Trung. Cung cấp dịch vụ quản trị fanpage, quảng cáo đa nền tảng, sản xuất video, thiết kế, SEO và tổ chức sự kiện.",
     images: [{ url: "/logo-hugs.png", width: 800, height: 600, alt: "HUGs Agency" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HUGs Agency | Digital Marketing Agency tại Việt Nam",
+    title: "HUGs Agency | Digital Marketing Agency tại Đà Nẵng & Miền Trung",
     description:
-      "HUGs Agency - Agency Marketing tổng thể tại Việt Nam.",
+      "HUGs Agency - Agency Marketing tổng thể tại Đà Nẵng & Miền Trung.",
     images: ["/logo-hugs.png"],
   },
   robots: { index: true, follow: true },
@@ -78,37 +82,68 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "HUGs Agency",
-              url: "https://hugs.agency",
-              logo: "https://hugs.agency/logo-hugs.png",
-              description: "Agency Marketing tổng thể tại Việt Nam",
-              address: {
-                "@type": "PostalAddress",
-                addressCountry: "VN",
+              "@type": "AdvertisingAgency",
+              "@id": "https://hugs.agency/#agency",
+              "name": "HUGs Agency",
+              "alternateName": "HUGs Digital Marketing Agency",
+              "url": "https://hugs.agency",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://hugs.agency/logo-hugs.png",
+                "width": 800,
+                "height": 600
               },
+              "image": "https://hugs.agency/logo-hugs.png",
+              "description": "HUGs Agency - Agency Marketing tổng thể tại Việt Nam. Cung cấp dịch vụ quản trị fanpage, quảng cáo đa nền tảng, sản xuất video, thiết kế, SEO và tổ chức sự kiện.",
+              "telephone": "+84778970999",
+              "email": "lienhe@hugs.agency",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "55 Lý Thường Kiệt, phường Hải Châu",
+                "addressLocality": "Hải Châu",
+                "addressRegion": "Đà Nẵng",
+                "postalCode": "550000",
+                "addressCountry": "VN"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 16.0754,
+                "longitude": 108.2235
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday"
+                ],
+                "opens": "08:00",
+                "closes": "17:30"
+              },
+              "contactPoint": [
+                {
+                  "@type": "ContactPoint",
+                  "telephone": "+84778970999",
+                  "contactType": "customer service",
+                  "areaServed": "VN",
+                  "availableLanguage": ["Vietnamese", "English"]
+                }
+              ],
+              "sameAs": [
+                "https://www.facebook.com/share/17GUXExbcd/?mibextid=wwXIfr",
+                "https://www.instagram.com/hugs_agency?igsh=MW9hOGkxYmUwaGFyYg==",
+                "https://www.tiktok.com/@hugsagency?_r=1&_t=ZS-93Pejzk3yJW",
+                "https://www.linkedin.com/company/hugs-agency/"
+              ],
+              "priceRange": "$$"
             }),
           }}
         />
       </head>
       <body className={`${manrope.variable} font-sans antialiased`} suppressHydrationWarning>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "HUGs Agency",
-              "url": "https://hugs.agency",
-              "logo": "https://hugs.agency/logo-hugs.png",
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "telephone": "+84 934 68 86 52",
-                "contactType": "customer service"
-              }
-            })
-          }}
-        />
         <Providers>
           {children}
           <FloatingActionButtons />
