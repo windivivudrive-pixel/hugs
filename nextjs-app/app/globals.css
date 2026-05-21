@@ -32,6 +32,16 @@ body {
 }
 
 /* Article content markdown styles */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 90px; /* offset for PageNavbar height */
+}
+
+/* Offset all elements with IDs inside article-content for exact header positioning */
+.article-content [id] {
+    scroll-margin-top: 100px;
+}
+
 .article-content h2 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -61,6 +71,13 @@ body {
     height: auto;
     border-radius: 0.5rem;
     margin: 1.5rem 0;
+}
+
+/* Table of Contents - Hidden completely from frontend viewport */
+.article-content #ez-toc-container,
+.article-content .ez-toc-container,
+.article-content [class*="ez-toc-"] {
+    display: none !important;
 }
 
 .article-content ul {

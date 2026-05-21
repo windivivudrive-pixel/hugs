@@ -43,6 +43,43 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
         }
     }, [isNewsArticle, article?.id]);
 
+    // Format all internal/external links in the article content to open in a new tab
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            const container = document.querySelector('.article-content');
+            if (container) {
+                const links = container.querySelectorAll('a');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href) {
+                        const hashIndex = href.indexOf('#');
+                        if (hashIndex !== -1) {
+                            const pathPart = href.substring(0, hashIndex);
+                            const currentPath = window.location.pathname;
+                            const cleanPathPart = pathPart.replace(window.location.origin, '');
+
+                            const isCurrentPage = 
+                                cleanPathPart === '' || 
+                                cleanPathPart === currentPath || 
+                                cleanPathPart === currentPath + '/' || 
+                                currentPath === cleanPathPart + '/';
+
+                            if (isCurrentPage) {
+                                // Skip local Table of Contents / Hash anchors
+                                return;
+                            }
+                        }
+                        // Set attributes to open all other links (internal/external) in a new tab
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        }, 200);
+
+        return () => clearTimeout(timeoutId);
+    }, [article]);
+
     // SEO Head handled dynamically by Next.js Server Component
     useDocumentHead({
         title: article?.title || 'Bài viết',

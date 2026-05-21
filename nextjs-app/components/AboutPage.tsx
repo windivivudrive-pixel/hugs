@@ -5,8 +5,11 @@ import { ArrowRight, Users, Target, Heart, Zap, ChevronLeft, ChevronRight, MapPi
 import { FooterSection } from '@/components/ui/FooterSection';
 import { PageNavbar } from '@/components/ui/PageNavbar';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentHead } from '@/lib/useDocumentHead';
+
+const MotionImage = motion(Image);
 
 interface SectionProps {
     title: string;
@@ -37,15 +40,16 @@ const StorySection: React.FC<SectionProps> = ({ title, content, image, reverse, 
         </div>
         <div className={`${reverse ? 'lg:order-1' : ''}`}>
             <motion.div
-                className="relative overflow-hidden"
+                className="relative overflow-hidden w-full aspect-[4/3]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
             >
-                <img
+                <Image
                     src={image}
                     alt={title}
-                    loading="lazy"
-                    className="w-full aspect-[4/3] object-contain bg-white"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-contain bg-white"
                 />
             </motion.div>
         </div>
@@ -143,7 +147,7 @@ export const AboutPage: React.FC = () => {
                     <div className="relative overflow-hidden rounded-2xl group">
                         <div className="relative w-full aspect-[16/9]">
                             <AnimatePresence initial={false} custom={direction}>
-                                <motion.img
+                                <MotionImage
                                     key={page}
                                     src={visionImages[imageIndex]}
                                     custom={direction}
@@ -168,7 +172,9 @@ export const AboutPage: React.FC = () => {
                                         }
                                     }}
                                     alt={`HUGs Vision ${imageIndex + 1}`}
-                                    className="absolute inset-0 w-full h-full object-contain cursor-grab active:cursor-grabbing bg-white"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 80vw"
+                                    className="object-contain cursor-grab active:cursor-grabbing bg-white"
                                 />
                             </AnimatePresence>
                         </div>
