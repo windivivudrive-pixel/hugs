@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, ArrowUp } from 'lucide-react';
+import dynamic from 'next/dynamic';
 
 import { Navbar } from '@/components/ui/Navbar';
 import { WelcomeCube } from './WelcomeCube';
@@ -14,11 +15,25 @@ import { SocialSection } from './SocialSection';
 // import { TestimonialsSection } from './TestimonialsSection';
 import { NewsSection } from './NewsSection';
 import { FooterSection } from '@/components/ui/FooterSection';
-import { ChatBot } from '@/components/ui/ChatBot';
 import { LoadingScreen } from '@/components/ui/LoadingScreen';
 import { useDocumentHead } from '@/lib/useDocumentHead';
 
-export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false }) => {
+// Dynamic import ChatBot to improve initial page load performance and reduce bundle weight
+const ChatBot = dynamic(() => import('@/components/ui/ChatBot').then(mod => mod.ChatBot), {
+  ssr: false,
+});
+
+interface MainSiteProps {
+  isLoading?: boolean;
+  initialArticles?: any[];
+  initialProjects?: any[];
+}
+
+export const MainSite: React.FC<MainSiteProps> = ({ 
+  isLoading = false,
+  initialArticles = [],
+  initialProjects = []
+}) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
@@ -59,14 +74,14 @@ export const MainSite: React.FC<{ isLoading?: boolean }> = ({ isLoading = false 
         <CultureSection />
         <PartnersSection />
         <ServicesSection />
-        <ProjectsSection />
+        <ProjectsSection initialProjects={initialProjects} />
         <SocialSection />
         {/* <TestimonialsSection /> */}
-        <NewsSection />
+        <NewsSection initialArticles={initialArticles} />
         <FooterSection />
       </div>
 
-      {/* AI Chat Bot */}
+      {/* AI Chat Bot - dynamically loaded */}
       <ChatBot onOpenChange={setIsChatOpen} />
     </div>
   );

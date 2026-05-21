@@ -6,21 +6,21 @@ import { FloatingActionButtons } from "@/components/ui/FloatingActionButtons";
 import { GlobalWelcomeCube } from "@/components/ui/GlobalWelcomeCube";
 
 const manrope = localFont({
-  src: [    {
-      path: "../public/Manrope-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/Manrope-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "../public/Manrope-Light.ttf",
-      weight: "300",
-      style: "normal",
-    },
+  src: [{
+    path: "../public/Manrope-Regular.ttf",
+    weight: "400",
+    style: "normal",
+  },
+  {
+    path: "../public/Manrope-Bold.ttf",
+    weight: "700",
+    style: "normal",
+  },
+  {
+    path: "../public/Manrope-Light.ttf",
+    weight: "300",
+    style: "normal",
+  },
   ],
   variable: "--font-manrope",
 });
@@ -107,8 +107,8 @@ export default function RootLayout({
               },
               "geo": {
                 "@type": "GeoCoordinates",
-                "latitude": 16.0754,
-                "longitude": 108.2235
+                "latitude": 16.07990,
+                "longitude": 108.21894
               },
               "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",

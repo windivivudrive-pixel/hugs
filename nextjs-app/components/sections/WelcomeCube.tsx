@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-// Image face component for cube
+// Image face component for cube using next/image for premium LCP/CLS optimizations
 const ImageFace: React.FC<{
   transform: string;
   cubeSize: number;
@@ -14,10 +15,13 @@ const ImageFace: React.FC<{
     className="absolute backface-hidden overflow-hidden shadow-lg bg-white"
     style={{ transform, width: cubeSize, height: cubeSize }}
   >
-    <img
+    <Image
       src={imageSrc}
       alt={alt}
-      className="w-full h-full object-contain"
+      fill
+      sizes="(max-width: 768px) 160px, 300px"
+      className="object-cover"
+      priority
     />
   </div>
 );

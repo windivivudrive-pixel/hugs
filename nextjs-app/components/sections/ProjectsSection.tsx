@@ -4,12 +4,25 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { fetchAllArticles } from '@/lib/actions-client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-export const ProjectsSection: React.FC = () => {
+interface ProjectsSectionProps {
+    initialProjects?: any[];
+}
+
+export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ initialProjects = [] }) => {
     const { t } = useLanguage();
-    const [projects, setProjects] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+
+    // Filter and slice helper to display only up to 6 featured/fallback projects
+    const getFilteredProjects = (all: any[]) => {
+        if (!all || all.length === 0) return [];
+        const featured = all.filter((p: any) => p.featured);
+        return featured.length > 0 ? featured.slice(0, 6) : all.slice(0, 6);
+    };
+
+    const [projects, setProjects] = useState<any[]>(() => getFilteredProjects(initialProjects));
+    const [loading, setLoading] = useState(initialProjects.length === 0);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     const [isMobile, setIsMobile] = useState(false);
@@ -24,13 +37,16 @@ export const ProjectsSection: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (initialProjects.length > 0) {
+            setProjects(getFilteredProjects(initialProjects));
+            setLoading(false);
+            return;
+        }
         const loadProjects = async () => {
             try {
                 setLoading(true);
                 const all = await fetchAllArticles();
-                // Show featured projects first, fallback to all if none featured
-                const featured = all.filter((p: any) => p.featured);
-                setProjects(featured.length > 0 ? featured.slice(0, 6) : all.slice(0, 6));
+                setProjects(getFilteredProjects(all));
             } catch (err) {
                 console.error('Error fetching projects:', err);
             } finally {
@@ -39,7 +55,7 @@ export const ProjectsSection: React.FC = () => {
         };
 
         loadProjects();
-    }, []);
+    }, [initialProjects]);
 
     return (
         <section className="py-24 bg-white relative overflow-hidden">
@@ -95,10 +111,6 @@ export const ProjectsSection: React.FC = () => {
                             const isHovered = hoveredId === project.id;
 
                             // Define precise layout using 20-column grid (where 2 cols = 1 unit)
-                            // Row Height = 2.4 units (4.8 grid cols)
-                            // Item 1 (4u): 4/2.4 = 5/3
-                            // Item 2 (2.5u): 2.5/2.4 = 25/24
-                            // Item 3 (3.5u): 3.5/2.4 = 35/24
                             const getGridStyle = (idx: number) => {
                                 const styles = [
                                     { colSpan: 'md:col-span-8', aspect: 'aspect-[5/3]' },     // Item 1: 4.0u
@@ -119,7 +131,6 @@ export const ProjectsSection: React.FC = () => {
                                     e.preventDefault(); // Prevent navigation on first tap
                                     setHoveredId(project.id); // Set hover state (show details)
                                 }
-                                // If already hovered (or on desktop), allow default navigation
                             };
 
                             return (
@@ -138,20 +149,21 @@ export const ProjectsSection: React.FC = () => {
                                             visible: { opacity: 1, y: 0 }
                                         }}
                                     >
-                                        {/* Project Thumbnail - always visible */}
-                                        <img
-                                            src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
-                                            alt={project.title}
-                                            loading="lazy"
-                                            className="absolute inset-0 w-full h-full object-cover"
-                                            style={{
-                                                transition: 'transform 0.5s ease-in-out',
-                                                transform: isHovered ? 'scale(1.05)' : 'scale(1)'
-                                            }}
-                                            onError={(e) => {
-                                                (e.target as HTMLImageElement).src = `https://picsum.photos/600/600?random=${project.id}`;
-                                            }}
-                                        />
+                                        {/* Project Thumbnail - optimized next/image with transition scale */}
+                                        <div className="absolute inset-0 w-full h-full overflow-hidden">
+                                            <Image
+                                                src={project.thumbnail || `https://picsum.photos/600/600?random=${project.id}`}
+                                                alt={project.title}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                className="object-cover"
+                                                style={{
+                                                    transition: 'transform 0.5s ease-in-out',
+                                                    transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+                                                }}
+                                                priority={index < 2} // Preload above-the-fold project items
+                                            />
+                                        </div>
 
                                         {/* Transparent Pink Overlay - visible by default, fades on hover */}
                                         <div
@@ -167,21 +179,27 @@ export const ProjectsSection: React.FC = () => {
                                             className="absolute inset-0 flex items-center justify-center z-10 p-4"
                                         >
                                             {project.logo ? (
-                                                <img
-                                                    src={project.logo}
-                                                    alt={project.title}
-                                                    className="w-auto h-auto max-w-[8rem] md:max-w-[10rem] max-h-[6rem] md:max-h-[7rem] object-contain drop-shadow-lg"
+                                                <div
+                                                    className="w-32 h-16 md:w-40 md:h-20 relative"
                                                     style={{
                                                         filter: isHovered ? 'none' : 'brightness(0) invert(1)',
                                                         transition: 'all 0.4s ease-in-out',
                                                         transform: isHovered ? 'scale(1.1) translateY(-15px)' : 'scale(1) translateY(0)'
                                                     }}
-                                                />
+                                                >
+                                                    <Image
+                                                        src={project.logo}
+                                                        alt={project.title}
+                                                        fill
+                                                        sizes="(max-width: 768px) 8rem, 10rem"
+                                                        className="object-contain drop-shadow-lg"
+                                                    />
+                                                </div>
                                             ) : (
                                                 <h3
                                                     className="text-center font-black leading-tight drop-shadow-lg px-4 max-w-[80%]"
                                                     style={{
-                                                        color: isHovered ? '#fff' : '#fff',
+                                                        color: '#fff',
                                                         fontSize: project.title.length > 30 ? '1rem' : project.title.length > 20 ? '1.25rem' : '1.5rem',
                                                         textShadow: isHovered ? '0 2px 8px rgba(0,0,0,0.6)' : '0 2px 4px rgba(0,0,0,0.3)',
                                                         transition: 'all 0.4s ease-in-out',

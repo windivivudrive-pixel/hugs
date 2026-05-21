@@ -8,13 +8,20 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';;
 import { useLanguage } from '@/contexts/LanguageContext';
 
-export const NewsSection: React.FC = () => {
+interface NewsSectionProps {
+    initialArticles?: NewsArticle[];
+}
+
+export const NewsSection: React.FC<NewsSectionProps> = ({ initialArticles = [] }) => {
     const { t } = useLanguage();
-    const [articles, setArticles] = useState<NewsArticle[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [articles, setArticles] = useState<NewsArticle[]>(initialArticles);
+    const [loading, setLoading] = useState(initialArticles.length === 0);
     const router = useRouter();
 
     useEffect(() => {
+        if (initialArticles.length > 0) {
+            return;
+        }
         const loadArticles = async () => {
             try {
                 const data = await fetchNewsArticles(4);
@@ -27,7 +34,7 @@ export const NewsSection: React.FC = () => {
         };
 
         loadArticles();
-    }, []);
+    }, [initialArticles]);
 
     const handleArticleClick = (article: NewsArticle) => {
         router.push(`/${article.slug}`);
