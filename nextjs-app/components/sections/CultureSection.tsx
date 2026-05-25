@@ -181,16 +181,22 @@ export const CultureSection: React.FC = () => {
                     >
                         {/* Main image */}
                         <div className="relative">
-                            <div className="relative rounded-xl overflow-hidden ">
-                                <video
-                                    src="/laptop.mp4"
-                                    autoPlay
-                                    loop
-                                    muted
-                                    playsInline
-                                    className="w-full h-auto object-cover scale-[1.15]"
-                                />
-                            </div>
+                            <div 
+                                className="relative rounded-xl overflow-hidden"
+                                dangerouslySetInnerHTML={{
+                                    __html: `
+                                        <video
+                                            src="/laptop.mp4"
+                                            autoplay
+                                            loop
+                                            muted
+                                            playsinline
+                                            preload="auto"
+                                            class="w-full h-auto object-cover scale-[1.15]"
+                                        ></video>
+                                    `
+                                }}
+                            />
 
                             {/* Stats badge - top right (refined size) */}
                             <motion.div
