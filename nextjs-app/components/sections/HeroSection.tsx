@@ -6,22 +6,27 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 export const HeroSection: React.FC = () => {
     const { t } = useLanguage();
+
     return (
         <section className="relative w-full aspect-video md:aspect-auto md:min-h-screen flex items-center justify-center overflow-hidden bg-black">
             {/* Background Video */}
-            <div className="absolute inset-0 w-full h-full">
-                <video
-                    className="absolute inset-0 w-full h-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                >
-                    <source src="/Loading.mp4" type="video/mp4" />
-                </video>
-                {/* Dark Overlay for text readability */}
-                {/* <div className="absolute inset-0 bg-black/50" /> */}
-            </div>
+            <div 
+                className="absolute inset-0 w-full h-full"
+                dangerouslySetInnerHTML={{
+                    __html: `
+                        <video
+                            class="absolute inset-0 w-full h-full object-cover"
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            preload="auto"
+                        >
+                            <source src="/Loading.mp4" type="video/mp4" />
+                        </video>
+                    `
+                }}
+            />
 
             <div className="max-w-7xl mx-auto px-6 w-full relative z-10 py-6 md:py-20 text-center flex flex-col items-center justify-center h-full">
                 <motion.div

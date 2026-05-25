@@ -400,12 +400,12 @@ export const translations = {
         },
         cultureSection: {
             aboutLabel: 'Về chúng tôi',
-            aboutTitle: 'HUGs Agency',
-            aboutDesc: 'Sinh ra ở Đà Nẵng. Lớn lên cùng nhịp sống Miền Trung. HUGs là một đội ngũ trẻ, kỷ luật và giàu năng lượng sáng tạo, làm marketing với tư duy định hướng chiến lược và tiêu chuẩn triển khai chuyên nghiệp.',
-            mindsetLabel: 'Tư Duy',
-            mindsetDesc: 'HUGs không bắt đầu bằng ý tưởng có sẵn. Chúng tôi bắt đầu từ việc hiểu đúng bối cảnh — thị trường, con người và những áp lực tăng trưởng mà thương hiệu đang đối mặt.',
+            aboutTitle: 'Agency Marketing chuyên nghiệp tại Đà Nẵng',
+            aboutDesc: 'HUGs Agency sinh ra tại Đà Nẵng và phát triển với định hướng trở thành agency marketing đồng hành cùng doanh nghiệp SME tại miền Trung. Chúng tôi cung cấp giải pháp SEO, Content Marketing (Social Post, Branding, Video Tiktok, Reels,..) và truyền thông số với tư duy chiến lược, triển khai bài bản và đo lường hiệu quả rõ ràng.',
+            mindsetLabel: 'Tư duy',
+            mindsetDesc: 'HUGs không bắt đầu từ những ý tưởng cảm tính. Chúng tôi bắt đầu bằng việc phân tích thị trường, hành vi khách hàng và mục tiêu tăng trưởng để xây dựng chiến lược marketing phù hợp cho từng doanh nghiệp tại Đà Nẵng và khu vực miền Trung.',
             values: {
-                innovative: 'Tư duy sáng tạo',
+                innovative: 'Chiến lược marketing thực chiến',
                 local: 'Local Insight Miền Trung',
                 personnel: '30+ Nhân sự'
             },
@@ -415,10 +415,10 @@ export const translations = {
                 location: 'Đà Nẵng',
                 region: 'Miền Trung, VN'
             },
-            implementationLabel: 'Triển Khai',
-            implementationDesc: 'Mỗi dự án tại HUGs được xây dựng như một hệ thống. Sáng tạo được dẫn dắt bởi chiến lược, triển khai có kỷ luật và luôn được đo lường để tạo ra hiệu quả thực.',
-            valueLabel: 'Giá Trị',
-            valueDesc: 'Giữa một thị trường ngày càng ồn ào, chỉ những thương hiệu xuất hiện đúng cách, đúng thời điểm và đủ chiều sâu mới có thể được ghi nhớ và lựa chọn.'
+            implementationLabel: 'Triển khai',
+            implementationDesc: 'Mỗi dự án tại HUGs Agency được triển khai như một hệ thống marketing hoàn chỉnh, kết hợp nội dung, quảng cáo, SEO website và tối ưu chuyển đổi. Mục tiêu không chỉ là tăng nhận diện thương hiệu mà còn mang về khách hàng tiềm năng và doanh thu thực tế.',
+            valueLabel: 'Giá trị',
+            valueDesc: 'Giữa thị trường cạnh tranh ngày càng cao, chúng tôi giúp doanh nghiệp xuất hiện đúng nơi, đúng thời điểm và đúng nhu cầu tìm kiếm của khách hàng. HUGs Agency hướng đến giải pháp marketing hiệu quả, bền vững và phù hợp với doanh nghiệp SME tại Đà Nẵng.'
         },
         servicePage: {
             badge: 'Dịch vụ của chúng tôi',
@@ -898,13 +898,13 @@ export const translations = {
         },
         cultureSection: {
             aboutLabel: 'About Us',
-            aboutTitle: 'HUGs Agency',
-            aboutDesc: 'Born in Da Nang. Grown with the rhythm of Central Vietnam. HUGs is a young, disciplined team full of creative energy, doing marketing with strategic orientation and professional execution standards.',
+            aboutTitle: 'HUGs Agency – Professional Marketing Agency in Da Nang',
+            aboutDesc: 'Born in Da Nang and developed with the goal of becoming a marketing agency companion for SMEs in Central Vietnam. We provide SEO, Content Marketing (Social Post, Branding, TikTok Video, Reels) and digital communications solutions with strategic thinking, methodical execution, and clear performance measurement.',
             mindsetLabel: 'Mindset',
-            mindsetDesc: 'HUGs does not start with ready-made ideas. We start by properly understanding the context — the market, the people, and the growth pressures that brands are facing.',
+            mindsetDesc: 'HUGs does not start with emotional ideas. We start by analyzing the market, customer behavior, and growth goals to build a suitable marketing strategy for each business in Da Nang and the Central region.',
             values: {
-                innovative: 'Creative Thinking',
-                local: 'Central Region Local Insight',
+                innovative: 'Practical Marketing Strategy',
+                local: 'Da Nang & Central Market Insight',
                 personnel: '30+ Personnel'
             },
             ctaButton: 'Explore Projects',
@@ -914,9 +914,9 @@ export const translations = {
                 region: 'Central Vietnam'
             },
             implementationLabel: 'Execution',
-            implementationDesc: 'Every project at HUGs is built as a system. Creativity is led by strategy, execution is disciplined, and always measured to create real effectiveness.',
+            implementationDesc: 'Every project at HUGs Agency is deployed as a complete marketing system, combining content, advertising, website SEO, and conversion optimization. The goal is not only to increase brand awareness but also to bring in potential leads and real revenue.',
             valueLabel: 'Value',
-            valueDesc: 'Amidst an increasingly noisy market, only brands that appear in the right way, at the right time, and with enough depth can be remembered and chosen.'
+            valueDesc: 'Amidst an increasingly competitive market, we help businesses appear in the right place, at the right time, and for the right customer search needs. HUGs Agency aims for effective, sustainable, and suitable marketing solutions for SMEs in Da Nang.'
         },
         servicePage: {
             badge: 'Our Services',
