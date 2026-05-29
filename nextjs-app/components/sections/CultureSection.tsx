@@ -181,12 +181,12 @@ export const CultureSection: React.FC = () => {
                     >
                         {/* Main image */}
                         <div className="relative">
-                            <div 
+                            <div
                                 className="relative rounded-xl overflow-hidden"
                                 dangerouslySetInnerHTML={{
                                     __html: `
                                         <video
-                                            src="/laptop.mp4"
+                                            src="/MockupLoading.mp4"
                                             autoplay
                                             loop
                                             muted
@@ -200,7 +200,7 @@ export const CultureSection: React.FC = () => {
 
                             {/* Stats badge - top right (refined size) */}
                             <motion.div
-                                className="absolute -top-3 right-[22px] bg-brand-pink text-white shadow-lg px-3 py-1 md:px-4 md:py-2 z-20"
+                                className="absolute -top-3 right-[48px] bg-brand-pink text-white shadow-lg px-3 py-1 md:px-4 md:py-2 z-20"
                                 initial={{ opacity: 0, scale: 0.6, y: -15 }}
                                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                                 transition={{ type: "spring" as const, stiffness: 180, damping: 22, delay: 0.8 }}
@@ -254,9 +254,8 @@ export const CultureSection: React.FC = () => {
                                         fill
                                         priority={idx === 0}
                                         sizes="(max-width: 768px) 100vw, 50vw"
-                                        className={`object-contain bg-white px-2 transition-opacity duration-300 ${
-                                            src === '/team-development.png' ? 'scale-90' : ''
-                                        } ${idx === imageIndex ? 'opacity-100' : 'opacity-0'}`}
+                                        className={`object-contain bg-white px-2 transition-opacity duration-300 ${src === '/team-development.png' ? 'scale-90' : ''
+                                            } ${idx === imageIndex ? 'opacity-100' : 'opacity-0'}`}
                                         draggable={false}
                                     />
                                 ))}
