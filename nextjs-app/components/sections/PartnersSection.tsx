@@ -79,7 +79,7 @@ export const PartnersSection: React.FC = () => {
                     {/* First row - scrolling left (CSS animation) */}
                     <div className="flex overflow-hidden mb-4 md:mb-6 pb-4">
                         <div
-                            className="flex gap-4 md:gap-8 items-center partners-marquee-left"
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-left w-max"
                         >
                             {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                                 <div
@@ -100,7 +100,7 @@ export const PartnersSection: React.FC = () => {
                     {/* Second row - scrolling right (CSS animation) */}
                     <div className="flex overflow-hidden pb-4">
                         <div
-                            className="flex gap-4 md:gap-8 items-center partners-marquee-right"
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-right w-max"
                         >
                             {[...partnerLogos.slice().reverse(), ...partnerLogos.slice().reverse()].map((partner, index) => (
                                 <div
@@ -122,12 +122,12 @@ export const PartnersSection: React.FC = () => {
                 {/* CSS Marquee Animations - GPU accelerated, zero JS overhead */}
                 <style>{`
                     @keyframes partners-scroll-left {
-                        from { transform: translateX(0%); }
-                        to { transform: translateX(-50%); }
+                        from { transform: translate3d(0, 0, 0); }
+                        to { transform: translate3d(-50%, 0, 0); }
                     }
                     @keyframes partners-scroll-right {
-                        from { transform: translateX(-50%); }
-                        to { transform: translateX(0%); }
+                        from { transform: translate3d(-50%, 0, 0); }
+                        to { transform: translate3d(0, 0, 0); }
                     }
                     .partners-marquee-left {
                         animation: partners-scroll-left 60s linear infinite;
