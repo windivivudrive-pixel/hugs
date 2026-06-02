@@ -94,7 +94,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
             <PageNavbar activePage="news" />
 
             {/* Hero Section with white background */}
-            <div className="pt-20 bg-white">
+            <div className="pt-20 pb-6 bg-white">
                 <div className="max-w-4xl mx-auto px-6">
                     {/* Back button */}
 
@@ -151,7 +151,7 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
 
                     {/* Share Buttons */}
                     <motion.div
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-3 mb-10"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
