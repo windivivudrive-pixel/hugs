@@ -330,7 +330,7 @@ export const CultureSection: React.FC = () => {
                     >
                         {/* Main image */}
                         <div className="relative">
-                            <div className="relative rounded-xl overflow-hidden">
+                            <div className="relative rounded-xl overflow-hidden bg-white">
                                 <video
                                     src="/MockupLoading.mp4"
                                     autoPlay
@@ -338,7 +338,7 @@ export const CultureSection: React.FC = () => {
                                     muted
                                     playsInline
                                     preload="auto"
-                                    className="w-full h-auto object-cover scale-[1.15]"
+                                    className="w-full h-auto object-cover scale-[1.15] bg-white"
                                 />
                             </div>
 
