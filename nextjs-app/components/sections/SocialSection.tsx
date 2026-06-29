@@ -103,21 +103,29 @@ export const SocialSection: React.FC = () => {
 
         let animationId: number;
         const scrollSpeed = 0.8; // pixels per frame
+        let exactScrollX = container.scrollLeft;
 
         const step = () => {
             if (!isManualScrolling.current && isVisibleRef.current) {
                 if (directionRef.current === 'right') {
-                    container.scrollLeft += scrollSpeed;
+                    exactScrollX += scrollSpeed;
+                    container.scrollLeft = exactScrollX;
                     if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 1) {
                         setDirection('left');
+                        exactScrollX = container.scrollLeft;
                     }
                 } else {
-                    container.scrollLeft -= scrollSpeed;
+                    exactScrollX -= scrollSpeed;
+                    container.scrollLeft = exactScrollX;
                     if (container.scrollLeft <= 1) {
                         setDirection('right');
+                        exactScrollX = container.scrollLeft;
                     }
                 }
+            } else {
+                exactScrollX = container.scrollLeft;
             }
+            
             // Only continue loop if visible
             if (isVisibleRef.current) {
                 animationId = requestAnimationFrame(step);

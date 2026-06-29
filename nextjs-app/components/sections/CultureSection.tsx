@@ -1,8 +1,7 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, MapPin, Users, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
-import Image from 'next/image';
+import { MapPin, Users, Lightbulb, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 // Stagger container variant
@@ -38,7 +37,8 @@ const popIn = {
     }
 };
 
-export const CultureSection: React.FC = () => {
+// Extracted Carousel Component to prevent parent re-renders and video flickering
+const CultureCarousel = () => {
     const { t } = useLanguage();
     const [[page, direction], setPage] = useState([0, 0]);
 
@@ -53,24 +53,192 @@ export const CultureSection: React.FC = () => {
 
     const imageIndex = Math.abs(page % cultureImages.length);
 
-    // Swipe configurations
+    // Native touch swipe handling (no framer-motion drag = no elastic snap-back jolt)
+    const touchStartX = useRef<number | null>(null);
+    const touchStartY = useRef<number | null>(null);
+    const isSwiping = useRef(false);
 
-    const swipeConfidenceThreshold = 10000;
-    const swipePower = (offset: number, velocity: number) => {
-        return Math.abs(offset) * velocity;
-    };
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
+        isSwiping.current = false;
+    }, []);
+
+    const handleTouchMove = useCallback((e: React.TouchEvent) => {
+        if (touchStartX.current === null || touchStartY.current === null) return;
+        const dx = Math.abs(e.touches[0].clientX - touchStartX.current);
+        const dy = Math.abs(e.touches[0].clientY - touchStartY.current);
+        // Lock to horizontal swipe if horizontal movement dominates
+        if (dx > dy && dx > 10) {
+            isSwiping.current = true;
+        }
+    }, []);
+
+    const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+        if (touchStartX.current === null || !isSwiping.current) {
+            touchStartX.current = null;
+            touchStartY.current = null;
+            return;
+        }
+        const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+        if (deltaX < -40) {
+            setPage(prev => [prev[0] + 1, 1]);
+        } else if (deltaX > 40) {
+            setPage(prev => [prev[0] - 1, -1]);
+        }
+        touchStartX.current = null;
+        touchStartY.current = null;
+        isSwiping.current = false;
+    }, []);
 
     const paginate = (newDirection: number) => {
         setPage([page + newDirection, newDirection]);
     };
 
-    const prevImage = () => {
-        paginate(-1);
-    };
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            {/* Left - Image Carousel */}
+            <div
+                className="relative culture-carousel-enter"
+                style={{ contain: 'layout style' }}
+            >
+                <div
+                    className="relative overflow-hidden touch-pan-y"
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    style={{ contain: 'layout style paint' }}
+                >
+                    {/* Fixed-size container — absolutely no height changes on image switch */}
+                    <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[4/3] bg-white rounded-2xl overflow-hidden shadow-sm">
+                        {cultureImages.map((src, idx) => (
+                            <img
+                                key={src}
+                                src={src}
+                                alt={`HUGs Team ${idx + 1}`}
+                                loading="eager"
+                                decoding="async"
+                                className={`absolute inset-0 w-full h-full transition-opacity duration-300 ease-in-out object-contain ${
+                                    src === '/team-development.png' ? 'p-4 md:p-8' : ''
+                                }`}
+                                style={{
+                                    opacity: idx === imageIndex ? 1 : 0,
+                                    pointerEvents: idx === imageIndex ? 'auto' : 'none',
+                                    willChange: 'opacity',
+                                    backfaceVisibility: 'hidden',
+                                    transform: 'translate3d(0,0,0)',
+                                }}
+                                draggable={false}
+                            />
+                        ))}
+                    </div>
 
-    const nextImage = () => {
-        paginate(1);
-    };
+                    {/* Navigation buttons */}
+                    <button
+                        type="button"
+                        onClick={() => paginate(-1)}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20 border-2 border-brand-pink touch-manipulation"
+                    >
+                        <ChevronLeft size={20} className="text-brand-pink" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => paginate(1)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-colors z-20 border-2 border-brand-pink touch-manipulation"
+                    >
+                        <ChevronRight size={20} className="text-brand-pink" />
+                    </button>
+
+                    {/* Dot indicators */}
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                        {cultureImages.map((_, idx) => (
+                            <button
+                                key={idx}
+                                type="button"
+                                onClick={() => setPage([idx, idx > imageIndex ? 1 : -1])}
+                                className={`w-2 h-2 rounded-full transition-all touch-manipulation ${idx === imageIndex
+                                    ? 'bg-brand-pink w-6'
+                                    : 'bg-white/70 hover:bg-white'
+                                    }`}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* CSS entrance animation — runs once, never re-triggers on state change */}
+                <style>{`
+                    .culture-carousel-enter {
+                        animation: culture-slide-in 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+                    }
+                    @keyframes culture-slide-in {
+                        from {
+                            opacity: 0;
+                            transform: translate3d(-60px, 0, 0) scale(0.95);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translate3d(0, 0, 0) scale(1);
+                        }
+                    }
+                `}</style>
+            </div>
+
+            {/* Right - Content (2 text blocks) with stagger */}
+            <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-50px" }}
+            >
+                {/* Block 1: Triển khai */}
+                <motion.div className="mb-12" variants={fadeUpChild}>
+                    {/* Section label */}
+                    <motion.div
+                        className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        viewport={{ once: true }}
+                    >
+                        {t('cultureSection.implementationLabel')}
+                    </motion.div>
+
+                    {/* Description */}
+                    <div className="space-y-4 text-gray-900 leading-relaxed">
+                        <p className="text-lg">
+                            {t('cultureSection.implementationDesc')}
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* Block 2: Giá trị */}
+                <motion.div variants={fadeUpChild}>
+                    {/* Section label */}
+                    <motion.div
+                        className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        viewport={{ once: true }}
+                    >
+                        {t('cultureSection.valueLabel')}
+                    </motion.div>
+
+                    {/* Description */}
+                    <div className="space-y-4 text-gray-900 leading-relaxed">
+                        <p className="text-lg">
+                            {t('cultureSection.valueDesc')}
+                        </p>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </div>
+    );
+};
+
+export const CultureSection: React.FC = () => {
+    const { t } = useLanguage();
+
     return (
         <section className="pt-8 lg:pt-12 pb-0 bg-white relative overflow-hidden">
             {/* Subtle background decorations */}
@@ -162,22 +330,17 @@ export const CultureSection: React.FC = () => {
                     >
                         {/* Main image */}
                         <div className="relative">
-                            <div
-                                className="relative rounded-xl overflow-hidden"
-                                dangerouslySetInnerHTML={{
-                                    __html: `
-                                        <video
-                                            src="/MockupLoading.mp4"
-                                            autoplay
-                                            loop
-                                            muted
-                                            playsinline
-                                            preload="auto"
-                                            class="w-full h-auto object-cover scale-[1.15]"
-                                        ></video>
-                                    `
-                                }}
-                            />
+                            <div className="relative rounded-xl overflow-hidden bg-white">
+                                <video
+                                    src="/MockupLoading.mp4"
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    preload="auto"
+                                    className="w-full h-auto object-cover scale-[1.15] bg-white"
+                                />
+                            </div>
 
                             {/* Stats badge - top right (refined size) */}
                             <motion.div
@@ -214,131 +377,7 @@ export const CultureSection: React.FC = () => {
                 </div>
 
                 {/* Second Block - Image Left, Text Right (2 sections) */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-
-                    {/* Left - Image Carousel */}
-                    <motion.div
-                        className="relative lg:-ml-20 lg:scale-110 origin-right"
-                        initial={{ opacity: 0, x: -60, scale: 0.95 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        transition={{ duration: 1.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                        viewport={{ once: true, margin: "-50px" }}
-                    >
-                        <div className="relative overflow-hidden">
-                            <div className="relative w-full aspect-[4/3]">
-                                {/* Pre-render ALL images — only active shown via opacity */}
-                                {cultureImages.map((src, idx) => (
-                                    <Image
-                                        key={src}
-                                        src={src}
-                                        alt={`HUGs Team ${idx + 1}`}
-                                        fill
-                                        priority={idx === 0}
-                                        sizes="(max-width: 768px) 100vw, 50vw"
-                                        className={`object-contain bg-white px-2 transition-opacity duration-300 ${src === '/team-development.png' ? 'scale-90' : ''
-                                            } ${idx === imageIndex ? 'opacity-100' : 'opacity-0'}`}
-                                        draggable={false}
-                                    />
-                                ))}
-
-                                {/* Stable drag overlay to keep swipe gesture without layout jumps or mounting cycles */}
-                                <motion.div
-                                    drag="x"
-                                    dragConstraints={{ left: 0, right: 0 }}
-                                    dragElastic={0.6}
-                                    onDragEnd={(e, { offset, velocity }) => {
-                                        const swipe = swipePower(offset.x, velocity.x);
-                                        if (swipe < -swipeConfidenceThreshold || offset.x < -100) {
-                                            paginate(1);
-                                        } else if (swipe > swipeConfidenceThreshold || offset.x > 100) {
-                                            paginate(-1);
-                                        }
-                                    }}
-                                    className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing z-10"
-                                    style={{ background: 'transparent' }}
-                                />
-                            </div>
-
-                            {/* Navigation buttons */}
-                            <button
-                                onClick={() => paginate(-1)}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border-2 border-brand-pink"
-                            >
-                                <ChevronLeft size={20} className="text-brand-pink" />
-                            </button>
-                            <button
-                                onClick={() => paginate(1)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all hover:scale-110 z-10 border-2 border-brand-pink"
-                            >
-                                <ChevronRight size={20} className="text-brand-pink" />
-                            </button>
-
-                            {/* Dot indicators */}
-                            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                                {cultureImages.map((_, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => setPage([idx, idx > imageIndex ? 1 : -1])}
-                                        className={`w-2 h-2 rounded-full transition-all ${idx === imageIndex
-                                            ? 'bg-brand-pink w-6'
-                                            : 'bg-white/70 hover:bg-white'
-                                            }`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Right - Content (2 text blocks) with stagger */}
-                    <motion.div
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                    >
-                        {/* Block 1: Triển khai */}
-                        <motion.div className="mb-12" variants={fadeUpChild}>
-                            {/* Section label */}
-                            <motion.div
-                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true }}
-                            >
-                                {t('cultureSection.implementationLabel')}
-                            </motion.div>
-
-                            {/* Description */}
-                            <div className="space-y-4 text-gray-900 leading-relaxed">
-                                <p className="text-lg">
-                                    {t('cultureSection.implementationDesc')}
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Block 2: Giá trị */}
-                        <motion.div variants={fadeUpChild}>
-                            {/* Section label */}
-                            <motion.div
-                                className="bg-brand-pink text-white px-4 py-2 text-sm font-black uppercase tracking-widest inline-block mb-6 shadow-md shadow-brand-pink/20"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.5, delay: 0.3 }}
-                                viewport={{ once: true }}
-                            >
-                                {t('cultureSection.valueLabel')}
-                            </motion.div>
-
-                            {/* Description */}
-                            <div className="space-y-4 text-gray-900 leading-relaxed">
-                                <p className="text-lg">
-                                    {t('cultureSection.valueDesc')}
-                                </p>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                </div>
+                <CultureCarousel />
             </div>
         </section>
     );

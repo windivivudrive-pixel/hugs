@@ -79,18 +79,18 @@ export const PartnersSection: React.FC = () => {
                     {/* First row - scrolling left (CSS animation) */}
                     <div className="flex overflow-hidden mb-4 md:mb-6 pb-4">
                         <div
-                            className="flex gap-4 md:gap-8 items-center partners-marquee-left"
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-left w-max"
                         >
                             {[...partnerLogos, ...partnerLogos].map((partner, index) => (
                                 <div
                                     key={`row1-${index}`}
-                                    className="flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                    className="group flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
                                 >
                                     <img
                                         src={partner.logo}
                                         alt={`Partner ${partner.id}`}
                                         loading="lazy"
-                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px]"
+                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px] grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                                     />
                                 </div>
                             ))}
@@ -100,18 +100,18 @@ export const PartnersSection: React.FC = () => {
                     {/* Second row - scrolling right (CSS animation) */}
                     <div className="flex overflow-hidden pb-4">
                         <div
-                            className="flex gap-4 md:gap-8 items-center partners-marquee-right"
+                            className="flex gap-4 md:gap-8 items-center partners-marquee-right w-max"
                         >
                             {[...partnerLogos.slice().reverse(), ...partnerLogos.slice().reverse()].map((partner, index) => (
                                 <div
                                     key={`row2-${index}`}
-                                    className="flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                                    className="group flex-shrink-0 h-14 md:h-20 px-4 md:px-6 bg-gray-50/80 flex items-center justify-center hover:bg-brand-pink/5 hover:shadow-lg transition-all duration-300 cursor-pointer"
                                 >
                                     <img
                                         src={partner.logo}
                                         alt={`Partner ${partner.id}`}
                                         loading="lazy"
-                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px]"
+                                        className="h-8 md:h-12 w-auto object-contain max-w-[100px] md:max-w-[140px] grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
                                     />
                                 </div>
                             ))}
@@ -122,12 +122,12 @@ export const PartnersSection: React.FC = () => {
                 {/* CSS Marquee Animations - GPU accelerated, zero JS overhead */}
                 <style>{`
                     @keyframes partners-scroll-left {
-                        from { transform: translateX(0%); }
-                        to { transform: translateX(-50%); }
+                        from { transform: translate3d(0, 0, 0); }
+                        to { transform: translate3d(-50%, 0, 0); }
                     }
                     @keyframes partners-scroll-right {
-                        from { transform: translateX(-50%); }
-                        to { transform: translateX(0%); }
+                        from { transform: translate3d(-50%, 0, 0); }
+                        to { transform: translate3d(0, 0, 0); }
                     }
                     .partners-marquee-left {
                         animation: partners-scroll-left 60s linear infinite;

@@ -8,19 +8,20 @@ export const HeroSection: React.FC = () => {
     const { t } = useLanguage();
 
     return (
-        <section className="relative w-full aspect-video md:aspect-auto md:min-h-screen flex items-center justify-center overflow-hidden bg-black">
+        <section className="relative w-full aspect-video md:aspect-auto md:min-h-screen flex items-center justify-center overflow-hidden bg-[#cc4e70]">
             {/* Background Video */}
             <div 
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 w-full h-full bg-[#cc4e70]"
                 dangerouslySetInnerHTML={{
                     __html: `
                         <video
-                            class="absolute inset-0 w-full h-full object-cover"
+                            class="absolute inset-0 w-full h-full object-cover bg-[#cc4e70]"
                             autoplay
                             loop
                             muted
                             playsinline
                             preload="auto"
+                            style="background-color: #cc4e70;"
                         >
                             <source src="/Loading.mp4" type="video/mp4" />
                         </video>

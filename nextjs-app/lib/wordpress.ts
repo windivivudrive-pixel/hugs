@@ -342,6 +342,8 @@ export interface CategoryFeedResult {
     articles: NewsArticle[];
     cursor: string | null;  // base64-encoded FeedCursor
     hasMore: boolean;
+    totalPages?: number;
+    totalArticles?: number;
 }
 
 function encodeCursor(date: string, id: number): string {

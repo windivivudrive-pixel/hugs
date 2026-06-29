@@ -1,4 +1,4 @@
-import { fetchNewsArticles, fetchInitialFeeds, fetchCategoryPage } from "@/lib/actions-server";
+import { fetchNewsArticles, fetchInitialFeeds, fetchCategoryPage, fetchCategoryPageRestAPI } from "@/lib/actions-server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -22,8 +22,22 @@ export async function GET(request: NextRequest) {
                 );
             }
             const cursor = searchParams.get('cursor') || null;
-            const limit = parseInt(searchParams.get('limit') || '10');
+            const limit = parseInt(searchParams.get('limit') || '9');
             const result = await fetchCategoryPage(cat, cursor, limit);
+            return NextResponse.json(result);
+        }
+
+        if (mode === 'category_page') {
+            const cat = searchParams.get('cat');
+            if (!cat) {
+                return NextResponse.json(
+                    { error: 'Missing "cat" parameter' },
+                    { status: 400 }
+                );
+            }
+            const page = parseInt(searchParams.get('page') || '1');
+            const limit = parseInt(searchParams.get('limit') || '9');
+            const result = await fetchCategoryPageRestAPI(cat, page, limit);
             return NextResponse.json(result);
         }
 

@@ -88,8 +88,54 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
 
     const displayArticle = article;
 
+    // Generate Schema Markup
+    const articleSchema = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": displayArticle.title,
+        "image": (displayArticle as any).thumbnail || "",
+        "datePublished": displayArticle.created_at || new Date().toISOString(),
+        "author": {
+            "@type": "Person",
+            "name": ((displayArticle as NewsArticle).author_details?.name) || ((displayArticle as NewsArticle).author) || "HUGs Agency"
+        }
+    };
+
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": `Nội dung chính của bài viết "${displayArticle.title}" là gì?`,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": (displayArticle as NewsArticle).excerpt || `Đây là bài viết chia sẻ thông tin chuyên sâu về chủ đề ${displayArticle.title} được biên soạn bởi HUGs Agency.`
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Làm sao để nhận tư vấn chi tiết từ HUGs Agency?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Bạn có thể liên hệ trực tiếp qua hotline, email hoặc để lại thông tin trên trang web của chúng tôi để được đội ngũ chuyên gia tư vấn miễn phí."
+                }
+            }
+        ]
+    };
+
     return (
         <div className="min-h-screen bg-white text-gray-900">
+            {/* Schema Markup for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+
             {/* Navbar */}
             <PageNavbar activePage="news" />
 
@@ -151,25 +197,25 @@ export const ArticlePageClient: React.FC<{ article: DisplayArticle }> = ({ artic
 
                     {/* Share Buttons */}
                     <motion.div
-                        className="flex items-center gap-3 mb-10"
+                        className="flex items-center gap-4 mb-10 border-b border-gray-100 pb-8"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <span className="text-sm text-gray-500">{t('article.share')}:</span>
+                        <span className="text-sm font-medium text-gray-500 mr-2">{t('article.share')}:</span>
                         <button
                             onClick={handleFacebookShare}
-                            className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center"
+                            className="w-10 h-10 rounded-full bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-all flex items-center justify-center"
                             title="Share on Facebook"
                         >
-                            <Facebook size={16} />
+                            <Facebook size={18} />
                         </button>
                         <button
                             onClick={handleCopyLink}
-                            className="w-9 h-9 bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-colors flex items-center justify-center relative"
+                            className="w-10 h-10 rounded-full bg-brand-pink/10 text-brand-pink hover:bg-brand-pink hover:text-white transition-all flex items-center justify-center relative"
                             title="Copy Link"
                         >
-                            {copied ? <Check size={16} className="text-green-500" /> : <Link2 size={16} />}
+                            {copied ? <Check size={18} className="text-green-500" /> : <Link2 size={18} />}
                             {copied && (
                                 <motion.span
                                     initial={{ opacity: 0, y: 10 }}
