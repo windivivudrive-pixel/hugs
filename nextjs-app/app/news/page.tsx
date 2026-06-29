@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function NewsRoute() {
   const [initialFeeds, categories] = await Promise.all([
-    fetchInitialFeeds(10),
+    fetchInitialFeeds(9),
     fetchCategories(),
   ]);
   

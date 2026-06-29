@@ -1,6 +1,6 @@
 'use client';
-import React, { useState, useMemo, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo, useCallback, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronRight, TrendingUp, Clock, Flame, Headphones } from 'lucide-react';
 import { NewsArticle, Category } from '@/lib/types';
 import { PageNavbar } from '@/components/ui/PageNavbar';
@@ -17,6 +17,8 @@ interface CategoryFeedState {
     cursor: string | null;
     hasMore: boolean;
     loading: boolean;
+    page: number;
+    totalPages: number;
 }
 
 interface CategorySectionConfig {
@@ -54,6 +56,126 @@ const SectionSkeleton: React.FC = () => (
     </div>
 );
 
+// ─── Article Card (extracted & memoized to prevent remount on parent re-render) ───
+
+const ArticleCard = memo<{
+    article: NewsArticle;
+    onClick: (article: NewsArticle) => void;
+    authorFallback: string;
+}>(({ article, onClick, authorFallback }) => (
+    <motion.article
+        layout
+        className="cursor-pointer group"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        onClick={() => onClick(article)}
+    >
+        <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
+            <img
+                src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
+                alt={article.title}
+                loading="lazy"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+        </div>
+        <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-brand-pink transition-colors">
+            {article.title}
+        </h3>
+        <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
+            <span className="font-medium">{article.author_details?.name || article.author || authorFallback}</span>
+            <span>•</span>
+            <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
+        </div>
+    </motion.article>
+));
+ArticleCard.displayName = 'ArticleCard';
+
+// ─── Category Section (extracted & memoized) ───
+
+const CategorySection = memo<{
+    section: CategorySectionConfig;
+    feed: CategoryFeedState;
+    isExpanded: boolean;
+    onToggle: () => void;
+    onLoadMore: () => void;
+    onArticleClick: (article: NewsArticle) => void;
+    authorFallback: string;
+    viewMoreLabel: string;
+    collapseLabel: string;
+}>(({ section, feed, isExpanded, onToggle, onLoadMore, onArticleClick, authorFallback, viewMoreLabel, collapseLabel }) => {
+    if (feed.articles.length === 0) return null;
+
+    const displayedArticles = isExpanded
+        ? feed.articles
+        : feed.articles.slice(0, INITIAL_ITEMS_PER_SECTION);
+    const hasMoreCollapsed = feed.articles.length > INITIAL_ITEMS_PER_SECTION;
+
+    return (
+        <div className="mb-12">
+            <div className="flex items-center justify-between mb-6 pb-3 border-b-2" style={{ borderColor: section.color }}>
+                <h2 className="text-2xl font-bold text-gray-900">
+                    {section.label}
+                </h2>
+                {hasMoreCollapsed && !isExpanded && (
+                    <button
+                        onClick={onToggle}
+                        className="flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all"
+                        style={{ color: section.color }}
+                    >
+                        {viewMoreLabel}
+                        <ChevronRight size={16} />
+                    </button>
+                )}
+                {isExpanded && hasMoreCollapsed && (
+                    <button
+                        onClick={onToggle}
+                        className="flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all"
+                        style={{ color: section.color }}
+                    >
+                        {collapseLabel}
+                        <ChevronRight size={16} className="rotate-90" />
+                    </button>
+                )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {displayedArticles.map((article) => (
+                    <ArticleCard key={article.id} article={article} onClick={onArticleClick} authorFallback={authorFallback} />
+                ))}
+                {feed.loading && isExpanded && Array.from({ length: 3 }).map((_, i) => (
+                    <ArticleSkeleton key={`skel-${i}`} />
+                ))}
+            </div>
+
+            {/* Load more button — only visible when expanded and server has more */}
+            {isExpanded && feed.hasMore && (
+                <div className="flex justify-center pt-6">
+                    <button
+                        onClick={onLoadMore}
+                        disabled={feed.loading}
+                        className="px-6 py-2 border-2 rounded-full font-semibold transition-all hover:shadow-md disabled:opacity-50"
+                        style={{
+                            borderColor: section.color,
+                            color: feed.loading ? '#999' : section.color,
+                        }}
+                    >
+                        {feed.loading ? (
+                            <span className="flex items-center gap-2">
+                                <Loader2 className="animate-spin" size={16} />
+                                Đang tải...
+                            </span>
+                        ) : (
+                            'Tải thêm bài viết'
+                        )}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+});
+CategorySection.displayName = 'CategorySection';
+
 // ─── Main Component ──────────────────────────────────────────
 
 export const NewsPageClient: React.FC<{
@@ -61,6 +183,7 @@ export const NewsPageClient: React.FC<{
         articles: NewsArticle[];
         cursor: string | null;
         hasMore: boolean;
+        totalPages?: number;
     }>;
     categories: Category[];
 }> = ({ initialFeeds }) => {
@@ -70,7 +193,12 @@ export const NewsPageClient: React.FC<{
     const [feeds, setFeeds] = useState<Record<string, CategoryFeedState>>(() => {
         const state: Record<string, CategoryFeedState> = {};
         for (const [slug, feed] of Object.entries(initialFeeds)) {
-            state[slug] = { ...feed, loading: false };
+            state[slug] = { 
+                ...feed, 
+                loading: false,
+                page: 1,
+                totalPages: feed.totalPages || 1
+            };
         }
         return state;
     });
@@ -113,11 +241,10 @@ export const NewsPageClient: React.FC<{
         if (activeTab === 'all') {
             return allArticles.slice(0, 5);
         }
-        const feed = feeds[activeTab];
-        return feed ? feed.articles.slice(0, 5) : [];
-    }, [allArticles, feeds, activeTab]);
+        return [];
+    }, [allArticles, activeTab]);
 
-    // ─── Load more for a specific category (cursor-based) ───
+    // ─── Load more for a specific category (append) ───
     const loadMoreByCategory = useCallback(async (categorySlug: string) => {
         const feed = feeds[categorySlug];
         if (!feed || !feed.hasMore || feed.loading) return;
@@ -128,12 +255,13 @@ export const NewsPageClient: React.FC<{
         }));
 
         try {
+            const nextPage = Math.floor(feed.articles.length / 9) + 1;
             const params = new URLSearchParams({
-                mode: 'category',
+                mode: 'category_page',
                 cat: categorySlug,
-                limit: '10',
+                page: nextPage.toString(),
+                limit: '9',
             });
-            if (feed.cursor) params.set('cursor', feed.cursor);
 
             const res = await fetch(`/api/news?${params}`);
             const data = await res.json();
@@ -147,9 +275,10 @@ export const NewsPageClient: React.FC<{
                 return {
                     ...prev,
                     [categorySlug]: {
+                        ...existing,
                         articles: [...existing.articles, ...newArticles],
-                        cursor: data.cursor || null,
                         hasMore: data.hasMore || false,
+                        totalPages: data.totalPages || existing.totalPages,
                         loading: false,
                     }
                 };
@@ -164,11 +293,11 @@ export const NewsPageClient: React.FC<{
     }, [feeds]);
 
     // ─── Handlers ───
-    const handleArticleClick = (article: NewsArticle) => {
+    const handleArticleClick = useCallback((article: NewsArticle) => {
         window.location.href = `/${article.slug}`;
-    };
+    }, []);
 
-    const toggleSection = (sectionId: string) => {
+    const toggleSection = useCallback((sectionId: string) => {
         setExpandedSections(prev => {
             const next = new Set(prev);
             if (next.has(sectionId)) {
@@ -178,10 +307,11 @@ export const NewsPageClient: React.FC<{
             }
             return next;
         });
-    };
+    }, []);
 
     const hotArticles = allArticles.slice(0, 5);
     const initialLoading = allArticles.length === 0;
+    const authorFallback = t('news.author');
 
     useDocumentHead({
         title: 'Tin tức Marketing & Xu hướng',
@@ -189,111 +319,7 @@ export const NewsPageClient: React.FC<{
         keywords: 'tin tức marketing, xu hướng digital, case study, HUGs Agency, social media',
     });
 
-    // ─── Article Card Component ───
-    const ArticleCard: React.FC<{
-        article: NewsArticle;
-        index: number;
-    }> = ({ article, index }) => (
-        <motion.article
-            className="cursor-pointer group"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.05 }}
-            viewport={{ once: true }}
-            onClick={() => handleArticleClick(article)}
-        >
-            <div className="aspect-[900/598] overflow-hidden bg-gray-100 mb-3">
-                <img
-                    src={article.thumbnail || `https://picsum.photos/400/300?random=${article.id}`}
-                    alt={article.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-            </div>
-            <h3 className="text-base font-bold text-gray-900 leading-snug line-clamp-2 group-hover:text-brand-pink transition-colors">
-                {article.title}
-            </h3>
-            <div className="flex items-center gap-2 text-xs text-gray-500 mt-2">
-                <span className="font-medium">{article.author_details?.name || article.author || t('news.author')}</span>
-                <span>•</span>
-                <span>{new Date(article.created_at || '').toLocaleDateString('vi-VN')}</span>
-            </div>
-        </motion.article>
-    );
 
-    // ─── Category Section Component ───
-    const CategorySection: React.FC<{
-        section: CategorySectionConfig;
-    }> = ({ section }) => {
-        const feed = feeds[section.id];
-        if (!feed || feed.articles.length === 0) return null;
-
-        const isExpanded = expandedSections.has(section.id);
-        const displayedArticles = isExpanded
-            ? feed.articles
-            : feed.articles.slice(0, INITIAL_ITEMS_PER_SECTION);
-        const hasMoreCollapsed = feed.articles.length > INITIAL_ITEMS_PER_SECTION;
-
-        return (
-            <div className="mb-12">
-                <div className="flex items-center justify-between mb-6 pb-3 border-b-2" style={{ borderColor: section.color }}>
-                    <h2 className="text-2xl font-bold text-gray-900">
-                        {section.label}
-                    </h2>
-                    {hasMoreCollapsed && !isExpanded && (
-                        <button
-                            onClick={() => toggleSection(section.id)}
-                            className="flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all"
-                            style={{ color: section.color }}
-                        >
-                            {t('news.viewMore')}
-                            <ChevronRight size={16} />
-                        </button>
-                    )}
-                    {isExpanded && hasMoreCollapsed && (
-                        <button
-                            onClick={() => toggleSection(section.id)}
-                            className="flex items-center gap-1 text-sm font-semibold hover:gap-2 transition-all"
-                            style={{ color: section.color }}
-                        >
-                            {t('news.collapse')}
-                            <ChevronRight size={16} className="rotate-90" />
-                        </button>
-                    )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {displayedArticles.map((article, index) => (
-                        <ArticleCard key={article.id} article={article} index={index} />
-                    ))}
-                </div>
-
-                {/* Load more button — only visible when expanded and server has more */}
-                {isExpanded && feed.hasMore && (
-                    <div className="flex justify-center pt-6">
-                        <button
-                            onClick={() => loadMoreByCategory(section.id)}
-                            disabled={feed.loading}
-                            className="px-6 py-2 border-2 rounded-full font-semibold transition-all hover:shadow-md disabled:opacity-50"
-                            style={{
-                                borderColor: section.color,
-                                color: feed.loading ? '#999' : section.color,
-                            }}
-                        >
-                            {feed.loading ? (
-                                <span className="flex items-center gap-2">
-                                    <Loader2 className="animate-spin" size={16} />
-                                    Đang tải...
-                                </span>
-                            ) : (
-                                'Tải thêm bài viết'
-                            )}
-                        </button>
-                    </div>
-                )}
-            </div>
-        );
-    };
 
     return (
         <div className="min-h-screen bg-white text-gray-900">
@@ -477,9 +503,24 @@ export const NewsPageClient: React.FC<{
                                 {activeTab === 'all' ? (
                                     <>
                                         {/* Category Sections — each with its own data */}
-                                        {categorySections.map((section) => (
-                                            <CategorySection key={section.id} section={section} />
-                                        ))}
+                                        {categorySections.map((section) => {
+                                            const feed = feeds[section.id];
+                                            if (!feed) return null;
+                                            return (
+                                                <CategorySection
+                                                    key={section.id}
+                                                    section={section}
+                                                    feed={feed}
+                                                    isExpanded={expandedSections.has(section.id)}
+                                                    onToggle={() => toggleSection(section.id)}
+                                                    onLoadMore={() => loadMoreByCategory(section.id)}
+                                                    onArticleClick={handleArticleClick}
+                                                    authorFallback={authorFallback}
+                                                    viewMoreLabel={t('news.viewMore')}
+                                                    collapseLabel={t('news.collapse')}
+                                                />
+                                            );
+                                        })}
                                     </>
                                 ) : (
                                     /* Single category view */
@@ -488,8 +529,8 @@ export const NewsPageClient: React.FC<{
                                         const section = categorySections.find(s => s.id === activeTab);
                                         if (!feed || !section) return null;
 
-                                        // Show articles beyond hero (first 5)
-                                        const remainingArticles = feed.articles.slice(5);
+                                        // Show all articles in grid
+                                        const remainingArticles = feed.articles;
 
                                         return (
                                             <div className="mb-12">
@@ -499,8 +540,11 @@ export const NewsPageClient: React.FC<{
                                                     </h2>
                                                 </div>
                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                                    {remainingArticles.map((article, index) => (
-                                                        <ArticleCard key={article.id} article={article} index={index} />
+                                                    {remainingArticles.map((article) => (
+                                                        <ArticleCard key={article.id} article={article} onClick={handleArticleClick} authorFallback={authorFallback} />
+                                                    ))}
+                                                    {feed.loading && Array.from({ length: 3 }).map((_, i) => (
+                                                        <ArticleSkeleton key={`skel-${i}`} />
                                                     ))}
                                                 </div>
 
@@ -517,7 +561,7 @@ export const NewsPageClient: React.FC<{
                                                                     Đang tải...
                                                                 </span>
                                                             ) : (
-                                                                'Tải thêm tin tức'
+                                                                'Tải thêm bài viết'
                                                             )}
                                                         </button>
                                                     </div>

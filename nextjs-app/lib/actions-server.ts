@@ -279,6 +279,8 @@ async function fetchFeedsFromRestAPI(
                         articles,
                         cursor: articles.length > 0 ? `${articles[articles.length - 1].created_at}__${articles[articles.length - 1].id}` : null,
                         hasMore: total > perCategory,
+                        totalPages: Math.ceil(total / perCategory),
+                        totalArticles: total,
                     };
                 } catch {
                     // leave this category empty
@@ -350,6 +352,62 @@ export const fetchCategoryPage = async (
         return await getPostsByCategoryCursor(categorySlug, cursor, limit);
     } catch (e) {
         console.error('fetchCategoryPage error:', e);
+        return { articles: [], cursor: null, hasMore: false };
+    }
+};
+
+/**
+ * Fetch a specific page for a category using WP REST API.
+ * This is used for traditional page-based pagination.
+ */
+export const fetchCategoryPageRestAPI = async (
+    categorySlug: string,
+    page: number = 1,
+    limit: number = 10
+): Promise<CategoryFeedResult> => {
+    try {
+        const catRes = await fetch(`${WP_API}/categories?slug=${categorySlug}`, {
+            next: { revalidate: 300 },
+        });
+        if (!catRes.ok) return { articles: [], cursor: null, hasMore: false };
+        const cats = await catRes.json();
+        if (!cats || cats.length === 0) return { articles: [], cursor: null, hasMore: false };
+        
+        const catId = cats[0].id;
+        const postsRes = await fetch(
+            `${WP_API}/posts?categories=${catId}&page=${page}&per_page=${limit}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia`,
+            { next: { revalidate: 120 } }
+        );
+        
+        if (!postsRes.ok) return { articles: [], cursor: null, hasMore: false };
+
+        const total = parseInt(postsRes.headers.get('x-wp-total') || '0', 10);
+        const posts = await postsRes.json();
+
+        const articles: NewsArticle[] = posts.map((p: any) => ({
+            id: p.id,
+            title: decodeHTMLEntities(stripHtml(p.title.rendered)),
+            slug: p.slug,
+            excerpt: decodeHTMLEntities(stripHtml(p.excerpt.rendered)),
+            content: '',
+            thumbnail: p._embedded?.['wp:featuredmedia']?.[0]?.source_url || null,
+            category: decodeHTMLEntities(cats[0].name),
+            category_slug: cats[0].slug,
+            author: 'Admin',
+            views: 0,
+            created_at: p.date,
+            updated_at: p.modified,
+        }));
+
+        return {
+            articles,
+            cursor: null,
+            hasMore: total > page * limit,
+            totalPages: Math.ceil(total / limit),
+            totalArticles: total,
+        };
+    } catch (e) {
+        console.error('fetchCategoryPageRestAPI error:', e);
         return { articles: [], cursor: null, hasMore: false };
     }
 };
