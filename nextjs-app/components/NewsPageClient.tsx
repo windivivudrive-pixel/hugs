@@ -228,8 +228,14 @@ export const NewsPageClient: React.FC<{
     // ─── All articles flat (for hero & sidebar) ───
     const allArticles = useMemo(() => {
         const all: NewsArticle[] = [];
+        const seen = new Set<number>();
         for (const feed of Object.values(feeds)) {
-            all.push(...feed.articles);
+            for (const article of feed.articles) {
+                if (!seen.has(article.id)) {
+                    seen.add(article.id);
+                    all.push(article);
+                }
+            }
         }
         return all.sort((a, b) =>
             new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()

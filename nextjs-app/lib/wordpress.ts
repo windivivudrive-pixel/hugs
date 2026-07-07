@@ -433,7 +433,7 @@ export async function getTopPostsPerCategory(
             // Build thumbnail URL
             let thumbnail: string | null = null;
             if (row.featured_image) {
-                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://hugs.agency';
+                const baseUrl = process.env.S3_UPLOADS_BUCKET_URL || 'https://img.hugs.agency';
                 const uploadPath = row.featured_image.startsWith('/') ? row.featured_image : `/uploads/${row.featured_image}`;
                 thumbnail = row.featured_image.startsWith('http')
                     ? row.featured_image
