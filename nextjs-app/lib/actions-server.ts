@@ -233,7 +233,7 @@ async function fetchFeedsFromRestAPI(
 
     try {
         // 1. Fetch all WP categories in one call
-        const catRes = await fetch(`${WP_API}/categories?per_page=100&slug=${NEWS_CATEGORY_SLUGS.join(',')}`, {
+        const catRes = await fetch(`${WP_API}/categories?per_page=99&slug=${NEWS_CATEGORY_SLUGS.join(',')}`, {
             headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate: 300 },
         });
@@ -245,7 +245,7 @@ async function fetchFeedsFromRestAPI(
             cats.map(async (cat) => {
                 try {
                     const postsRes = await fetch(
-                        `${WP_API}/posts?categories=${cat.id}&per_page=${perCategory}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia`,
+                        `${WP_API}/posts?categories=${cat.id}&per_page=${perCategory}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia&cachebust=1`,
                         { 
                             headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
                             next: { revalidate: 120 } 
@@ -370,7 +370,8 @@ export const fetchCategoryPageRestAPI = async (
     limit: number = 10
 ): Promise<CategoryFeedResult> => {
     try {
-        const catRes = await fetch(`${WP_API}/categories?slug=${categorySlug}`, {
+        const catRes = await fetch(`${WP_API}/categories?slug=${categorySlug}&cachebust=1`, {
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate: 300 },
         });
         if (!catRes.ok) return { articles: [], cursor: null, hasMore: false };
@@ -379,8 +380,11 @@ export const fetchCategoryPageRestAPI = async (
         
         const catId = cats[0].id;
         const postsRes = await fetch(
-            `${WP_API}/posts?categories=${catId}&page=${page}&per_page=${limit}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia`,
-            { next: { revalidate: 120 } }
+            `${WP_API}/posts?categories=${catId}&page=${page}&per_page=${limit}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia&cachebust=1`,
+            { 
+                headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+                next: { revalidate: 120 } 
+            }
         );
         
         if (!postsRes.ok) return { articles: [], cursor: null, hasMore: false };
