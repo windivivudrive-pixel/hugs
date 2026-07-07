@@ -77,7 +77,7 @@ async function createSSHTunnel(): Promise<number> {
             host: sshHost,
             port: parseInt(process.env.SSH_PORT || '22'),
             username: process.env.SSH_USER || 'root',
-            readyTimeout: 30000, // Increased timeout for slow connections
+            readyTimeout: 3000, // Reduced to 3s so Vercel doesn't hit 10s timeout if SSH hangs
         };
 
         if (sshPrivateKeyContent) {
