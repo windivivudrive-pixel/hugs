@@ -234,6 +234,7 @@ async function fetchFeedsFromRestAPI(
     try {
         // 1. Fetch all WP categories in one call
         const catRes = await fetch(`${WP_API}/categories?per_page=100&slug=${NEWS_CATEGORY_SLUGS.join(',')}`, {
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate: 300 },
         });
         if (!catRes.ok) return result;
@@ -245,7 +246,10 @@ async function fetchFeedsFromRestAPI(
                 try {
                     const postsRes = await fetch(
                         `${WP_API}/posts?categories=${cat.id}&per_page=${perCategory}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia`,
-                        { next: { revalidate: 120 } }
+                        { 
+                            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+                            next: { revalidate: 120 } 
+                        }
                     );
                     if (!postsRes.ok) return;
 
