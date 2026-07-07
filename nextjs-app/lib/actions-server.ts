@@ -18,7 +18,7 @@ export const fetchProjectCategories = async (): Promise<ProjectCategory[]> => {
     try {
         const revalidate = 120;
         const res = await fetch(`${API_URL}/project_category?per_page=100`, { 
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate } 
         });
         const categories = await res.json();
@@ -46,7 +46,7 @@ export const fetchAllArticles = async (): Promise<ServiceArticle[]> => {
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
         
         const res = await fetch(`https://admin.hugs.agency/api-projects.php?cachebust=1`, { 
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate },
             signal: controller.signal
         });
@@ -77,7 +77,7 @@ export const fetchIndustries = async (): Promise<Industry[]> => {
     try {
         const revalidate = 120;
         const res = await fetch(`${API_URL}/industry?per_page=100`, { 
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate } 
         });
         if (!res.ok) return [];
@@ -100,7 +100,7 @@ export const fetchArticleBySlug = async (slug: string): Promise<NewsArticle | nu
     try {
         const revalidate = 120;
         const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, { 
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate } 
         });
         if (!res.ok) return null;
@@ -139,7 +139,7 @@ export const fetchCategories = async (): Promise<Category[]> => {
     try {
         const revalidate = 120;
         const res = await fetch(`${API_URL}/categories?per_page=100`, { 
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate } 
         });
         if (!res.ok) return [];
@@ -247,7 +247,7 @@ async function fetchFeedsFromRestAPI(
     try {
         // 1. Fetch all WP categories in one call
         const catRes = await fetch(`${WP_API}/categories?per_page=99&slug=${NEWS_CATEGORY_SLUGS.join(',')}`, {
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate: 300 },
         });
         if (!catRes.ok) return result;
@@ -260,7 +260,7 @@ async function fetchFeedsFromRestAPI(
                     const postsRes = await fetch(
                         `${WP_API}/posts?categories=${cat.id}&per_page=${perCategory}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia&cachebust=1`,
                         { 
-                            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+                            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
                             next: { revalidate: 120 } 
                         }
                     );
@@ -384,7 +384,7 @@ export const fetchCategoryPageRestAPI = async (
 ): Promise<CategoryFeedResult> => {
     try {
         const catRes = await fetch(`${WP_API}/categories?slug=${categorySlug}&cachebust=1`, {
-            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate: 300 },
         });
         if (!catRes.ok) return { articles: [], cursor: null, hasMore: false };
@@ -395,7 +395,7 @@ export const fetchCategoryPageRestAPI = async (
         const postsRes = await fetch(
             `${WP_API}/posts?categories=${catId}&page=${page}&per_page=${limit}&_fields=id,title,slug,excerpt,date,modified,_links&_embed=wp:featuredmedia&cachebust=1`,
             { 
-                headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+                headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
                 next: { revalidate: 120 } 
             }
         );
