@@ -17,7 +17,10 @@ export const fetchServiceCategories = async (): Promise<ServiceCategory[]> => {
 export const fetchProjectCategories = async (): Promise<ProjectCategory[]> => {
     try {
         const revalidate = 120;
-        const res = await fetch(`${API_URL}/project_category?per_page=100`, { next: { revalidate } });
+        const res = await fetch(`${API_URL}/project_category?per_page=100`, { 
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            next: { revalidate } 
+        });
         const categories = await res.json();
         return categories.map((c: { id: number; name: string; slug: string }) => ({
             id: String(c.id),
@@ -42,7 +45,8 @@ export const fetchAllArticles = async (): Promise<ServiceArticle[]> => {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
         
-        const res = await fetch(`https://admin.hugs.agency/api-projects.php`, { 
+        const res = await fetch(`https://admin.hugs.agency/api-projects.php?cachebust=1`, { 
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
             next: { revalidate },
             signal: controller.signal
         });
@@ -72,7 +76,10 @@ export interface Industry {
 export const fetchIndustries = async (): Promise<Industry[]> => {
     try {
         const revalidate = 120;
-        const res = await fetch(`${API_URL}/industry?per_page=100`, { next: { revalidate } });
+        const res = await fetch(`${API_URL}/industry?per_page=100`, { 
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            next: { revalidate } 
+        });
         if (!res.ok) return [];
         const data = await res.json();
         return data.map((d: { id: number; name: string; slug: string }) => ({
@@ -92,7 +99,10 @@ export const fetchIndustries = async (): Promise<Industry[]> => {
 export const fetchArticleBySlug = async (slug: string): Promise<NewsArticle | null> => {
     try {
         const revalidate = 120;
-        const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, { next: { revalidate } });
+        const res = await fetch(`${API_URL}/posts?slug=${slug}&_embed`, { 
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            next: { revalidate } 
+        });
         if (!res.ok) return null;
         const data = await res.json();
         if (data.length === 0) return null;
@@ -128,7 +138,10 @@ export const fetchArticleBySlug = async (slug: string): Promise<NewsArticle | nu
 export const fetchCategories = async (): Promise<Category[]> => {
     try {
         const revalidate = 120;
-        const res = await fetch(`${API_URL}/categories?per_page=100`, { next: { revalidate } });
+        const res = await fetch(`${API_URL}/categories?per_page=100`, { 
+            headers: { 'X-Vercel-Bypass': 'hugs2026-secret-waf-bypass' },
+            next: { revalidate } 
+        });
         if (!res.ok) return [];
         const data = await res.json();
         return data.map((cat: { id: number; name: string; slug: string; count: number }): Category => ({
