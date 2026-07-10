@@ -440,6 +440,8 @@ export async function getTopPostsPerCategory(
                     : `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
             }
 
+            console.log(`DEBUG THUMBNAIL: post ${row.ID} (${row.post_title}) -> featured_image: ${row.featured_image} | final_thumbnail: ${thumbnail}`);
+
             const article = {
                 ...transformPost(row, row.cat_name, row.cat_slug),
                 thumbnail,

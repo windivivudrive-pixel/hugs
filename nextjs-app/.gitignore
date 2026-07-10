@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# temp output and test files
+db-output.json
+next-output.json
+test-db.ts
+test-next.ts
