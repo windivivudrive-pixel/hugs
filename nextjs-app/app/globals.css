@@ -66,11 +66,25 @@ html {
     overflow-wrap: anywhere;
 }
 
+.article-content figure,
 .article-content img {
-    max-width: 100%;
-    height: auto;
+    max-width: calc(100% - 40px) !important;
+    height: auto !important;
     border-radius: 0.5rem;
-    margin: 1.5rem 0;
+    margin: 1.5rem auto !important;
+    display: block !important;
+}
+
+.article-content figure img {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.article-content figcaption {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
 }
 
 /* Table of Contents - Hidden completely from frontend viewport */

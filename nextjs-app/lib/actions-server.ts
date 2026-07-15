@@ -40,6 +40,21 @@ export const fetchArticlesByService = async (serviceSlug: string): Promise<Servi
 };
 
 export const fetchAllArticles = async (): Promise<ServiceArticle[]> => {
+    // Attempt to fetch directly from DB if SSH/DB env vars are present
+    const hasDbAccess = !!process.env.SSH_PRIVATE_KEY || !!process.env.SSH_PRIVATE_KEY_PATH || !!process.env.SSH_HOST || !!process.env.DB_HOST;
+    if (hasDbAccess) {
+        try {
+            const { getProjectsLite } = await import('./wordpress');
+            const projects = await getProjectsLite();
+            if (projects && projects.length > 0) {
+                return projects;
+            }
+        } catch (e) {
+            console.error("fetchAllArticles DB fallback error:", e);
+        }
+    }
+
+    // Fallback to custom PHP endpoint
     try {
         const revalidate = 120;
         const controller = new AbortController();

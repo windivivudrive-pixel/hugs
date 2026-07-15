@@ -440,6 +440,8 @@ export async function getTopPostsPerCategory(
                     : `${baseUrl.replace(/\/$/, '')}${uploadPath}`;
             }
 
+            console.log(`DEBUG THUMBNAIL: post ${row.ID} (${row.post_title}) -> featured_image: ${row.featured_image} | final_thumbnail: ${thumbnail}`);
+
             const article = {
                 ...transformPost(row, row.cat_name, row.cat_slug),
                 thumbnail,
@@ -569,6 +571,7 @@ export async function getProjectsLite(): Promise<ServiceArticle[]> {
             industry_id: string | null;
             service_id: string | null;
             category_name: string | null;
+            featured: string | null;
         }
 
         const projects = await query<ProjectRow>(
@@ -577,6 +580,8 @@ export async function getProjectsLite(): Promise<ServiceArticle[]> {
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_logo' LIMIT 1) as logo,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_yoast_wpseo_primary_industry' LIMIT 1) as industry_id,
                 (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_service_id' LIMIT 1) as service_id,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = '_hugs_featured' LIMIT 1) as featured,
+                (SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'hugs_display_order' LIMIT 1) as display_order,
                 (SELECT t.name FROM wp_term_relationships tr
                  INNER JOIN wp_term_taxonomy tt ON tr.term_taxonomy_id = tt.term_taxonomy_id AND tt.taxonomy = 'project_category'
                  INNER JOIN wp_terms t ON tt.term_id = t.term_id
@@ -584,7 +589,7 @@ export async function getProjectsLite(): Promise<ServiceArticle[]> {
          FROM wp_posts p
          WHERE p.post_type = 'projects' 
            AND p.post_status = 'publish'
-         ORDER BY p.post_date DESC
+         ORDER BY COALESCE(CAST((SELECT meta_value FROM wp_postmeta WHERE post_id = p.ID AND meta_key = 'hugs_display_order' LIMIT 1) AS UNSIGNED), 999) ASC, p.post_date DESC
          LIMIT 1000`
         );
 
@@ -611,6 +616,7 @@ export async function getProjectsLite(): Promise<ServiceArticle[]> {
                 category: decodeHTMLEntities(p.category_name || 'Tất cả'),
                 project_industry_ids: p.industry_id ? [parseInt(p.industry_id)] : [],
                 service_id: p.service_id || '',
+                featured: p.featured === '1' || p.featured === 'true',
             };
         });
     } catch (error) {
