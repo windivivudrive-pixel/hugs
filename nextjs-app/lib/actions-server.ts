@@ -177,7 +177,10 @@ export const fetchCategories = async (): Promise<Category[]> => {
  */
 export const fetchPostCount = async (): Promise<number> => {
     try {
-        const res = await fetch(`${API_URL}/posts?per_page=1`, { method: 'HEAD' });
+        const res = await fetch(`${API_URL}/posts?per_page=1`, { 
+            method: 'HEAD',
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' }
+        });
         const total = res.headers.get('x-wp-total');
         return total ? parseInt(total) : 0;
     } catch (e) {
@@ -189,7 +192,10 @@ export const fetchPostCount = async (): Promise<number> => {
 export const fetchNewsArticles = async (limit = 10, offset = 0): Promise<NewsArticle[]> => {
     try {
         const revalidate = 120;
-        const res = await fetch(`${API_URL}/posts?per_page=${limit}&offset=${offset}&_embed`, { next: { revalidate } });
+        const res = await fetch(`${API_URL}/posts?per_page=${limit}&offset=${offset}&_embed`, { 
+            headers: { 'x-vercel-bypass': 'hugs2026-secret-waf-bypass' },
+            next: { revalidate } 
+        });
         if (!res.ok) return [];
         const data = await res.json();
         return data.map((post: { 
