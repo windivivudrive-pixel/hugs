@@ -12,7 +12,9 @@ interface NewsSectionProps {
     initialArticles?: NewsArticle[];
 }
 
-export const NewsSection: React.FC<NewsSectionProps> = ({ initialArticles = [] }) => {
+const EMPTY_ARTICLES: NewsArticle[] = [];
+
+export const NewsSection: React.FC<NewsSectionProps> = ({ initialArticles = EMPTY_ARTICLES }) => {
     const { t } = useLanguage();
     const [articles, setArticles] = useState<NewsArticle[]>(initialArticles);
     const [loading, setLoading] = useState(initialArticles.length === 0);
